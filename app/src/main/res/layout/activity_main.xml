@@ -43,7 +43,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="20dp"
             android:layout_below="@id/txtWelTec"
-            android:src="@drawable/logo"/>
+            android:src="@drawable/welcome"/>
 
         <TextView
             android:id="@+id/txtWelcome"
@@ -74,21 +74,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:backgroundTint="@color/teal_700"
-        app:fabCradleMargin="10dp"
-        app:fabCradleRoundedCornerRadius="50dp"
-        >
+        app:fabCradleRoundedCornerRadius="50dp">
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:background="@color/teal_700"
             android:backgroundTint="@color/teal_700"
             app:itemIconTint="@color/white"
             app:itemTextColor="@color/white"
             app:labelVisibilityMode="labeled"
-            android:background="@color/teal_700"
-            app:menu="@menu/bottom_menu"
-            />
+            app:menu="@menu/bottom_menu" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 

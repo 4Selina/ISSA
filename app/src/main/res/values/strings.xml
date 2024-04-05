@@ -1,8 +1,10 @@
 <resources>
     --Welcome layout--
     <string name="app_name">ISSA</string>
-    <string name="welcome">Do you need help! Are you struggling with the course select? Do you .......</string>
-    Whitireia WelTec
+    <string name="welcome">Welcome to NewZealand! We are so thrilled that you have chosen
+        Whitireia and WelTec as your new home while you study. This app will serve as a
+        resource hub for information and support you may need while you are settling into studying with us.</string>
+
     <string name="school">Whitireia and WelTec</string>
 
     --Home layout--

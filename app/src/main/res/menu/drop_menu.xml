@@ -32,13 +32,13 @@
         <item
             android:id="@+id/nav_Transport"
             android:icon="@drawable/bus"
-            android:title="Transport"
+            android:title="Transports"
             />
 
     <item
         android:id="@+id/nav_Webpage"
-        android:icon="@drawable/contact"
-        android:title="International Students Website"
+        android:icon="@drawable/school"
+        android:title="WelTec"
         />
     </group>
 

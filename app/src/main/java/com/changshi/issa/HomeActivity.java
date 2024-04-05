@@ -64,27 +64,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Functions LearningSupportFunction = new Functions();
 
         LearningSupportFunction.setNameOfFunction("Learning Support");
-        LearningSupportFunction.setfuncationImage(R.drawable.logo);
+        LearningSupportFunction.setfuncationImage(R.drawable.learn);
 
         Functions SocialActivitiesFunction = new Functions();
 
         SocialActivitiesFunction.setNameOfFunction("Social Activities");
-        SocialActivitiesFunction.setfuncationImage("http://www.google.com");
+        SocialActivitiesFunction.setfuncationImage(R.drawable.social);
 
         Functions AccommodationFunction = new Functions();
 
         AccommodationFunction.setNameOfFunction("Accommodation");
-        AccommodationFunction.setfuncationImage("http://www.google.com");
+        AccommodationFunction.setfuncationImage(R.drawable.accommodation);
 
         Functions TransportsFunction = new Functions();
 
         TransportsFunction.setNameOfFunction("Transports");
-        TransportsFunction.setfuncationImage("http://www.google.com");
+        TransportsFunction.setfuncationImage(R.drawable.transit);
 
         Functions JobSupportFunction = new Functions();
 
         JobSupportFunction.setNameOfFunction("Job Support");
-        JobSupportFunction.setfuncationImage("http://www.google.com");
+        JobSupportFunction.setfuncationImage(R.drawable.jobsupport);
 
         AllFunctions.add(LearningSupportFunction);
         AllFunctions.add(SocialActivitiesFunction);

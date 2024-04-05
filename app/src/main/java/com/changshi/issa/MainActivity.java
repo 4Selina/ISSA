@@ -21,17 +21,27 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnLogin;
     private BottomNavigationView bottomNavigationView;
-    TextView Welcometext;
+
+    private TextView welcomeText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setContentView(R.layout.activity_main);
 
         btnLogin = findViewById(R.id.btnLogin);
         bottomNavigationView = findViewById(R.id.bottomNavigationMenu);
+        welcomeText = findViewById(R.id.txtWelTec);
+        //Click the screen to the home page
+        welcomeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        //admin can login for managing the contents
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // bottom navigation bar is clickable
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -61,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
 
+
             private void displayFragment(Fragment fragment) {
                 // Hide the welcome logo and text
                 findViewById(R.id.imgWelcomeLogo).setVisibility(View.GONE);
@@ -75,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     };
         });
 
+        //hide the navigation items when users view the app without login
         bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
         bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
     }
