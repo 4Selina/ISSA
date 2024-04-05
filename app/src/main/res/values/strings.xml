@@ -1,0 +1,46 @@
+<resources>
+    --Welcome layout--
+    <string name="app_name">ISSA</string>
+    <string name="welcome">Do you need help! Are you struggling with the course select? Do you .......</string>
+    Whitireia WelTec
+    <string name="school">Whitireia and WelTec</string>
+
+    --Home layout--
+    <string name="nav_header">Admin@weltec.ac.nz</string>
+    <string name="fab">Add Task</string>
+
+    <string name="functionTitle">International Students Support</string>
+    <string name="function_1">Learning Support</string>
+    <string name="function_2">Social Activities</string>
+    <string name="function_3">Accommodation</string>
+    <string name="function_4">Job Support</string>
+    <string name="function_5">Transport Support</string>
+    <string name="function_button">Go to View</string>
+    --Login layout--
+    <string name="edtUsername">Username</string>
+    <string name="edtPassword">Password</string>
+    <string name="btnLogin">Login</string>
+    <string name="btnSkip">Skip</string>
+    <string name="txtForgotPassword">Forgot password?</string>
+    <string name="txtTerm">Term ......</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Fragment</string>
+
+
+    --Webpage--
+
+    <string name="contactUs">0800 935 832 (WelTec) | 0800 944 847 (Whitireia)
+
+Email: information@wandw.ac.nz</string>
+    <string name="navigation_drawer_open" />
+    <string name="navigation_drawer_close" />
+
+
+    --Add new content layout--
+    <string name="select">Select Support Functions</string>
+
+    --Welcome layout--
+
+
+</resources>

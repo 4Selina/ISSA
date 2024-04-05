@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home"
+            android:title="Home"
+            />
+        <item
+            android:id="@+id/nav_LearningSupport"
+            android:icon="@drawable/learning"
+            android:title="Learning Support"
+            />
+        <item
+            android:id="@+id/nav_Accommodation"
+            android:icon="@drawable/bed"
+            android:title="Accommodation"
+            />
+        <item
+            android:id="@+id/nav_SocialAct"
+            android:icon="@drawable/activity"
+            android:title="Social Activities"
+            />
+        <item
+            android:id="@+id/nav_JobSupport"
+            android:icon="@drawable/job"
+            android:title="Job Support"
+            />
+        <item
+            android:id="@+id/nav_Transport"
+            android:icon="@drawable/bus"
+            android:title="Transport"
+            />
+
+    <item
+        android:id="@+id/nav_Webpage"
+        android:icon="@drawable/contact"
+        android:title="International Students Website"
+        />
+    </group>
+
+    <item android:title="">
+        <menu>
+
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/logout"
+                android:title="Logout"
+                />
+
+            <item
+                android:id="@+id/nav_login"
+                android:icon="@drawable/logout"
+                android:title="Login"
+                />
+        </menu>
+    </item>
+
+</menu>

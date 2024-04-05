@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <item
+        android:id="@+id/homeBTM"
+        android:title="Home"
+        android:icon="@drawable/home"
+
+        />
+
+    <item
+        android:id="@+id/searchBTM"
+        android:title="Search"
+        android:icon="@drawable/search"
+
+        />
+    <item
+        android:id="@+id/addBTM"
+        android:title="Add"
+        android:icon="@drawable/add"
+        />
+
+
+    <item
+        android:id="@+id/webBTM"
+        android:title="Help"
+        android:icon="@drawable/contact"
+
+       />
+    <item
+        android:id="@+id/logoutBTM"
+        android:title="Logout"
+        android:icon="@drawable/logout"
+
+        />
+
+</menu>
