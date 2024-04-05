@@ -57,28 +57,142 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
             @Override
             public void onClick(View v)
             {
-                // This is Commented because the Activities don't exist yet.
                 // Create a new Intent.
 
-                // Code.
                 if(holder.txtFunctionTitle.getText() == "Learning Support")
                 {
                     ArrayList<Functions> LearningSupportFunctions = new ArrayList<>();
 
                     Functions CourseSelectionFunction = new Functions();
-
                     CourseSelectionFunction.setNameOfFunction("Course Selection");
-                    CourseSelectionFunction.setfuncationImage("http://www.google.com");
+                    CourseSelectionFunction.setfuncationImage(R.drawable.learn);
 
                     LearningSupportFunctions.add(CourseSelectionFunction);
                     ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+
+                    Functions AcademicFunction = new Functions();
+                    AcademicFunction.setNameOfFunction("Academic Support");
+                    AcademicFunction.setfuncationImage(R.drawable.learn);
+
+                    LearningSupportFunctions.add(AcademicFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+
+
+                    Functions StudentCouncilFunction = new Functions();
+                    StudentCouncilFunction.setNameOfFunction("Student Council");
+                    StudentCouncilFunction.setfuncationImage(R.drawable.learn);
+
+                    LearningSupportFunctions.add(StudentCouncilFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+
+                    Functions HealthFunction = new Functions();
+                    HealthFunction.setNameOfFunction("Health & Wellbeing");
+                    HealthFunction.setfuncationImage(R.drawable.learn);
+
+                    LearningSupportFunctions.add(HealthFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
                 }
                 if(holder.txtFunctionTitle.getText() == "Social Activities")
-                {
-                    // Create Intent to Send to Social Activities Activity.
-                    // Send to Social Activities Activity.
+                { ArrayList<Functions> SocialActFunctions = new ArrayList<>();
+
+                    Functions NetworkingFunction = new Functions();
+                    NetworkingFunction.setNameOfFunction("Networking");
+                    NetworkingFunction.setfuncationImage(R.drawable.social);
+
+                    SocialActFunctions.add(NetworkingFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions));
+
+
+                    Functions SportClubFunction = new Functions();
+                    SportClubFunction.setNameOfFunction("Sport Club");
+                    SportClubFunction.setfuncationImage(R.drawable.social);
+
+                    SocialActFunctions.add(SportClubFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions));
+
+
+                    Functions FoodOptionsFunction = new Functions();
+                    FoodOptionsFunction.setNameOfFunction("Food Options");
+                    FoodOptionsFunction.setfuncationImage(R.drawable.social);
+
+                    SocialActFunctions.add(FoodOptionsFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions));
+
                     // Finish();
                 }
+                if(holder.txtFunctionTitle.getText() == "Accommodation")
+                {ArrayList<Functions> AccommodationFunction = new ArrayList<>();
+
+                    Functions HomestayFunction = new Functions();
+                    HomestayFunction.setNameOfFunction("Homestay Information");
+                    HomestayFunction.setfuncationImage(R.drawable.accommodation);
+
+                    AccommodationFunction.add(HomestayFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(AccommodationFunction));
+
+
+                    Functions RentalFunction = new Functions();
+                    RentalFunction.setNameOfFunction("Rental Information");
+                    RentalFunction.setfuncationImage(R.drawable.accommodation);
+
+                    AccommodationFunction.add(RentalFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(AccommodationFunction));
+
+                    // Finish();
+                }
+                if(holder.txtFunctionTitle.getText() == "Transports")
+                {ArrayList<Functions> TransportsFunction = new ArrayList<>();
+
+                    Functions PublicTranFunction = new Functions();
+                    PublicTranFunction.setNameOfFunction("Public Transport System");
+                    PublicTranFunction.setfuncationImage(R.drawable.transit);
+
+                    TransportsFunction.add(PublicTranFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction));
+
+
+                    Functions AirportFunction = new Functions();
+                    AirportFunction.setNameOfFunction("Airport Express");
+                    AirportFunction.setfuncationImage(R.drawable.transit);
+
+                    TransportsFunction.add(AirportFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction));
+
+
+                    Functions CampusFunction = new Functions();
+                    CampusFunction.setNameOfFunction("Campus Transfers");
+                    CampusFunction.setfuncationImage(R.drawable.transit);
+
+                    TransportsFunction.add(CampusFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction));
+                }
+                if(holder.txtFunctionTitle.getText() == "Job Support")
+                {ArrayList<Functions> JobFunctions = new ArrayList<>();
+
+                    Functions PartTimeFunction = new Functions();
+                    PartTimeFunction.setNameOfFunction("Part-time Job");
+                    PartTimeFunction.setfuncationImage(R.drawable.jobsupport);
+
+                    JobFunctions.add(PartTimeFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions));
+
+
+                    Functions InternshipFunction = new Functions();
+                    InternshipFunction.setNameOfFunction("Internship");
+                    InternshipFunction.setfuncationImage(R.drawable.jobsupport);
+
+                    JobFunctions.add(InternshipFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions));
+
+
+                    Functions FoodOptionsFunction = new Functions();
+                    FoodOptionsFunction.setNameOfFunction("Graduate Job");
+                    FoodOptionsFunction.setfuncationImage(R.drawable.jobsupport);
+
+                    JobFunctions.add(FoodOptionsFunction);
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions));
+                }
+
             }
         });
     }

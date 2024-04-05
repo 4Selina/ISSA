@@ -7,6 +7,7 @@ public class Functions {
     private String ImageURL = "";
     private int Image;
 
+
     public String getNameOfFunction() {
         return Name;
     }
