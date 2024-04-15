@@ -2,6 +2,9 @@ package com.changshi.issa;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -39,7 +42,16 @@ public class AddActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish(); // Close the activity nd go back to the previous one
+                // Set admin login status to true
+                SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putBoolean("is_logged_in", true);
+                editor.apply();
+
+                // Start HomeActivity
+                Intent intent = new Intent(AddActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

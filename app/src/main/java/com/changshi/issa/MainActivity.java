@@ -61,17 +61,23 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(homeIntent);
                         return true;
                     case R.id.searchBTM:
-                        // Click add icon to SearchActivity
-                        displayFragment(new SearchSFragment());
+                        // Click add icon to SearchFragment
+                        Intent searchIntent = new Intent(MainActivity.this, HomeActivity.class);
+                        searchIntent.putExtra("fragment", "search");
+                        startActivity(searchIntent);
                         return true;
+
                     case R.id.webBTM:
-                        // Click campus icon to webpageActivity
-                        displayFragment(new WebpageFragment());
+                        // Click campus icon to webpageFragment
+                        Intent webpageIntent = new Intent(MainActivity.this, HomeActivity.class);
+                        webpageIntent.putExtra("fragment", "webpage");
+                        startActivity(webpageIntent);
                         return true;
                 }
 
                 return false;
             }
+
 
 
             private void displayFragment(Fragment fragment) {
@@ -90,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         //hide the navigation items when users view the app without login
         bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
-        bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
+//        bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
     }
 
 }

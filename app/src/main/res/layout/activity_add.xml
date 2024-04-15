@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="30dp"
-        android:text="Heating:"
+        android:text="Heading:"
         android:layout_below="@+id/txtContentId" />
 
     <EditText

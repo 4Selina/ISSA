@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -31,12 +29,10 @@ import com.changshi.issa.Fragment.SocialActFragment;
 import com.changshi.issa.Fragment.TransportFragment;
 import com.changshi.issa.Fragment.WebpageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -51,6 +47,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences.Editor PrefEditor;
 
     public boolean IsLoggedIn;
+
 
     private ArrayList<Functions> AllFunctions;
 
@@ -118,25 +115,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int itemId = item.getItemId();
                 if(itemId == R.id.homeBTM){
-                    openFragment(new FunctionsFragment(AllFunctions));
+                    openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
                     return true;
                 }
                 else if(itemId == R.id.searchBTM){
-                    openFragment(new SearchSFragment());
+                    openFragment(new SearchSFragment(), " ");
                     return true;
                 }
-                else if(itemId == R.id.addBTM){
-                    SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean("is_logged_in", false);
-                    editor.apply();
-
-                    Intent intent = new Intent(HomeActivity.this, AddActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
                 else if(itemId == R.id.webBTM){
-                    openFragment(new WebpageFragment());
+                    openFragment(new WebpageFragment(), "WelTec");
                     return true;
                 }
                 else if(itemId == R.id.logoutBTM)
@@ -156,7 +143,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
 
         fragmentManager = getSupportFragmentManager();
-        openFragment(new FunctionsFragment(AllFunctions));
+        openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
 
         if(!IsLoggedIn)
         {
@@ -164,7 +151,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             NavView.getMenu().findItem(R.id.nav_login).setVisible(true);
 
             bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
-            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
+
         }
         else
         {
@@ -172,8 +159,40 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             NavView.getMenu().findItem(R.id.nav_login).setVisible(false);
 
             bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(true);
-            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
+
         }
+
+        // Check if there's an extra "fragment" in the intent
+        String fragmentName = getIntent().getStringExtra("fragment");
+        if (fragmentName != null) {
+            switch (fragmentName) {
+                case "learningSupport":
+                    openFragment(new SearchSFragment(), "Learning Support");
+                    break;
+                case "social":
+                    openFragment(new WebpageFragment(), "Social Activities");
+                    break;
+                case "accommodation":
+                    openFragment(new WebpageFragment(), "Accommodation");
+
+                case "transport":
+                    openFragment(new WebpageFragment(), "Transport");
+                    break;
+                case "jobSupport":
+                    openFragment(new WebpageFragment(), "Job Support");
+                    break;
+                case "search":
+                    openFragment(new SearchSFragment(), " ");
+                    break;
+                case "webpage":
+                    openFragment(new WebpageFragment(), "WelTec");
+                    break;
+            }
+        } else {
+            // If no extra "fragment", open the default fragment
+            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
+        }
+
     }
 
 
@@ -181,40 +200,46 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if(itemId == R.id.nav_home){
-            openFragment(new FunctionsFragment(AllFunctions));
+            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
+
         }
         else if (itemId == R.id.nav_LearningSupport){
-            openFragment(new LearningFragment());
+            openFragment(new LearningFragment(),"Learning Support");
+
         }
         else if (itemId == R.id.nav_Accommodation){
-            openFragment(new AccommodationFragment());
+            openFragment(new AccommodationFragment(),"Accommodation");
+
         }
         else if (itemId == R.id.nav_JobSupport){
-            openFragment(new JobFragment());
+            openFragment(new JobFragment(), "Job Support");
         }
         else if (itemId == R.id.nav_SocialAct){
-            openFragment(new SocialActFragment());
+            openFragment(new SocialActFragment(),"Social Activities");
         }
         else if (itemId == R.id.nav_Transport){
-            openFragment(new TransportFragment());
+            openFragment(new TransportFragment(), "Transport");
         }
         else if (itemId == R.id.nav_Webpage){
-            openFragment(new WebpageFragment());
+            openFragment(new WebpageFragment(), "WelTec");
         }
-        else if(itemId == R.id.nav_logout)
-        {
+        else if (itemId == R.id.nav_login){
+            SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("is_logged_in", false);
+            editor.apply();
+
+            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish(); // Close the current activity ;
+        }
+        else if (itemId == R.id.nav_logout){
             SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("is_logged_in", false);
             editor.apply();
 
             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish(); // Close the current activity
-        }
-        else if(itemId == R.id.nav_login)
-        {
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(intent);
             finish(); // Close the current activity
         }
@@ -230,10 +255,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-    public void openFragment(Fragment fragment){
+    public void openFragment(Fragment fragment, String title){
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();
+        getSupportActionBar().setTitle(title); //display fragment title on the toolbar
+
     }
 
 }

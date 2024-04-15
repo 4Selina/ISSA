@@ -5,6 +5,7 @@
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,10 +13,10 @@
         android:theme="@style/Theme.ISSA"
         tools:targetApi="31">
         <activity
-            android:name=".AddActivity"
+            android:name=".EditeActivity"
             android:exported="false" />
         <activity
-            android:name=".WebpageActivity"
+            android:name=".AddActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

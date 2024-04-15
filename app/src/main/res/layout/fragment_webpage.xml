@@ -1,86 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/imgWebpage"
-        android:layout_width="280dp"
-        android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/logo"/>
-
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/WebpageLayout">
+<!--Title-->
     <TextView
         android:id="@+id/txtWebTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Whitireia WelTec"
+        android:layout_marginTop="20dp"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="30dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/imgWebpage"
-        />
+        android:layout_centerHorizontal="true"/>
 
-
-    <TextView
-        android:id="@+id/txtWebContent"
-        android:layout_width="360dp"
-        android:layout_height="wrap_content"
-        android:text="Whitireia WelTec"
-        android:textColor="@color/black"
-        android:textSize="25dp"
+    <ImageView
+        android:id="@+id/imgWebpage"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/txtWebTitle"
-        />
+        android:src="@drawable/logo"
+        android:layout_below="@+id/txtWebTitle"/>
 
-    <EditText
-        android:id="@+id/editWebTitle"
+    <ImageView
+        android:id="@+id/edtWebpageLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Enter Title"
-        android:textSize="28dp"
-        android:textStyle="bold"
-        android:layout_below="@id/txtWebContent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        />
+        android:layout_toEndOf="@id/imgWebpage"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/teal_700"
+        android:src="@drawable/edit"
+        android:layout_alignTop="@id/imgWebpage"/>
 
-    <EditText
-        android:id="@+id/editWebContents"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/txtWebpageContent"
+        android:layout_width="360dp"
+        android:layout_height="350dp"
+        android:text="@string/WelTecContent"
+        android:textColor="@color/black"
         android:textSize="20dp"
-        android:hint="Enter Contents"
-        android:layout_below="@id/editWebTitle"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        />
-
-    <Button
-        android:id="@+id/btnChangeWebImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Change Image"
-        android:layout_below="@id/editWebContents"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        />
+        android:layout_below="@id/imgWebpage"/>
 
+    <!-- admin can edite web page-->
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/btnUpdateWebpage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save Changes"
-        android:layout_below="@id/btnChangeWebImage"
+        android:text="Update"
+        android:textSize="25dp"
+        android:layout_below="@id/txtWebpageContent"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         />

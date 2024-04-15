@@ -1,5 +1,8 @@
 package com.changshi.issa.Fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.changshi.issa.AddActivity;
+import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
 
 import android.os.Bundle;
@@ -16,6 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -27,6 +34,7 @@ public class SearchSFragment extends Fragment {
 
     private EditText searchEditText;
     private Button searchButton;
+    private ImageView imageView;
     private RecyclerView searchRecyclerView;
 
     public SearchSFragment() {
@@ -41,18 +49,44 @@ public class SearchSFragment extends Fragment {
 
         searchEditText = view.findViewById(R.id.searchEditText);
         searchButton = view.findViewById(R.id.searchButton);
+        imageView = view.findViewById(R.id.backIcon);
         searchRecyclerView = view.findViewById(R.id.searchRecyclerView);
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navigateToHomeActivity();
+            }
+        });
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String query = searchEditText.getText().toString();
-                performSearch(query);
+                // Check if user is logged in
+                SharedPreferences sharedPref = getActivity().getSharedPreferences("login_pref", Context.MODE_PRIVATE);
+                boolean isLoggedIn = sharedPref.getBoolean("is_logged_in", false);
+
+                if (isLoggedIn) {
+                    navigateToHomeActivity();
+                } else {
+                    // Start HomeActivity without add and logout icons
+                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                    intent.putExtra("hide_icons", true);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
             }
         });
 
         return view;
     }
+
+    private void navigateToHomeActivity() {
+        // Start HomeActivity with add and logout icons
+        Intent intent = new Intent(getActivity(), HomeActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+    }
+
 
     private void performSearch(String query) {
         // Perform the search operation here

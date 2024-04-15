@@ -68,14 +68,14 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     CourseSelectionFunction.setfuncationImage(R.drawable.learn);
 
                     LearningSupportFunctions.add(CourseSelectionFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions), "CourseSelection");
 
                     Functions AcademicFunction = new Functions();
                     AcademicFunction.setNameOfFunction("Academic Support");
                     AcademicFunction.setfuncationImage(R.drawable.learn);
 
                     LearningSupportFunctions.add(AcademicFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions), "Academic");
 
 
                     Functions StudentCouncilFunction = new Functions();
@@ -83,14 +83,14 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     StudentCouncilFunction.setfuncationImage(R.drawable.learn);
 
                     LearningSupportFunctions.add(StudentCouncilFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions), "Student Council");
 
                     Functions HealthFunction = new Functions();
                     HealthFunction.setNameOfFunction("Health & Wellbeing");
                     HealthFunction.setfuncationImage(R.drawable.learn);
 
                     LearningSupportFunctions.add(HealthFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(LearningSupportFunctions), "Health & Wellbeing");
                 }
                 if(holder.txtFunctionTitle.getText() == "Social Activities")
                 { ArrayList<Functions> SocialActFunctions = new ArrayList<>();
@@ -100,7 +100,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     NetworkingFunction.setfuncationImage(R.drawable.social);
 
                     SocialActFunctions.add(NetworkingFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions), "Networking");
 
 
                     Functions SportClubFunction = new Functions();
@@ -108,7 +108,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     SportClubFunction.setfuncationImage(R.drawable.social);
 
                     SocialActFunctions.add(SportClubFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions), "Sport Club");
 
 
                     Functions FoodOptionsFunction = new Functions();
@@ -116,7 +116,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     FoodOptionsFunction.setfuncationImage(R.drawable.social);
 
                     SocialActFunctions.add(FoodOptionsFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(SocialActFunctions), "Food Options");
 
                     // Finish();
                 }
@@ -128,7 +128,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     HomestayFunction.setfuncationImage(R.drawable.accommodation);
 
                     AccommodationFunction.add(HomestayFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(AccommodationFunction));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(AccommodationFunction), "Homestay Information");
 
 
                     Functions RentalFunction = new Functions();
@@ -136,7 +136,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     RentalFunction.setfuncationImage(R.drawable.accommodation);
 
                     AccommodationFunction.add(RentalFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(AccommodationFunction));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(AccommodationFunction), "Rental Information");
 
                     // Finish();
                 }
@@ -148,7 +148,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     PublicTranFunction.setfuncationImage(R.drawable.transit);
 
                     TransportsFunction.add(PublicTranFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction), "Public Transport System");
 
 
                     Functions AirportFunction = new Functions();
@@ -156,7 +156,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     AirportFunction.setfuncationImage(R.drawable.transit);
 
                     TransportsFunction.add(AirportFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction), "Airport Express");
 
 
                     Functions CampusFunction = new Functions();
@@ -164,7 +164,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     CampusFunction.setfuncationImage(R.drawable.transit);
 
                     TransportsFunction.add(CampusFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction), "Campus Transfers");
                 }
                 if(holder.txtFunctionTitle.getText() == "Job Support")
                 {ArrayList<Functions> JobFunctions = new ArrayList<>();
@@ -174,7 +174,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     PartTimeFunction.setfuncationImage(R.drawable.jobsupport);
 
                     JobFunctions.add(PartTimeFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions), "Part-time Job");
 
 
                     Functions InternshipFunction = new Functions();
@@ -182,7 +182,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     InternshipFunction.setfuncationImage(R.drawable.jobsupport);
 
                     JobFunctions.add(InternshipFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions), "Internship");
 
 
                     Functions FoodOptionsFunction = new Functions();
@@ -190,7 +190,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     FoodOptionsFunction.setfuncationImage(R.drawable.jobsupport);
 
                     JobFunctions.add(FoodOptionsFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions));
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(JobFunctions), "Graduate Job");
                 }
 
             }

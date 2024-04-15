@@ -2,13 +2,14 @@
     --Welcome layout--
     <string name="app_name">ISSA</string>
     <string name="welcome">Welcome to NewZealand! We are so thrilled that you have chosen
-        Whitireia and WelTec as your new home while you study. This app will serve as a
-        resource hub for information and support you may need while you are settling into studying with us.</string>
+        Whitireia and WelTec as your new home while you study. \n\n
+        \n\n
+        This app will serve as a resource hub for information and support you may need while you are settling into studying with us.</string>
 
     <string name="school">Whitireia and WelTec</string>
 
     --Home layout--
-    <string name="nav_header">Admin@weltec.ac.nz</string>
+    <string name="nav_header">Admin</string>
     <string name="fab">Add Task</string>
 
     <string name="functionTitle">International Students Support</string>
@@ -17,7 +18,7 @@
     <string name="function_3">Accommodation</string>
     <string name="function_4">Job Support</string>
     <string name="function_5">Transport Support</string>
-    <string name="function_button">Go to View</string>
+    <string name="function_button">Edit</string>
     --Login layout--
     <string name="edtUsername">Username</string>
     <string name="edtPassword">Password</string>
@@ -31,10 +32,23 @@
 
 
     --Webpage--
+    <string name="WelTecContent">For International Enquiries: \n
+    International.support@wandw.ac.nz \n\n
+    For International Admissions: \n
+    International-admissions@wandw.ac.nz \n\n
 
-    <string name="contactUs">0800 935 832 (WelTec) | 0800 944 847 (Whitireia)
+        Physical Locations \n\n
 
-Email: information@wandw.ac.nz</string>
+    Petone campus: \n
+    Te Whare Wānanga o te Awakairangi (WelTec)\n
+      21 Kensington Avenue, Petone, New Zealand, 5012 \n\n
+    Porirua campus: \n
+    Te Kura Matatini o Whitireia (Whitireia) \n
+      3 Wi Neera Drive, Porirua, New Zealand, 5022 \n\n
+    Te Kahui Auaha campus: \n
+      65 Dixon Street, Te Aro, Wellington, 6011 \n\n
+</string>
+
     <string name="navigation_drawer_open" />
     <string name="navigation_drawer_close" />
 
