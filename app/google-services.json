@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1070942128646",
+    "project_id": "issa-d8a47",
+    "storage_bucket": "issa-d8a47.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070942128646:android:ffe557c81980ada8b65187",
+        "android_client_info": {
+          "package_name": "com.changshi.issa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_4_VzIl-WED2FiVbUMRHUGAkCSSVC6XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
