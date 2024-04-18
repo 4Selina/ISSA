@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:id="@+id/layout_support_Fragment">
+
+        <!-- Banner Image -->
+        <ImageView
+            android:id="@+id/image_banner"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo"
+            android:contentDescription="banner image" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Support Introduction"
+            android:textSize="18sp"
+            android:padding="8dp"/>
+
+        <!-- Sections -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_sections"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
+
+        <!-- Conclusion -->
+        <TextView
+            android:id="@+id/text_conclusion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Conclusion"
+            android:textSize="18sp"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/button_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textStyle="bold"/>
+    </LinearLayout>

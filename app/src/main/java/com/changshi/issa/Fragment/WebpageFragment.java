@@ -71,7 +71,6 @@ public class WebpageFragment extends Fragment {
         // Set the formatted text
         setFormattedText();
 
-
         edtWebpageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +129,8 @@ public class WebpageFragment extends Fragment {
                             updateImageFromUrl(imageUrl);
                         }
 
-                        private void updateImageFromUrl(String imageUrl) {
+                        private void updateImageFromUrl(String imageUrl)
+                        {
 
                         }
                     });

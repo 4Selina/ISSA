@@ -6,28 +6,40 @@
     android:id="@+id/layout_edit_support">
 
     <EditText
-        android:id="@+id/edit_support_title"
+        android:id="@+id/edtSupport_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Support Title" />
+        android:hint="Support Title"
+        android:textSize="25dp"
+        />
+    <ImageButton
+        android:id="@+id/edtSupport_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:scaleType="centerCrop"
+        android:contentDescription="Edit banner"
+        />
 
 
     <EditText
+        android:id="@+id/edtSupport_intro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Description"
-        android:textSize="25dp"/>
+        android:textSize="20dp"/>
 
 
     <!--  add or remove heading section-->
     <!--  add new bullet points in each heading section-->
     <LinearLayout
-        android:id="@+id/layout_recipe_steps"
+        android:id="@+id/layout_support_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/edtSupport_heading_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Heading"
@@ -35,13 +47,13 @@
             android:textSize="25dp"/>
 
         <LinearLayout
-            android:id="@+id/layout_content_1"
+            android:id="@+id/layout_support_detail_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/edit_content_text_1"
+                android:id="@+id/edtSupport_detail_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -68,7 +80,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button_add_heading"
+                android:id="@+id/edtSupport_add_section_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+"
@@ -76,7 +88,7 @@
                 android:layout_marginStart="100dp"/>
 
             <Button
-                android:id="@+id/button_del_heading"
+                android:id="@+id/edtSupport_del_section_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-"
@@ -88,14 +100,14 @@
 
 
     <EditText
-        android:id="@+id/bottom_support_content"
+        android:id="@+id/edtSupport_conclusion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Bottom Text"
         android:textSize="25dp"/>
 
     <Button
-        android:id="@+id/button_edit_support_content"
+        android:id="@+id/btn_edtSupport_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"

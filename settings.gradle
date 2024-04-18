@@ -1,16 +1,22 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
 pluginManagement {
     repositories {
         google()
         mavenCentral()
         gradlePluginPortal()
+        jcenter()
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories
+    {
         google()
+        jcenter()
         mavenCentral()
     }
 }
+
 rootProject.name = "ISSA"
 include ':app'

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:gravity="center_vertical"
+    >
+
+    <EditText
+        android:id="@+id/edit_detail_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="20sp"
+        android:hint="Details eg. Email or Links" />
+
+    <Button
+        android:id="@+id/button_add_detail"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="+"
+        android:textSize="24sp"
+        android:contentDescription="Add detail" />
+
+    <Button
+        android:id="@+id/button_remove_detail"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:text="-"
+        android:textSize="24sp"
+        android:contentDescription="Remove detail" />
+
+</LinearLayout>

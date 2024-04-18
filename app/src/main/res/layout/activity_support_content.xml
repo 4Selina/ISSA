@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SupportContentActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <EditText
+            android:id="@+id/title_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:hint="Title" />
+
+        <EditText
+            android:id="@+id/description_edit_text"
+            android:layout_width="match_parent"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:hint="Description" />
+
+
+        <Spinner
+            android:id="@+id/parent_category_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Parent Category"
+            android:contentDescription="Parent Category Selector"
+            />
+        <Spinner
+            android:id="@+id/sub_category_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Sub Category"
+            android:contentDescription="Sub Category Selector"
+            />
+
+
+        <Button
+            android:id="@+id/add_support_content_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Links/Contents"
+            android:height="48dp" />
+
+        <LinearLayout
+            android:id="@+id/content_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <EditText
+            android:id="@+id/conclusion_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:hint="Conclusion" />
+
+
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:height="48dp"
+            android:layout_marginLeft="130dp"/>
+
+    </LinearLayout>
+</ScrollView>

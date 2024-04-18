@@ -55,6 +55,15 @@
 
     --Add new content layout--
     <string name="select">Select Support Functions</string>
+    <string-array name="function_array">
+        <item>Learning Support</item>
+        <item>Social Activity</item>
+        <item>Accommodation</item>
+        <item>Transports</item>
+        <item>Job Support</item>
+    </string-array>
+    <string name="select_function">Select Function</string>
+
 
     --Welcome layout--
 

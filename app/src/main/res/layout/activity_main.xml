@@ -8,6 +8,7 @@
     tools:context=".MainActivity">
 
     <RelativeLayout
+        android:id="@+id/welcomeContents"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -15,79 +16,81 @@
             android:id="@+id/btnLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
             android:layout_marginLeft="307dp"
-            android:background="@drawable/circle_button"
             android:layout_marginTop="25dp"
+            android:background="@drawable/circle_button"
             android:backgroundTint="@color/teal_700"
-            />
+            android:text="Login" />
 
         <TextView
             android:id="@+id/txtWelTec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Whitireia WelTec"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="30dp"
+            android:layout_below="@id/btnLogin"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:layout_below="@id/btnLogin"
-            />
+            android:text="Whitireia WelTec"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imgWelcomeLogo"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_below="@id/txtWelTec"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
-            android:layout_below="@id/txtWelTec"
-            android:src="@drawable/welcome"/>
+            android:src="@drawable/welcome" />
 
         <TextView
             android:id="@+id/txtWelcome"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:text="@string/welcome"
-            android:textColor="@color/black"
-            android:textSize="18dp"
+            android:layout_above="@id/bottomNavigationMenu"
             android:layout_below="@id/imgWelcomeLogo"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            />
-        <FrameLayout
-            android:id="@+id/fragmentContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/txtWelcome"
-           />
-
-    </RelativeLayout>
-
-
-    <!-- Bottom app bar-->
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:backgroundTint="@color/teal_700"
-        app:fabCradleRoundedCornerRadius="50dp">
+            android:text="@string/welcome"
+            android:textColor="@color/black"
+            android:textSize="18dp" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="start"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
             android:background="@color/teal_700"
             android:backgroundTint="@color/teal_700"
             app:itemIconTint="@color/white"
             app:itemTextColor="@color/white"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_menu" />
+        <!--        <FrameLayout-->
+        <!--            android:id="@+id/fragmentContainer"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:layout_below="@id/txtWelcome"-->
+        <!--           />-->
 
-    </com.google.android.material.bottomappbar.BottomAppBar>
+    </RelativeLayout>
+
+
+    <!-- Bottom app bar-->
+<!--    <com.google.android.material.bottomappbar.BottomAppBar-->
+<!--        android:id="@+id/bottomAppBar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:backgroundTint="@color/teal_700"-->
+<!--        app:fabCradleRoundedCornerRadius="50dp">-->
+
+    <!--    </com.google.android.material.bottomappbar.BottomAppBar>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

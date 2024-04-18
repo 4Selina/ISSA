@@ -16,11 +16,11 @@
         android:icon="@drawable/search"
 
         />
-<!--    <item-->
-<!--        android:id="@+id/editBTM"-->
-<!--        android:title="Add"-->
-<!--        android:icon="@drawable/edit"-->
-<!--        />-->
+    <item
+        android:id="@+id/addBTM"
+        android:title="Add"
+        android:icon="@drawable/add"
+        />
 
 
     <item

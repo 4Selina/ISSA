@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="78c6989a-d936-4a43-8d35-a3183f225be8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/CategoryAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/DetailsAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/GalleryAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/SectionAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/SectionDetails.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/SupportContentAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/CategoryActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/ClickableTextView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/DBHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/DatabaseHandler/DbReference.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Fragment/SupportContentFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Post.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/SupportContent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/SupportContentActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/SupportDetails.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/delete.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/activity_category.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/activity_category_item.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/activity_gallery.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/activity_support_content.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_support_content.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/item_details.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/item_section.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/item_subcategory_button.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/list_support.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/FunctionAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Adapter/FunctionAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/changshi/issa/AddActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/AddActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Fragment/FunctionsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/Fragment/FunctionsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/changshi/issa/HomeActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/HomeActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/changshi/issa/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/changshi/issa/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_add.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_add.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_accommodation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_accommodation.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_job.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_job.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_learning.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_learning.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_social_act.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_social_act.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/fragment_transport.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/fragment_transport.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/list_function.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/list_function.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/nav_header.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/nav_header.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/menu/bottom_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/bottom_menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../build.gradle" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2f6XBrPYkxGUUrUgKAqtW4bCzt3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "last_opened_file_path": "C:/Users/selina/AndroidStudioProjects/ISSA"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="78c6989a-d936-4a43-8d35-a3183f225be8" name="Changes" comment="" />
+      <created>1713122374258</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713122374258</updated>
+    </task>
+    <servers />
+  </component>
+</project>
