@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import com.changshi.issa.DatabaseHandler.Functions;
+import com.changshi.issa.Fragment.AccommodationFragment;
 import com.changshi.issa.Fragment.FunctionsFragment;
 import com.changshi.issa.Fragment.SupportContentFragment;
 import com.changshi.issa.HomeActivity;
@@ -124,18 +125,23 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 }
                 if(holder.txtFunctionTitle.getText() == "Accommodation")
                 {
-                    ArrayList<SupportContent> AccommodationSupport = new ArrayList<>();
 
-                    // Get the Information from the Database HERE.
+                    ArrayList<Functions> AccommodationFunctions = new ArrayList<>();
 
-                    // Create a For Loop to run through each Document in the Information.
-                    // IF the Documents CategoryID is Equal to the Accommodation Category ID Then do the Following:
-                        SupportContent NewContent = new SupportContent();
-                        // Set the NewContent to the Information we got from the Database.
-                        AccommodationSupport.add(NewContent);
+                    Functions HomeStayFunction = new Functions();
+                    HomeStayFunction.setNameOfFunction("Homestay");
+                    HomeStayFunction.setfuncationImage(R.drawable.accommodation);
 
-                    // Create a New Fragment, SubFunctionFragment and Replace the SupportContentFragment with it.
-                    ((HomeActivity)mContext).openFragment(new SupportContentFragment(AccommodationSupport), "Accommodation");
+                    AccommodationFunctions.add(HomeStayFunction);
+
+                    Functions RentalFunction = new Functions();
+                    RentalFunction.setNameOfFunction("Rental");
+                    RentalFunction.setfuncationImage(R.drawable.accommodation);
+
+                    AccommodationFunctions.add(RentalFunction);
+
+                    ((HomeActivity) mContext).openFragment(new FunctionsFragment(AccommodationFunctions), "Accommodation");
+
                 }
                 if(holder.txtFunctionTitle.getText() == "Transports")
                 {ArrayList<Functions> TransportsFunction = new ArrayList<>();
@@ -161,7 +167,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     CampusFunction.setfuncationImage(R.drawable.transit);
 
                     TransportsFunction.add(CampusFunction);
-                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction), "Transfers");
+                    ((HomeActivity)mContext).openFragment(new FunctionsFragment(TransportsFunction), "Transports");
                 }
                 if(holder.txtFunctionTitle.getText() == "Job Support")
                 {ArrayList<Functions> JobFunctions = new ArrayList<>();

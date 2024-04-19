@@ -106,6 +106,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         bottomNavigationView = findViewById(R.id.bottomNavigationMenu);
         bottomNavigationView.setBackground(null);
 
+        //Bottom navigation
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -152,13 +153,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
 
+        //hide the navigation items when users view the app without login
         if(!IsLoggedIn)
         {
             NavView.getMenu().findItem(R.id.nav_logout).setVisible(false);
             NavView.getMenu().findItem(R.id.nav_login).setVisible(true);
 
             bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
-            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
+            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
         }
         else
         {
@@ -166,7 +168,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             NavView.getMenu().findItem(R.id.nav_login).setVisible(false);
 
             bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(true);
-            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
+            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
 
         }
 
@@ -386,5 +388,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setTitle(title); //display fragment title on the toolbar
 
     }
+
 
 }
