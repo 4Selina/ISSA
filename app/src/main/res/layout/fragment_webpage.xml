@@ -1,62 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_Webpage_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerHorizontal="true"
-    android:id="@+id/WebpageLayout">
-<!--Title-->
-    <TextView
-        android:id="@+id/txtWebTitle"
-        android:layout_width="wrap_content"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Whitireia WelTec"
-        android:layout_marginTop="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="30dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginTop="20sp">
 
-    <ImageView
-        android:id="@+id/imgWebpage"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/logo"
-        android:layout_below="@+id/txtWebTitle"/>
+        <LinearLayout
+            android:id="@+id/layout_webpage_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/edtWebpageLogo"
-        android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgWebpage"
+                    android:layout_width="250sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10sp"
+                    android:src="@drawable/logo"
+                    android:contentDescription="Display webpage banner"/>
+
+                <ImageButton
+                    android:id="@+id/edtWebpageLogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginTop="20sp"
+                    android:background="@color/black"
+                    android:src="@drawable/edit"
+                    android:contentDescription="edit the webpage banner"/>
+
+
+            </LinearLayout>
+
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/recycler_view_sections"-->
+<!--                android:layout_width="360sp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginTop="15sp"-->
+<!--                android:nestedScrollingEnabled="false"-->
+<!--                android:textSize="20sp"/>-->
+            <TextView
+                android:id="@+id/txtWebpageContent"
+                android:layout_width="360sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15sp"
+                android:text="@string/WelTecContent"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- admin can edit web page-->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/imgWebpage"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/teal_700"
-        android:src="@drawable/edit"
-        android:layout_alignTop="@id/imgWebpage"/>
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@color/white">
 
-    <TextView
-        android:id="@+id/txtWebpageContent"
-        android:layout_width="360dp"
-        android:layout_height="350dp"
-        android:text="@string/WelTecContent"
-        android:textColor="@color/black"
-        android:textSize="20dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:layout_below="@id/imgWebpage"/>
+        <Button
+            android:id="@+id/btnUpdateWebpage"
+            android:layout_width="130sp"
+            android:layout_height="wrap_content"
+            android:text="Update"
+            android:textSize="20sp"
+            android:layout_margin="10sp"/>
 
-    <!-- admin can edite web page-->
-    <Button
-        android:id="@+id/btnUpdateWebpage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Update"
-        android:textSize="25dp"
-        android:layout_below="@id/txtWebpageContent"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        />
+    </LinearLayout>
+
 
 </RelativeLayout>

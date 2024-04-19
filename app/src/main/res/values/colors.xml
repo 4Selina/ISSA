@@ -10,6 +10,7 @@
     <color name="gray">#424141</color>
     <color name="hint">#AAACAA</color>
     <color name="red">#D60808</color>
+    <color name="green">#DDCFF1E3</color>
 
     <color name="background">#D8D8D7</color>
 </resources>

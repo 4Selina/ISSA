@@ -6,76 +6,103 @@
     android:layout_margin="20dp"
     android:id="@+id/layout_add_activity">
 
-    <ImageButton
-        android:id="@+id/image_support_banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo"
-        android:scaleType="centerCrop"
-        android:contentDescription="Edit support layout banner"
-        />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    <EditText
-        android:id="@+id/edit_support_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22dp"
-        android:hint="Support Title" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_support_intro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="18dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-    <!-- Add Spinners for function and sub-function selection -->
-    <Spinner
-        android:id="@+id/spinner_function"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:entries="@array/function_array"
-        android:prompt="@string/select_function"
-        android:layout_marginBottom="15dp"/>
+                    <ImageView
+                        android:id="@+id/image_support_banner"
+                        android:layout_width="300sp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/logo"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="Edit support layout banner" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_sections"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
-        />
+                    <ImageButton
+                        android:id="@+id/update_support_banner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:background="@color/black"
+                        android:src="@drawable/edit" />
 
-    <EditText
-        android:id="@+id/edit_conclusion_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Conclusion"
-        android:textSize="22dp"
-        android:layout_marginTop="15dp"/>
+                </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+                <EditText
+                    android:id="@+id/edit_support_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:hint="Support Title" />
 
-        <Button
-            android:id="@+id/button_cancel"
-            android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/edit_support_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="18sp" />
+
+                <!-- Add Spinners for function and sub-function selection -->
+                <Spinner
+                    android:id="@+id/spinner_function"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:entries="@array/function_array"
+                    android:prompt="@string/select_function"
+                    android:layout_marginBottom="15dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_sections"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <EditText
+                    android:id="@+id/edit_conclusion_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Conclusion"
+                    android:textSize="22sp"
+                    android:layout_marginTop="15dp" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Buttons at the bottom -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cancel"
-            android:layout_gravity="center"/>
-        <Button
-            android:id="@+id/button_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Save"
-            android:layout_gravity="center"/>
+            android:orientation="horizontal"
+            android:layout_gravity="bottom">
+
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="100sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:layout_gravity="center" />
+
+            <Button
+                android:id="@+id/button_save"
+                android:layout_width="100sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="50sp"
+                android:text="Save"
+                android:layout_gravity="center" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <!-- Section RecyclerView -->
-
-</LinearLayout>

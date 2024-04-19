@@ -1,13 +1,17 @@
 package com.changshi.issa;
 
+import static android.app.PendingIntent.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -53,7 +57,7 @@ public class AddActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("support_contents");
 
-        mImageBanner = findViewById(R.id.image_support_banner);
+        mImageBanner = findViewById(R.id.update_support_banner);
         mEditTitle = findViewById(R.id.edit_support_title);
         mEditDescription = findViewById(R.id.edit_support_intro);
         mButtonAddDetail = findViewById(R.id.button_add_detail);
@@ -70,6 +74,10 @@ public class AddActivity extends AppCompatActivity {
                 // Handle image banner click
             }
         });
+
+        Intent intent = new Intent(AddActivity.this, HomeActivity.class);
+        intent.putExtra("from", "HomeActivity");
+        startActivityForResult(intent, 1);
 
         ArrayList<SectionDetails> BaseArray = new ArrayList<>();
         ArrayList<Details> DetailsArray = new ArrayList<>();
@@ -94,13 +102,19 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
+
         mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                String from = getIntent().getStringExtra("from");
+                if ("HomeActivity".equals(from)) {
+                    setResult(Activity.RESULT_CANCELED, new Intent());
+                    finish();
+                }
             }
         });
-    }
+
+
 
     /*
     private void submitContent() {
@@ -138,5 +152,6 @@ public class AddActivity extends AppCompatActivity {
     }
 
      */
+    }
 }
 

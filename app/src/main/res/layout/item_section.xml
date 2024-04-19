@@ -7,6 +7,7 @@
     android:paddingEnd="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
+    android:background="@color/background"
     android:gravity="center_vertical"
     android:id="@+id/Layout_Support_Section">
 
