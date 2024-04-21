@@ -75,10 +75,6 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        Intent intent = new Intent(AddActivity.this, HomeActivity.class);
-        intent.putExtra("from", "HomeActivity");
-        startActivityForResult(intent, 1);
-
         ArrayList<SectionDetails> BaseArray = new ArrayList<>();
         ArrayList<Details> DetailsArray = new ArrayList<>();
 
@@ -103,16 +99,23 @@ public class AddActivity extends AppCompatActivity {
         });
 
 
+
         mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String from = getIntent().getStringExtra("from");
-                if ("HomeActivity".equals(from)) {
-                    setResult(Activity.RESULT_CANCELED, new Intent());
-                    finish();
-                }
+
+                // Create an intent to return to HomeActivity
+                Intent intent = new Intent(AddActivity.this, HomeActivity.class);
+                // Add an extra indicating the fragment to return to
+                intent.putExtra("currentFragment", "AddActivity");
+                // Set the result to indicate that the action was canceled
+                setResult(Activity.RESULT_CANCELED, intent);
+                // Finish AddActivity to return to HomeActivity
+                finish();
+
             }
         });
+
 
 
 
