@@ -1,5 +1,9 @@
 package com.changshi.issa.Fragment;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,8 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.changshi.issa.Adapter.SupportContentAdapter;
+import com.changshi.issa.AddActivity;
+import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
 import com.changshi.issa.SupportContent;
 import com.google.firebase.database.DataSnapshot;
@@ -26,35 +33,53 @@ import java.util.List;
 
 public class SupportContentFragment extends Fragment {
 
-        private RecyclerView recyclerView;
-        private SupportContentAdapter adapter;
-        private List<SupportContent> supportContentList;
+    private RecyclerView recyclerView;
+    private SupportContentAdapter adapter;
+    private List<SupportContent> supportContentList;
 
-        public SupportContentFragment(ArrayList<SupportContent> NewSupportContentList)
-        {
-            supportContentList = NewSupportContentList;
+    private Button buttonEdit;
+    private RecyclerView.ViewHolder holder;
+
+    public SupportContentFragment(ArrayList<SupportContent> NewSupportContentList) {
+        supportContentList = NewSupportContentList;
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_support_content, container, false);
+
+        recyclerView = root.findViewById(R.id.recycler_view_sections);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        buttonEdit = root.findViewById(R.id.button_edit);
+
+        SharedPreferences Pref = getActivity().getSharedPreferences("login_pref", MODE_PRIVATE);
+        boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
+
+        if (!IsLoggedIn) {
+            buttonEdit.setVisibility(View.GONE);
         }
+        buttonEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddActivity.class);
+                intent.putExtra("IsEditMode", true);
+                startActivity(intent);
+            }
+        });
 
+        // 初始化空的支持内容列表
+        if (supportContentList == null)
+            supportContentList = new ArrayList<>();
 
-        public View onCreateView(@NonNull LayoutInflater inflater,
-                                 ViewGroup container, Bundle savedInstanceState) {
-            View root = inflater.inflate(R.layout.fragment_support_content, container, false);
+        adapter = new SupportContentAdapter(supportContentList);
+        recyclerView.setAdapter(adapter);
 
-            recyclerView = root.findViewById(R.id.recycler_view_sections);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // 从Firebase实时数据库中获取支持内容数据
+        fetchSupportContentData();
 
-            // 初始化空的支持内容列表
-            if(supportContentList == null)
-                supportContentList = new ArrayList<>();
-
-            adapter = new SupportContentAdapter(supportContentList);
-            recyclerView.setAdapter(adapter);
-
-            // 从Firebase实时数据库中获取支持内容数据
-            fetchSupportContentData();
-
-            return root;
-        }
+        return root;
+    }
 
         private void fetchSupportContentData() {
             DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("support_contents");
@@ -83,4 +108,8 @@ public class SupportContentFragment extends Fragment {
                 }
             });
         }
+
+    public void setHolder(RecyclerView.ViewHolder holder) {
+        this.holder = holder;
     }
+}

@@ -1,116 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:id="@+id/layout_edit_support">
-
-    <EditText
-        android:id="@+id/edtSupport_title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Support Title"
-        android:textSize="25dp"
-        />
-    <ImageButton
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <ImageView
         android:id="@+id/edtSupport_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@drawable/logo"
         android:scaleType="centerCrop"
-        android:contentDescription="Edit banner"
-        />
-
-
-    <EditText
-        android:id="@+id/edtSupport_intro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="20dp"/>
-
-
-    <!--  add or remove heading section-->
-    <!--  add new bullet points in each heading section-->
-    <LinearLayout
-        android:id="@+id/layout_support_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:contentDescription="Edit banner"/>
 
         <EditText
-            android:id="@+id/edtSupport_heading_1"
+            android:id="@+id/edtSupport_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Heading"
-            android:textStyle="bold"
-            android:textSize="25dp"/>
+            android:hint="Title"
+            android:textSize="20dp"/>
+
+        <Spinner
+            android:id="@+id/function_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:hint="Parent Category" />
+
+        <EditText
+            android:id="@+id/edtSupport_intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="20dp"/>
+
+
+
+        <Button
+            android:id="@+id/bytn_add_section_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add content"
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/conclusion_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:hint="Conclusion" />
 
         <LinearLayout
-            android:id="@+id/layout_support_detail_1"
+            android:id="@+id/layout_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical" />
 
-            <EditText
-                android:id="@+id/edtSupport_detail_1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Email or Links"
-                android:textSize="20dp"/>
-
-            <Button
-                android:id="@+id/button_add_content_text"
-                android:layout_width="59dp"
-                android:layout_height="wrap_content"
-                android:text="+" />
-
-            <Button
-                android:id="@+id/button_del_content_text"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:text="-" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_submit_content"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/edtSupport_add_section_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+"
-                android:textSize="25dp"
-                android:layout_marginStart="100dp"/>
-
-            <Button
-                android:id="@+id/edtSupport_del_section_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-"
-                android:textSize="25dp"
-                android:layout_marginStart="20dp" />
-        </LinearLayout>
+            android:text="Submit"
+            android:textSize="20dp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
-
-
-    <EditText
-        android:id="@+id/edtSupport_conclusion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bottom Text"
-        android:textSize="25dp"/>
-
-    <Button
-        android:id="@+id/btn_edtSupport_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_gravity="center"/>
-
-</LinearLayout>
+</ScrollView>

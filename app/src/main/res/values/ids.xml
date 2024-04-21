@@ -2,4 +2,7 @@
 <resources>
     <item name="campusBTM" type="id" />
     <item name="txtAddNew" type="id" />
+    <item name="layout_departments" type="id" />
+    <item name="dialog_add_department" type="id" />
+    <item name="dialog_webContents_text_view" type="id" />
 </resources>

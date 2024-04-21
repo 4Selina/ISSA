@@ -4,85 +4,84 @@ public class Post {
 
     private int id;
     private String title;
-    private String imagePath;
+    private String bannerUrl;
     private String description;
-
     private String heading;
     private String details;
-
     private String category;
     private String conclusion;
 
-//    private int thumbUpCounts;
-//
-//    private int collectedCounts;
-
-    public Post(String title, String description, String imagePath, String category) {
+    public Post(String title, String description, String bannerUrl, String category, String section, String heading, String details) {
         this.title = title;
+        this.bannerUrl = bannerUrl;
+        this.category = category;
         this.description = description;
         this.heading = heading;
-        this.imagePath = imagePath;
         this.details = details;
-        this.category = category;
         this.conclusion = conclusion;
-//        this.thumbUpCounts = 0;
-//        this.collectedCounts = 0;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-//    public void setThumbUpCounts(int thumbUpCounts) {
-//        this.thumbUpCounts = thumbUpCounts;
-//    }
-//
-//    public void setCollectedCounts(int collectedCounts) {
-//        this.collectedCounts = collectedCounts;
-//    }
-
     public String getTitle() {
         return title;
     }
+
     public String getDescription() {
         return description;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getBannerUrl() {
+        return bannerUrl;
     }
 
     public String getCategory() {
         return category;
     }
 
-//    public int getThumbUpCounts() {
-//        return thumbUpCounts;
-//    }
-//
-//    public int getCollectedCounts() {
-//        return collectedCounts;
-//    }
-
     public int getId() {
         return id;
     }
 
-
-    public void setTitle(String test_title) {
-        this.title = test_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setDescription(String test_description) {
-        this.description = test_description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setCategory(String i) {
-        this.category = i;
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl = bannerUrl;
     }
 
-    public void setImagePath(String s) {
-        this.imagePath = s;
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getHeading() {
+        return heading;
+    }
+
+    public void setHeading(String heading) {
+        this.heading = heading;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public String getConclusion() {
+        return conclusion;
+    }
+
+    public void setConclusion(String conclusion) {
+        this.conclusion = conclusion;
     }
 }
-

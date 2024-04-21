@@ -1,4 +1,4 @@
-package com.changshi.issa.Adapter;
+package com.changshi.issa.DatabaseHandler;
 
 public class Details
 {

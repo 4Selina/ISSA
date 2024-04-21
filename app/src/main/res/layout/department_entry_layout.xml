@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/department_entry_layout"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/webpage_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter new contents"
+        android:textSize="21dp"
+        android:textStyle="bold"
+        android:layout_marginTop="8sp"
+        android:layout_marginBottom="8sp"/>
+
+    <EditText
+        android:id="@+id/webpage_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter address/email"
+        android:textSize="20dp"
+        android:textColor="@color/purple_700"
+        android:layout_marginBottom="8sp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_add_web"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="+"
+            android:textSize="24sp"
+            android:contentDescription="Add detail" />
+
+        <Button
+            android:id="@+id/btn_remove_web"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="-"
+            android:textSize="24sp"
+            android:contentDescription="Remove detail" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.changshi.issa;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -25,6 +27,7 @@ import com.changshi.issa.Fragment.WebpageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -51,7 +54,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mDbHandler = new DBHandler();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        mDbHandler = new DBHandler(this);
+
 
         AllFunctions = new ArrayList<>();
         Functions LearningSupportFunction = new Functions();
@@ -122,14 +127,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 else if(itemId == R.id.addBTM)
                 {
-                    SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putBoolean("is_logged_in", false);
-                    editor.apply();
-
                     Intent intent = new Intent(HomeActivity.this, AddActivity.class);
                     startActivity(intent);
-                    finish(); // Close the current activity
                 }
                 else if(itemId == R.id.webBTM){
                     openFragment(new WebpageFragment(), "WelTec");
@@ -153,6 +152,85 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
 
+//        //hide the navigation items when users view the app without login
+//        if(!IsLoggedIn)
+//        {
+//            NavView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+//            NavView.getMenu().findItem(R.id.nav_login).setVisible(true);
+//
+//            bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
+//            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
+//        }
+//        else
+//        {
+//            NavView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+//            NavView.getMenu().findItem(R.id.nav_login).setVisible(false);
+//
+//            bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(true);
+//            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
+//
+//        }
+//
+//        // Check if there's an extra "fragment" in the intent
+//        String fragmentName = getIntent().getStringExtra("fragment");
+//
+//        if (fragmentName != null)
+//        {
+//            switch (fragmentName)
+//            {
+//                case "learningSupport":
+//                    openFragment(new SearchSFragment(), "Learning Support");
+//                    break;
+//                case "social":
+//                    openFragment(new WebpageFragment(), "Social Activities");
+//                    break;
+//                case "accommodation":
+//                    openFragment(new WebpageFragment(), "Accommodation");
+//
+//                case "transport":
+//                    openFragment(new WebpageFragment(), "Transport");
+//                    break;
+//                case "jobSupport":
+//                    openFragment(new WebpageFragment(), "Job Support");
+//                    break;
+//                case "search":
+//                    openFragment(new SearchSFragment(), " ");
+//                    break;
+//                case "webpage":
+//                    openFragment(new WebpageFragment(), "WelTec");
+//                    break;
+//            }
+//        } else {
+//            // If no extra "fragment", open the default fragment
+//            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
+//        }
+
+        
+        /*
+        String fragmentClassName = getIntent().getStringExtra("fragment_class");
+        if (fragmentClassName != null) {
+            try {
+                Fragment fragment = (Fragment) Class.forName(fragmentClassName).newInstance();
+                openFragment(fragment, fragmentClassName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
+        }
+         */
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check if the user is logged in
+        Pref = getSharedPreferences("login_pref", MODE_PRIVATE);
+        IsLoggedIn = Pref.getBoolean("is_logged_in", false);
+
+        // Determine which fragment to display based on login status
+        String currentFragment = getIntent().getStringExtra("currentFragment");
+        openFragmentByFragmentName(currentFragment);
+
         //hide the navigation items when users view the app without login
         if(!IsLoggedIn)
         {
@@ -169,9 +247,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(true);
             bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
-
         }
+    }
 
+    private void openFragmentByFragmentName(String currentFragment) {
         // Check if there's an extra "fragment" in the intent
         String fragmentName = getIntent().getStringExtra("fragment");
 
@@ -206,20 +285,28 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
         }
 
-        /*
-        String fragmentClassName = getIntent().getStringExtra("fragment_class");
-        if (fragmentClassName != null) {
-            try {
-                Fragment fragment = (Fragment) Class.forName(fragmentClassName).newInstance();
-                openFragment(fragment, fragmentClassName);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
-        }
-         */
     }
+
+    private String getCurrentFragmentName() {
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment != null) {
+            return currentFragment.getClass().getSimpleName();
+        }
+        return null;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_CANCELED && data != null) {
+            String previousFragment = data.getStringExtra("from");
+            if ("AddActivity".equals(previousFragment)) {
+                // Return to the previous fragment in HomeActivity
+                openFragmentByFragmentName("FunctionsFragment");
+            }
+        }
+    }
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

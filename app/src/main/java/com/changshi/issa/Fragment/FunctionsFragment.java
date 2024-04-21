@@ -22,6 +22,7 @@ import com.changshi.issa.Adapter.FunctionAdapter;
 
 public class FunctionsFragment extends Fragment
 {
+
     RecyclerView functionRecyclerView;
 
     private ArrayList<Functions> AllFunctions;

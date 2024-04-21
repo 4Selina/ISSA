@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16sp"
     tools:context=".SupportContentActivity">
 
     <LinearLayout
@@ -11,6 +12,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp">
+        <ImageView
+            android:id="@+id/image_support_banner"
+            android:layout_width="400sp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            android:scaleType="centerCrop"/>
 
 
         <EditText
@@ -35,27 +42,18 @@
             android:hint="Parent Category"
             android:contentDescription="Parent Category Selector"
             />
-        <Spinner
-            android:id="@+id/sub_category_spinner"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_contents"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Sub Category"
-            android:contentDescription="Sub Category Selector"
-            />
-
-
-        <Button
-            android:id="@+id/add_support_content_button"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Links/Contents"
-            android:height="48dp" />
+            android:nestedScrollingEnabled="false" />
 
         <LinearLayout
             android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
 
         <EditText
             android:id="@+id/conclusion_edit_text"

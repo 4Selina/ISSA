@@ -1,11 +1,8 @@
 package com.changshi.issa.Adapter;
 
-import android.telecom.Call;
-
-import com.changshi.issa.SupportDetails;
+import com.changshi.issa.DatabaseHandler.Details;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SectionDetails
 {
