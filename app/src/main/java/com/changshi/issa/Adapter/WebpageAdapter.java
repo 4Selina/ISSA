@@ -13,14 +13,15 @@ import com.changshi.issa.DatabaseHandler.WebpageItem;
 import com.changshi.issa.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHolder> {
 
-    private List<WebpageItem> mItems;
+    private ArrayList<WebpageItem> mItems;
     private FirebaseFirestore mFirestore;
 
-    public WebpageAdapter(List<WebpageItem> items, FirebaseFirestore firestore) {
+    public WebpageAdapter(ArrayList<WebpageItem> items, FirebaseFirestore firestore) {
         mItems = items;
         mFirestore = firestore;
     }
@@ -97,7 +98,8 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
             });
         }
 
-        private void addNewDepartment() {
+        private void addNewDepartment()
+        {
             // 创建一个新的 WebpageItem 对象
             WebpageItem newItem = new WebpageItem();
             // 设置新部门的属性，您可能需要从用户输入中获取这些值
@@ -111,20 +113,24 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
             notifyDataSetChanged();
             // 在这里您还需要将新部门数据保存到数据库中
             // 可以调用一个方法来执行这个操作
-            saveToDatabase(newItem);
+            //saveToDatabase(newItem);
         }
 
         private void removeDepartment() {
             // 获取当前部门在列表中的位置
-            int position = getAdapterPosition();
-            if (position != RecyclerView.NO_POSITION) {
-                // 移除列表中的部门
-                WebpageItem removedItem = mItems.remove(position);
-                // 通知适配器数据已更改
-                notifyDataSetChanged();
-                // 在这里您还需要从数据库中删除当前部门的数据
-                // 可以调用一个方法来执行这个操作
-                deleteFromDatabase(removedItem);
+            if(mItems.size() != 1)
+            {
+                int position = getAdapterPosition();
+                if (position != RecyclerView.NO_POSITION)
+                {
+                    // 移除列表中的部门
+                    WebpageItem removedItem = mItems.remove(position);
+                    // 通知适配器数据已更改
+                    notifyDataSetChanged();
+                    // 在这里您还需要从数据库中删除当前部门的数据
+                    // 可以调用一个方法来执行这个操作
+                    //deleteFromDatabase(removedItem);
+                }
             }
         }
 

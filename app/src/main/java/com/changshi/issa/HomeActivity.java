@@ -129,6 +129,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 {
                     Intent intent = new Intent(HomeActivity.this, AddActivity.class);
                     startActivity(intent);
+                    return true;
                 }
                 else if(itemId == R.id.webBTM){
                     openFragment(new WebpageFragment(), "WelTec");
@@ -152,58 +153,58 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         fragmentManager = getSupportFragmentManager();
         openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
 
-//        //hide the navigation items when users view the app without login
-//        if(!IsLoggedIn)
-//        {
-//            NavView.getMenu().findItem(R.id.nav_logout).setVisible(false);
-//            NavView.getMenu().findItem(R.id.nav_login).setVisible(true);
-//
-//            bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
-//            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
-//        }
-//        else
-//        {
-//            NavView.getMenu().findItem(R.id.nav_logout).setVisible(true);
-//            NavView.getMenu().findItem(R.id.nav_login).setVisible(false);
-//
-//            bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(true);
-//            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
-//
-//        }
-//
-//        // Check if there's an extra "fragment" in the intent
-//        String fragmentName = getIntent().getStringExtra("fragment");
-//
-//        if (fragmentName != null)
-//        {
-//            switch (fragmentName)
-//            {
-//                case "learningSupport":
-//                    openFragment(new SearchSFragment(), "Learning Support");
-//                    break;
-//                case "social":
-//                    openFragment(new WebpageFragment(), "Social Activities");
-//                    break;
-//                case "accommodation":
-//                    openFragment(new WebpageFragment(), "Accommodation");
-//
-//                case "transport":
-//                    openFragment(new WebpageFragment(), "Transport");
-//                    break;
-//                case "jobSupport":
-//                    openFragment(new WebpageFragment(), "Job Support");
-//                    break;
-//                case "search":
-//                    openFragment(new SearchSFragment(), " ");
-//                    break;
-//                case "webpage":
-//                    openFragment(new WebpageFragment(), "WelTec");
-//                    break;
-//            }
-//        } else {
-//            // If no extra "fragment", open the default fragment
-//            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
-//        }
+        //hide the navigation items when users view the app without login
+        if(!IsLoggedIn)
+        {
+            NavView.getMenu().findItem(R.id.nav_logout).setVisible(false);
+            NavView.getMenu().findItem(R.id.nav_login).setVisible(true);
+
+            bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
+            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
+        }
+        else
+        {
+            NavView.getMenu().findItem(R.id.nav_logout).setVisible(true);
+            NavView.getMenu().findItem(R.id.nav_login).setVisible(false);
+
+            bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(true);
+            bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(true);
+
+        }
+
+        // Check if there's an extra "fragment" in the intent
+        String fragmentName = getIntent().getStringExtra("fragment");
+
+        if (fragmentName != null)
+        {
+            switch (fragmentName)
+            {
+                case "learningSupport":
+                    openFragment(new SearchSFragment(), "Learning Support");
+                    break;
+                case "social":
+                    openFragment(new WebpageFragment(), "Social Activities");
+                    break;
+                case "accommodation":
+                    openFragment(new WebpageFragment(), "Accommodation");
+
+                case "transport":
+                    openFragment(new WebpageFragment(), "Transport");
+                    break;
+                case "jobSupport":
+                    openFragment(new WebpageFragment(), "Job Support");
+                    break;
+                case "search":
+                    openFragment(new SearchSFragment(), " ");
+                    break;
+                case "webpage":
+                    openFragment(new WebpageFragment(), "WelTec");
+                    break;
+            }
+        } else {
+            // If no extra "fragment", open the default fragment
+            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
+        }
 
         
         /*
@@ -228,8 +229,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
         // Determine which fragment to display based on login status
-        String currentFragment = getIntent().getStringExtra("currentFragment");
-        openFragmentByFragmentName(currentFragment);
+        //String currentFragment = getIntent().getStringExtra("currentFragment");
+        //openFragmentByFragmentName(currentFragment);
 
         //hide the navigation items when users view the app without login
         if(!IsLoggedIn)

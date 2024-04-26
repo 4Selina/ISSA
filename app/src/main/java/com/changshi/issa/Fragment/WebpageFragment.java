@@ -11,6 +11,7 @@ import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.WebpageAdapter;
 import com.changshi.issa.AddActivity;
 import com.changshi.issa.DatabaseHandler.WebpageItem;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class WebpageFragment extends Fragment {
 
@@ -39,30 +45,41 @@ public class WebpageFragment extends Fragment {
 
     private HomeActivity ActivityInstance;
 
+    private RecyclerView WebpageRV;
+
     public WebpageFragment() {
         // Required empty public constructor
     }
 
     @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_webpage, container, false);
 
         ActivityInstance = (HomeActivity) getActivity();
 
         imgWebpage = view.findViewById(R.id.imgWebpage);
-        contentsTextView = view.findViewById(R.id.txtWebpageContent);
         btnUpdateWebpage = view.findViewById(R.id.btnUpdateWebpage);
         edtWebpageLogo = view.findViewById(R.id.edtWebpageLogo);
 
+        WebpageRV = view.findViewById(R.id.RV_Webpage_Content);
+
+        ArrayList<WebpageItem> DefaultArrayList = new ArrayList<>();
+        WebpageItem DefaultItem = new WebpageItem();
+
+        DefaultArrayList.add(DefaultItem);
+
+        WebpageAdapter Adapter = new WebpageAdapter(DefaultArrayList, FirebaseFirestore.getInstance());
+
+        WebpageRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        WebpageRV.setAdapter(Adapter);
+
         // Set initial values
         imgWebpage.setImageResource(R.drawable.logo);
-        contentsTextView.setText(getString(R.string.WelTecContent));
 
         // Set the formatted text
-        setFormattedText();
 
         edtWebpageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,13 +117,15 @@ public class WebpageFragment extends Fragment {
                 builder.create().show();
             }
 
-            private void pickImageFromGallery() {
+            private void pickImageFromGallery()
+            {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, REQUEST_CODE_PICK_IMAGE);
             }
 
-            private void showUrlInputDialog() {
+            private void showUrlInputDialog()
+            {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Enter Image URL");
 
@@ -116,9 +135,11 @@ public class WebpageFragment extends Fragment {
                 builder.setView(input);
 
                 // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         String imageUrl = input.getText().toString();
                         // Update the image using the URL
                         updateImageFromUrl(imageUrl);
@@ -129,148 +150,30 @@ public class WebpageFragment extends Fragment {
                         Picasso.get().load(imageUrl).into(imgWebpage);
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         dialog.cancel();
                     }
                 });
 
                 builder.show();
             }
-
         });
 
-        btnUpdateWebpage.setOnClickListener(new View.OnClickListener() {
+        btnUpdateWebpage.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                Log.d("ButtonClicked", "Update button clicked");
                 // Create and show update webpage dialog
-                showUpdateWebpageDialog();
+
             }
         });
-
-        // Check the Home Activity to see if it has been Logged In.
-        if (!ActivityInstance.IsLoggedIn) {
-            // Hide all the Elements from a non Logged In User.
-
-            edtWebpageLogo.setVisibility(View.GONE);
-            btnUpdateWebpage.setVisibility(View.GONE);
-        }
 
         return view;
-    }
-
-    private void setFormattedText() {
-        String welTecDetails = getString(R.string.WelTecContent);
-        String[] paragraphs = welTecDetails.split("\n\n");
-
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-        int start = 0;
-        for (int i = 0; i < paragraphs.length; i++) {
-            String paragraph = paragraphs[i];
-            if (paragraph.contains(":")) { // Assuming this indicates a section title
-                builder.append(paragraph).append("\n\n");
-                start += paragraph.length() + 2;
-            } else {
-                builder.append(paragraph).append("\n");
-                if (i % 2 == 0) {
-                    // Apply Teal 700 color to even lines
-                    builder.setSpan(new ForegroundColorSpan(Color.parseColor("#00796B")), start, start + paragraph.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                start += paragraph.length() + 1;
-            }
-        }
-
-        // Set the formatted text to your TextView
-        contentsTextView.setText(builder);
-    }
-
-    private void showUpdateWebpageDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Edit Webpage Contents");
-
-        // Inflate the dialog layout
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_update_webpage, null);
-        builder.setView(view);
-
-        // Get references to dialog views
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) LinearLayout layoutDepartments = view.findViewById(R.id.layout_departments);
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btnAddDepartment = view.findViewById(R.id.dialog_add_department);
-        Button btnSaveChanges = view.findViewById(R.id.dialog_btn_save_webChanges);
-        Button btnCancelChanges = view.findViewById(R.id.dialog_btn_cancel_webChanges);
-
-        // Add initial department entry
-        addDepartmentEntry(layoutDepartments);
-
-        // Show the dialog
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        // Add a new department when the Add Department button is clicked
-        btnAddDepartment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addDepartmentEntry(layoutDepartments);
-            }
-        });
-
-        // Save changes when the Save Changes button is clicked
-        btnSaveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Iterate over department entries to save changes
-                for (int i = 0; i < layoutDepartments.getChildCount(); i++) {
-                    LinearLayout departmentEntry = (LinearLayout) layoutDepartments.getChildAt(i);
-                    EditText departmentEditText = departmentEntry.findViewById(R.id.dialog_department);
-                    EditText contactEditText = departmentEntry.findViewById(R.id.dialog_contact);
-
-                    String departmentName = departmentEditText.getText().toString();
-                    String contactNumber = contactEditText.getText().toString();
-
-                    // Save department name and contact number to database or shared preferences
-                    // You can also validate the input before saving
-                }
-
-                dialog.dismiss(); // Dismiss the dialog
-            }
-        });
-
-        // Cancel changes when the Cancel Changes button is clicked
-        btnCancelChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder cancelBuilder = new AlertDialog.Builder(getContext());
-                cancelBuilder.setTitle("Cancel Changes");
-                cancelBuilder.setMessage("Are you sure you want to cancel the changes?");
-
-                // Add the buttons
-                cancelBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked Yes button
-                        // Navigate to the webpage fragment
-                        getParentFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, new WebpageFragment())
-                                .commit();
-                    }
-                });
-                cancelBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User clicked No button
-                        // Do nothing, stay in the dialog
-                    }
-                });
-
-                // Create and show the AlertDialog
-                AlertDialog cancelDialog = cancelBuilder.create();
-                cancelDialog.show();
-            }
-        });
-    }
-
-    private void addDepartmentEntry(LinearLayout layoutDepartments) {
-        // Inflate department entry layout
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View departmentEntry = inflater.inflate(R.layout.department_entry_layout, null);
-        layoutDepartments.addView(departmentEntry);
     }
 }

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -109,8 +110,14 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
         holder.txtSupportTitle.setText(currentItem.getTitle());
         holder.txtSupportDescription.setText(currentItem.getDescription());
 
-        holder.editButton.setOnClickListener(v -> {
-            mContext.startActivity(new Intent(mContext, AddActivity.class));
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent NewIntent = new Intent(mContext, AddActivity.class);
+                NewIntent.putExtra("IsEditModeSupport", true);
+
+                mContext.startActivity(NewIntent);
+            }
         });
 
         holder.deleteButton.setOnClickListener(v -> {

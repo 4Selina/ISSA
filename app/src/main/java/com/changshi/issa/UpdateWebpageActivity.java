@@ -23,7 +23,7 @@ public class UpdateWebpageActivity extends AppCompatActivity {
         private RecyclerView mRecyclerView;
         private WebpageAdapter mAdapter;
         private FirebaseFirestore mFirestore;
-        private List<WebpageItem> mItems;
+        private ArrayList<WebpageItem> mItems;
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {

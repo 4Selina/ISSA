@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_Webpage_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_centerHorizontal="true"
-    >
+    android:layout_centerHorizontal="true">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -43,27 +43,17 @@
 
 
             </LinearLayout>
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/recycler_view_sections"-->
-<!--                android:layout_width="360sp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:layout_marginTop="15sp"-->
-<!--                android:nestedScrollingEnabled="false"-->
-<!--                android:textSize="20sp"/>-->
-            <TextView
-                android:id="@+id/txtWebpageContent"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/RV_Webpage_Content"
                 android:layout_width="360sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15sp"
-                android:text="@string/WelTecContent"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
-
+                android:textSize="20sp"
+                tools:listitem="@layout/item_web_inform"
+            />
         </LinearLayout>
-
     </ScrollView>
 
     <!-- admin can edit web page-->

@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".Fragment.AccommodationFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/functionRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/list_support" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/functionRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:listitem="@layout/list_support" />-->
 
 </FrameLayout>

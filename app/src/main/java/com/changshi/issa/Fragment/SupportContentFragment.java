@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,11 +23,16 @@ import com.changshi.issa.AddActivity;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
 import com.changshi.issa.SupportContent;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +46,10 @@ public class SupportContentFragment extends Fragment {
     private Button buttonEdit;
     private RecyclerView.ViewHolder holder;
 
+    private FirebaseAuth fAuth;
+    private FirebaseFirestore fStore;
+
+
     public SupportContentFragment(ArrayList<SupportContent> NewSupportContentList) {
         supportContentList = NewSupportContentList;
     }
@@ -52,6 +62,22 @@ public class SupportContentFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         buttonEdit = root.findViewById(R.id.button_edit);
+//
+//        fAuth = FirebaseAuth.getInstance();
+//        fStore = FirebaseFirestore.getInstance();
+//        DocumentReference documentReference = fStore.collection("Support_contents").document(support_Contents);
+//        documentReference.addSnapshotListener(this. new EventListener<DocumentSnapshot>(){
+//            @override
+//            public void onEvent(@NonNull DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e)
+//
+//                title.setText(documentSnapshot.getString(""))
+//        this.bannerUrl = bannerUrl;
+//        this.parentCategory = parentCategory;
+//        this.description = description;
+//        this.sections = sections;
+//        this.conclusion = conclusion;
+//
+//        }
 
         SharedPreferences Pref = getActivity().getSharedPreferences("login_pref", MODE_PRIVATE);
         boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
@@ -61,10 +87,12 @@ public class SupportContentFragment extends Fragment {
         }
         buttonEdit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                int LAUNCH_ADD_ACTIVITY = 1;
                 Intent intent = new Intent(getActivity(), AddActivity.class);
                 intent.putExtra("IsEditMode", true);
-                startActivity(intent);
+                startActivityForResult(intent, LAUNCH_ADD_ACTIVITY);
             }
         });
 

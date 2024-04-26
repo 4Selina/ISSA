@@ -1,46 +1,48 @@
 package com.changshi.issa;
 
-import static android.app.PendingIntent.getActivity;
+import static com.changshi.issa.Fragment.WebpageFragment.REQUEST_CODE_PICK_IMAGE;
 
 import static java.security.AccessController.*;
 import static java.security.AccessController.getContext;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.changshi.issa.DatabaseHandler.Details;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.changshi.issa.Adapter.SectionAdapter;
 import com.changshi.issa.Adapter.SectionDetails;
+import com.changshi.issa.DatabaseHandler.Details;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.security.AccessController;
 import java.util.ArrayList;
 
 public class AddActivity extends AppCompatActivity {
-    private ImageView mImageView;
+
 
     private ImageButton mImageBanner;
     private EditText mEditTitle;
     private EditText mEditDescription;
 
-    private static final int REQUEST_CODE_PICK_IMAGE = 1;
     private SectionAdapter adapter;
     private RecyclerView SectionsRV;
 
@@ -50,24 +52,19 @@ public class AddActivity extends AppCompatActivity {
     private Button mButtonSubmit;
     private Button mButtonCancel;
 
-    private DatabaseReference mDatabase;
-    private int mSection = 1;
-    private int mSupportDetail = 1;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri mImageUrl;
 
-    boolean IsEdit = false;
+    private FirebaseFirestore db;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance();
 
-        if(getIntent().hasExtra("IsEditMode"))
-            IsEdit = getIntent().getBooleanExtra("IsEditMode", false);
-
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("support_contents");
-
-        mImageView = findViewById(R.id.image_support_banner);
         mImageBanner = findViewById(R.id.update_support_banner);
         mEditTitle = findViewById(R.id.edit_support_title);
         mEditDescription = findViewById(R.id.edit_support_intro);
@@ -85,6 +82,7 @@ public class AddActivity extends AppCompatActivity {
                 // Open a dialog for picking an image
                 showImagePickerDialog();
             }
+
             private void showImagePickerDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
                 builder.setTitle("Select Image Source")
@@ -93,13 +91,17 @@ public class AddActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
+                                        // Pick image from gallery
                                         pickImageFromGallery();
                                         break;
                                     case 1:
+                                        // Show dialog to enter URL
                                         showUrlInputDialog();
                                         break;
                                 }
                             }
+
+
                         })
                         .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
@@ -111,18 +113,22 @@ public class AddActivity extends AppCompatActivity {
             }
 
             private void pickImageFromGallery() {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, REQUEST_CODE_PICK_IMAGE);
             }
 
             private void showUrlInputDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
+
                 builder.setTitle("Enter Image URL");
 
+                // Set up the input
                 final EditText input = new EditText(AddActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
+                // Set up the buttons
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -130,23 +136,26 @@ public class AddActivity extends AppCompatActivity {
                         // Update the image using the URL
                         updateImageFromUrl(imageUrl);
                     }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+
+                    private void updateImageFromUrl(String imageUrl)
+                    {
+                        Picasso.get().load(imageUrl).into(mImageBanner);
                     }
                 });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
 
                 builder.show();
-            }
-
-            private void updateImageFromUrl(String imageUrl) {
-                Picasso.get().load(imageUrl).into(mImageView);
-            }
-
-
+                }
         });
+
+        //Intent intent = new Intent(AddActivity.this, HomeActivity.class);
+        //intent.putExtra("from", "HomeActivity");
+        //startActivityForResult(intent, 1);
 
         ArrayList<SectionDetails> BaseArray = new ArrayList<>();
         ArrayList<Details> DetailsArray = new ArrayList<>();
@@ -167,80 +176,26 @@ public class AddActivity extends AppCompatActivity {
         mButtonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showConfirmationDialog();
-            }
-
-            private void showConfirmationDialog() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
-            builder.setMessage("Are you sure you want to submit?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-//                            // 提交内容
-//                            submitContent();
-                            // 显示信息已添加成功
-                            showSuccessDialog();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .show();
-        }
-
-        private void showSuccessDialog() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
-            builder.setMessage("Information added successfully.")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 返回到之前的页面
-                            finish();
-                        }
-                    })
-                    .show();
-
-
-        mButtonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                // Create an intent to return to HomeActivity
-                Intent intent = new Intent(AddActivity.this, HomeActivity.class);
-                // Add an extra indicating the fragment to return to
-                intent.putExtra("currentFragment", "AddActivity");
-                // Set the result to indicate that the action was canceled
-                setResult(Activity.RESULT_CANCELED, intent);
-                // Finish AddActivity to return to HomeActivity
-                finish();
+                //submitContent();
 
             }
         });
 
 
-
+        mButtonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                finish();
+            }
+        });
 
     /*
     private void submitContent() {
-
-        if(IsEdit)
-        {
-            // Do Edit Code Here.
-            // Find Document in the Database and Update it with the Old Stuff.
-        }
-        else
-        {
-            Supports NewItem = new Supports();
-
         String title = mEditTitle.getText().toString().trim();
         String description = mEditDescription.getText().toString().trim();
         String heading = mEditHeading.getText().toString().trim();
         String conclusion = mEditConclusion.getText().toString().trim();
-
-        NewItem.setTitle(title)
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) || TextUtils.isEmpty(heading) || TextUtils.isEmpty(conclusion)) {
             Toast.makeText(this, "Title, Description, Heading, and Conclusion cannot be empty", Toast.LENGTH_SHORT).show();
@@ -268,12 +223,9 @@ public class AddActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("No", null)
                 .show();
-        }
     }
 
      */
     }
-
-    });
-    }
 }
+
