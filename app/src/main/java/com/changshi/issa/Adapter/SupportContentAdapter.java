@@ -50,7 +50,6 @@ public class SupportContentAdapter extends RecyclerView.Adapter<SupportContentAd
 
         public void bindData(SupportContent supportContent) {
             supportContentTitleTextView.setText(supportContent.getTitle());
-            supportContentDetailsTextView.setText(supportContent.getDetails().toString());
         }
     }
 }

@@ -10,8 +10,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
+import android.net.Uri;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-public class DBHandler {
+public class DBHandler
+{
 
     private FirebaseFirestore db;
     private CollectionReference supportsRef;
@@ -21,8 +26,37 @@ public class DBHandler {
         supportsRef = db.collection("supports");
     }
 
+    public interface OnImageUploadListener {
+        void onImageUpload(String imageUrl);
+        void onError(Exception exception);
+    }
+    public void uploadImage(Uri imageUri, String imageName, final OnImageUploadListener listener) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imageRef = storageRef.child("images/" + imageName);
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String imageUrl = uri.toString();
+                                listener.onImageUpload(imageUrl);
+                            }
+                        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        listener.onError(exception);
+                    }
+                });
+    }
     public void addSupport(String title, String bannerUrl, String parentCategory, String description,
-                           Map<String, Object> sections, String conclusion) {
+                           Map<String, Object> sections, String conclusion)
+    {
         Map<String, Object> support = new HashMap<>();
         support.put("title", title);
         support.put("bannerUrl", bannerUrl);

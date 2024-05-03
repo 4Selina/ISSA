@@ -62,27 +62,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Functions LearningSupportFunction = new Functions();
 
         LearningSupportFunction.setNameOfFunction("Learning Support");
-        LearningSupportFunction.setfuncationImage(R.drawable.learn);
+        LearningSupportFunction.setFunctionImage(R.drawable.learn);
 
         Functions SocialActivitiesFunction = new Functions();
 
         SocialActivitiesFunction.setNameOfFunction("Social Activities");
-        SocialActivitiesFunction.setfuncationImage(R.drawable.social);
+        SocialActivitiesFunction.setFunctionImage(R.drawable.social);
 
         Functions AccommodationFunction = new Functions();
 
         AccommodationFunction.setNameOfFunction("Accommodation");
-        AccommodationFunction.setfuncationImage(R.drawable.accommodation);
+        AccommodationFunction.setFunctionImage(R.drawable.accommodation);
 
         Functions TransportsFunction = new Functions();
 
         TransportsFunction.setNameOfFunction("Transports");
-        TransportsFunction.setfuncationImage(R.drawable.transit);
+        TransportsFunction.setFunctionImage(R.drawable.transit);
 
         Functions JobSupportFunction = new Functions();
 
         JobSupportFunction.setNameOfFunction("Job Support");
-        JobSupportFunction.setfuncationImage(R.drawable.jobsupport);
+        JobSupportFunction.setFunctionImage(R.drawable.jobsupport);
 
         AllFunctions.add(LearningSupportFunction);
         AllFunctions.add(SocialActivitiesFunction);
@@ -131,8 +131,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                     return true;
                 }
-                else if(itemId == R.id.webBTM){
-                    openFragment(new WebpageFragment(), "WelTec");
+                else if(itemId == R.id.webBTM)
+                {
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
                     return true;
                 }
                 else if(itemId == R.id.logoutBTM)
@@ -183,22 +184,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     openFragment(new SearchSFragment(), "Learning Support");
                     break;
                 case "social":
-                    openFragment(new WebpageFragment(), "Social Activities");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Social Activities");
                     break;
                 case "accommodation":
-                    openFragment(new WebpageFragment(), "Accommodation");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Accommodation");
 
                 case "transport":
-                    openFragment(new WebpageFragment(), "Transport");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Transport");
                     break;
                 case "jobSupport":
-                    openFragment(new WebpageFragment(), "Job Support");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Job Support");
                     break;
                 case "search":
                     openFragment(new SearchSFragment(), " ");
                     break;
                 case "webpage":
-                    openFragment(new WebpageFragment(), "WelTec");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
                     break;
             }
         } else {
@@ -263,22 +264,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     openFragment(new SearchSFragment(), "Learning Support");
                     break;
                 case "social":
-                    openFragment(new WebpageFragment(), "Social Activities");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Social Activities");
                     break;
                 case "accommodation":
-                    openFragment(new WebpageFragment(), "Accommodation");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Accommodation");
 
                 case "transport":
-                    openFragment(new WebpageFragment(), "Transport");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Transport");
                     break;
                 case "jobSupport":
-                    openFragment(new WebpageFragment(), "Job Support");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Job Support");
                     break;
                 case "search":
                     openFragment(new SearchSFragment(), " ");
                     break;
                 case "webpage":
-                    openFragment(new WebpageFragment(), "WelTec");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
                     break;
             }
         } else {
@@ -320,22 +321,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Functions CourseSelectionFunction = new Functions();
             CourseSelectionFunction.setNameOfFunction("Course Selection");
-            CourseSelectionFunction.setfuncationImage(R.drawable.learn);
+            CourseSelectionFunction.setFunctionImage(R.drawable.learn);
             LearningSupportFunctions.add(CourseSelectionFunction);
 
             Functions AcademicFunction = new Functions();
             AcademicFunction.setNameOfFunction("Academic Support");
-            AcademicFunction.setfuncationImage(R.drawable.learn);
+            AcademicFunction.setFunctionImage(R.drawable.learn);
             LearningSupportFunctions.add(AcademicFunction);
 
             Functions StudentCouncilFunction = new Functions();
             StudentCouncilFunction.setNameOfFunction("Student Council");
-            StudentCouncilFunction.setfuncationImage(R.drawable.learn);
+            StudentCouncilFunction.setFunctionImage(R.drawable.learn);
             LearningSupportFunctions.add(StudentCouncilFunction);
 
             Functions HealthFunction = new Functions();
             HealthFunction.setNameOfFunction("Health & Wellbeing");
-            HealthFunction.setfuncationImage(R.drawable.learn);
+            HealthFunction.setFunctionImage(R.drawable.learn);
             LearningSupportFunctions.add(HealthFunction);
 
             openFragment(new FunctionsFragment(LearningSupportFunctions), "Learning Support");
@@ -346,12 +347,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Functions HomestayFunction = new Functions();
             HomestayFunction.setNameOfFunction("Homestay Information");
-            HomestayFunction.setfuncationImage(R.drawable.accommodation);
+            HomestayFunction.setFunctionImage(R.drawable.accommodation);
             AccommodationFunctions.add(HomestayFunction);
 
             Functions RentalFunction = new Functions();
             RentalFunction.setNameOfFunction("Academic Support");
-            RentalFunction.setfuncationImage(R.drawable.accommodation);
+            RentalFunction.setFunctionImage(R.drawable.accommodation);
             AccommodationFunctions.add(RentalFunction);
 
 
@@ -363,17 +364,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Functions PublicTranFunction = new Functions();
             PublicTranFunction.setNameOfFunction("Public Transport System");
-            PublicTranFunction.setfuncationImage(R.drawable.transit);
+            PublicTranFunction.setFunctionImage(R.drawable.transit);
             TransportsFunctions.add(PublicTranFunction);
 
             Functions AirportFunction = new Functions();
             AirportFunction.setNameOfFunction("Airport Express");
-            AirportFunction.setfuncationImage(R.drawable.transit);
+            AirportFunction.setFunctionImage(R.drawable.transit);
             TransportsFunctions.add(AirportFunction);
 
             Functions CampusFunction = new Functions();
             CampusFunction.setNameOfFunction("Campus Transfers");
-            CampusFunction.setfuncationImage(R.drawable.transit);
+            CampusFunction.setFunctionImage(R.drawable.transit);
             TransportsFunctions.add(CampusFunction);
 
 
@@ -385,17 +386,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Functions NetworkingFunction = new Functions();
             NetworkingFunction.setNameOfFunction("Networking");
-            NetworkingFunction.setfuncationImage(R.drawable.social);
+            NetworkingFunction.setFunctionImage(R.drawable.social);
             SocialActFunctions.add(NetworkingFunction);
 
             Functions SportClubFunction = new Functions();
             SportClubFunction.setNameOfFunction("Sport Club");
-            SportClubFunction.setfuncationImage(R.drawable.social);
+            SportClubFunction.setFunctionImage(R.drawable.social);
             SocialActFunctions.add(SportClubFunction);
 
             Functions FoodOptionsFunction = new Functions();
             FoodOptionsFunction.setNameOfFunction("Food Options");
-            FoodOptionsFunction.setfuncationImage(R.drawable.social);
+            FoodOptionsFunction.setFunctionImage(R.drawable.social);
             SocialActFunctions.add(FoodOptionsFunction);
 
             openFragment(new FunctionsFragment(SocialActFunctions), "Social Activities");
@@ -405,25 +406,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             Functions PartTimeFunction = new Functions();
             PartTimeFunction.setNameOfFunction("Part-time Job");
-            PartTimeFunction.setfuncationImage(R.drawable.jobsupport);
+            PartTimeFunction.setFunctionImage(R.drawable.jobsupport);
             JobSupportFunctions.add(PartTimeFunction);
 
             Functions InternshipFunction = new Functions();
             InternshipFunction.setNameOfFunction("Internship");
-            InternshipFunction.setfuncationImage(R.drawable.jobsupport);
+            InternshipFunction.setFunctionImage(R.drawable.jobsupport);
             JobSupportFunctions.add(InternshipFunction);
 
             Functions GraduateJobFunction = new Functions();
             GraduateJobFunction.setNameOfFunction("Graduate Job");
-            GraduateJobFunction.setfuncationImage(R.drawable.jobsupport);
+            GraduateJobFunction.setFunctionImage(R.drawable.jobsupport);
             JobSupportFunctions.add(GraduateJobFunction);
 
             openFragment(new FunctionsFragment(JobSupportFunctions), "Job Support");
 
         }
 
-        else if (itemId == R.id.nav_Webpage) {
-            openFragment(new WebpageFragment(), "WelTec");
+        else if (itemId == R.id.nav_Webpage)
+        {
+            openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
             return true;
         }
 

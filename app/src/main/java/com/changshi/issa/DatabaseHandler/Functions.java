@@ -4,7 +4,7 @@ import android.graphics.drawable.Drawable;
 
 public class Functions {
     private String Name;
-    private String ImageURL = "";
+    private String FunctionURL = "";
     private int Image;
 
 
@@ -13,13 +13,13 @@ public class Functions {
     }
     public void setNameOfFunction(String name) {Name = name;}
 
-    public String getfuncationImageURL() {
-        return ImageURL;
+    public String getFunctionURL() {
+        return FunctionURL;
     }
-    public void setfuncationImage(String imageURL) { ImageURL = imageURL; }
+    public void setFunctionURL(String imageURL) { FunctionURL = imageURL; }
 
-    public int getfuncationImage() {
+    public int getFunctionImage() {
         return Image;
     }
-    public void setfuncationImage(int image) { Image = image; }
+    public void setFunctionImage(int image) { Image = image; }
 }

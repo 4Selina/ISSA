@@ -23,6 +23,7 @@ public class Supports {
     private String parentCategory;
     private String description;
     private List<Section> sections;
+
     private String conclusion;
 
     public Supports() {

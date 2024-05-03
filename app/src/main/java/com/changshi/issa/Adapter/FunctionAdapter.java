@@ -69,13 +69,13 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         Functions currentFunction = mFunctionList.get(position);
         holder.txtFunctionTitle.setText(currentFunction.getNameOfFunction());
 
-        if(mFunctionList.get(position).getfuncationImageURL().equals(""))
+        if(mFunctionList.get(position).getFunctionURL().equals(""))
         {
-            holder.functionImage.setImageResource(mFunctionList.get(position).getfuncationImage());
+            holder.functionImage.setImageResource(mFunctionList.get(position).getFunctionImage());
         }
         else
         {
-            Picasso.get().load(currentFunction.getfuncationImageURL()).into(holder.functionImage);
+            Picasso.get().load(currentFunction.getFunctionURL()).into(holder.functionImage);
         }
 
         SharedPreferences Pref = holder.itemView.getContext().getSharedPreferences("login_pref", MODE_PRIVATE);
@@ -220,6 +220,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 if(holder.txtFunctionTitle.getText() == "Accommodation")
                 {
                     ArrayList<Supports> AccommodationFunctions = new ArrayList<>();
+//                    ArrayList<Supports> AccommodationFunctions = GetSupports(2);
 
                     Supports HomeStayFunction = new Supports();
                     HomeStayFunction.setTitle("Homestay");
@@ -234,7 +235,6 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     AccommodationFunctions.add(RentalFunction);
 
                     ((HomeActivity) mContext).openFragment(new SupportsFragment(AccommodationFunctions), "Accommodation");
-
                 }
                 if(holder.txtFunctionTitle.getText() == "Transports")
                 {
@@ -312,4 +312,11 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         }
 
     }
+
+//    public ArrayList<Supports> GetSupports(int CategoryID)
+//    {
+//        ArrayList<Supports> CurrentSupports = new ArrayList<>();
+//
+//        return CurrentSupports;
+//    }
 }

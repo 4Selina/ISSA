@@ -2,12 +2,33 @@ package com.changshi.issa.DatabaseHandler;
 
 public class WebpageItem {
     private String id;
-    private String imageUrl;
     private String department;
     private String email;
     private String address;
     private String contact;
+    private String imageUrl;
 
+
+    public WebpageItem(){
+
+    }
+    public WebpageItem( String id, String department, String email, String contact, String address){
+
+        this.id = id;
+        this.department = department;
+        this.email = email;
+        this.contact = contact;
+        this.address = address;
+    }
+    public WebpageItem( String id, String department, String email, String contact, String address, String imageUrl){
+
+        this.id = id;
+        this.department = department;
+        this.email = email;
+        this.contact = contact;
+        this.address = address;
+        this.imageUrl = imageUrl;
+    }
     public String getId() {
         return id;
     }
@@ -16,13 +37,6 @@ public class WebpageItem {
         this.id = id;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
     public String getDepartment() {
         return department;
     }
@@ -53,5 +67,13 @@ public class WebpageItem {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

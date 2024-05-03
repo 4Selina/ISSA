@@ -1,29 +1,33 @@
 package com.changshi.issa;
 
+import android.util.EventLogTags;
+
+import com.changshi.issa.DatabaseHandler.Supports;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class SupportContent {
+public class SupportContent
+{
     private String title;
     private String description;
-    private String heading;
-    private String conclusion;
-    private List<String> details;
+    private String BannerUrl;
+    private int ParentCategory;
+    private ArrayList<Supports.Section> AllSections;
+
+    private String Conclusion;
 
     public SupportContent() {
         // Default constructor required for Firebase
     }
 
-    public SupportContent(String title, String description, String heading, String conclusion) {
+    public SupportContent(String title, String description, int parentCategory, String conclusion)
+    {
         this.title = title;
         this.description = description;
-        this.heading = heading;
-        this.conclusion = conclusion;
-        this.details = new ArrayList<>();
-    }
-
-    public void addDetail(String detail) {
-        details.add(detail);
+        this.ParentCategory = parentCategory;
+        this.Conclusion = conclusion;
+        this.AllSections = new ArrayList<>();
     }
 
     public String getTitle() {
@@ -34,8 +38,22 @@ public class SupportContent {
         this.title = title;
     }
 
-    public List<String> getDetails() {
-        return details;
+    public String getDescription() {return description;}
+
+    public void setDescription(String description) {
+        this.description = description;
     }
+
+    public int getParentCategory() {
+        return ParentCategory;
+    }
+
+    public void setParentCategory(int parentCategory) {
+        this.ParentCategory = parentCategory;
+    }
+
+    public String getConclusion() { return Conclusion; }
+
+    public void setConclusion(String conclusion) {this.Conclusion = conclusion;}
 }
 

@@ -1,62 +1,199 @@
 package com.changshi.issa;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.changshi.issa.Adapter.WebpageAdapter;
-import com.changshi.issa.DatabaseHandler.WebpageItem;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class UpdateWebpageActivity extends AppCompatActivity {
 
-    private Button mBtnSubmit;
+    private EditText mDepartmentEt;
+    private EditText mEmailEt;
+    private EditText mContactEt;
+    private EditText mAddressEt;
+    private Button mSaveWebInfoBTN;
+    private Button mCancelWebBTN;
+    private ProgressDialog pd;
+    private FirebaseFirestore db;
 
-        private RecyclerView mRecyclerView;
-        private WebpageAdapter mAdapter;
-        private FirebaseFirestore mFirestore;
-        private ArrayList<WebpageItem> mItems;
+    String pId, pDepartment,pEmail, pContact, pAddress;
+    @SuppressLint("MissingInflatedId")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update_webpage);
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_update_webpage);
-
-            mRecyclerView = findViewById(R.id.recycler_view_webpage);
-            mFirestore = FirebaseFirestore.getInstance();
-
-            mItems = new ArrayList<>();
-            mAdapter = new WebpageAdapter(mItems, mFirestore);
-
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mRecyclerView.setAdapter(mAdapter);
-
-            loadDataFromFirestore();
+        //actionbar and its title
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("Add Data");
         }
 
-        private void loadDataFromFirestore() {
-            // Load data from Firestore and populate mItems
-            // For example:
-            mFirestore.collection("webpageItems").get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        WebpageItem item = document.toObject(WebpageItem.class);
-                        if (item != null) {
-                            mItems.add(item);
-                        }
-                    }
-                    mAdapter.notifyDataSetChanged();
+        mDepartmentEt = findViewById(R.id.departmentEt);
+        mEmailEt = findViewById(R.id.emailEt);
+        mContactEt = findViewById(R.id.contactEt);
+        mAddressEt = findViewById(R.id.addressEt);
+        mSaveWebInfoBTN = findViewById(R.id.saveWebInfoBTN);
+        mCancelWebBTN = findViewById(R.id.cancelWebBTN);
+
+        final Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            //Update data
+            if (actionBar != null) {
+                actionBar.setTitle("Update Data");
+            }
+            mSaveWebInfoBTN.setText("Save");
+            //get data
+            pId = bundle.getString("pId");
+            pDepartment = bundle.getString("pDepartment");
+            pEmail = bundle.getString("pEmail");
+            pContact = bundle.getString("pContact");
+            pAddress = bundle.getString("pAddress");
+
+            //set data
+            mDepartmentEt.setText(pDepartment);
+            mEmailEt.setText(pEmail);
+            mContactEt.setText(pContact);
+            mAddressEt.setText(pAddress);
+        }else{
+            //New data
+            if (actionBar != null) {
+                actionBar.setTitle("Add Data");
+            }
+            mSaveWebInfoBTN.setText("Save");
+        }
+
+
+        //progress dialog
+        pd = new ProgressDialog(this);
+
+        //firestore
+        db = FirebaseFirestore.getInstance();
+
+        //click button to upload data
+        mSaveWebInfoBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle1 = getIntent().getExtras();
+
+                if (bundle != null){
+                    //updating
+                    //input data
+                    String id = pId;
+                    String department = mDepartmentEt.getText().toString().trim();
+                    String email = mEmailEt.getText().toString().trim();
+                    String contact = mContactEt.getText().toString().trim();
+                    String address = mAddressEt.getText().toString().trim();
+                    //function call to update data
+                    uploadData(id, department, email, contact, address);
+
+
+                }else {
+                    //adding new
+                    //input data
+                    String department = mDepartmentEt.getText().toString().trim();
+                    String email = mEmailEt.getText().toString().trim();
+                    String contact = mContactEt.getText().toString().trim();
+                    String address = mAddressEt.getText().toString().trim();
+
+                    //function call to upload data
+                    uploadData(department, email, contact, address, address);
+
                 }
-            });
-        }
 
 
+                //
+                Intent intent = new Intent(UpdateWebpageActivity.this, HomeActivity.class);
+                intent.putExtra("fragment", "webpage");
+                startActivity(intent);
+                finish();
+            }
+        });
+        //click cancel go back to webpage
+        mCancelWebBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UpdateWebpageActivity.this, HomeActivity.class);
+                intent.putExtra("fragment", "webpage");
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+    private void updateAddingData(String id, String department, String email, String contact, String address) {
+        //Set title and show progress bar
+        pd.setTitle("Updating Data...");
+        pd.show();
+        db.collection("Documents").document(id)
+                .update("department", department, "email", email, "contact", contact, "address", address)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //this will be called when data is updated successfully
+                        pd.dismiss();
+                        Toast.makeText(UpdateWebpageActivity.this, "Updated...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //this will be called if there is any error while updating
+                        pd.dismiss();
+                        Toast.makeText(UpdateWebpageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void uploadData(String department, String email, String contact, String address, String s) {
+        //Set title and show progress bar
+        pd.setTitle("Adding Data to Firestore");
+        pd.show();
+
+        //random id for each data to be stored
+        String id = UUID.randomUUID().toString();
+
+        Map<String, Object> doc = new HashMap<>();
+        doc.put("id", id);
+        doc.put("department", department);
+
+
+        doc.put("email", email);
+        doc.put("contact", contact);
+        doc.put("address", address);
+
+        //add this data
+        db.collection("Documents").document(id).set(doc)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //this will be called when data is added successfully
+                        pd.dismiss();
+                        Toast.makeText(UpdateWebpageActivity.this, "Uploaded...", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //this will be called if there is any error while uploading
+                        pd.dismiss();
+                        Toast.makeText(UpdateWebpageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+}

@@ -1,41 +1,48 @@
 package com.changshi.issa.Fragment;
 
-import android.content.Context;
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.changshi.issa.AddActivity;
+import com.changshi.issa.Adapter.WebpageAdapter;
+import com.changshi.issa.DatabaseHandler.WebpageItem;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.changshi.issa.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchSFragment extends Fragment {
 
     private EditText searchEditText;
     private Button searchButton;
-    private ImageView imageView;
-    private RecyclerView searchRecyclerView;
+    private ImageView backBtn;
+    private RecyclerView searchView;
+    private FirebaseFirestore db;
+    private List<WebpageItem> dataList = new ArrayList<>();
+    private WebpageAdapter adapter;
 
     public SearchSFragment() {
         // Required empty public constructor
@@ -49,30 +56,30 @@ public class SearchSFragment extends Fragment {
 
         searchEditText = view.findViewById(R.id.searchEditText);
         searchButton = view.findViewById(R.id.searchButton);
-        imageView = view.findViewById(R.id.backIcon);
-        searchRecyclerView = view.findViewById(R.id.searchRecyclerView);
+        backBtn = view.findViewById(R.id.backIcon);
+        searchView = view.findViewById(R.id.searchRecyclerView);
+        db = FirebaseFirestore.getInstance();
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+
+//        // Initialize your adapter
+//        adapter = new WebpageAdapter(getActivity(), webpageItems, WebpageFragment.this);
+        searchView.setAdapter(adapter);
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 navigateToHomeActivity();
             }
         });
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check if user is logged in
-                SharedPreferences sharedPref = getActivity().getSharedPreferences("login_pref", Context.MODE_PRIVATE);
-                boolean isLoggedIn = sharedPref.getBoolean("is_logged_in", false);
-
-                if (isLoggedIn) {
-                    navigateToHomeActivity();
+                String query = searchEditText.getText().toString();
+                if (!query.isEmpty()) {
+//                    performSearch(query);
                 } else {
-                    // Start HomeActivity without add and logout icons
-                    Intent intent = new Intent(getActivity(), HomeActivity.class);
-                    intent.putExtra("hide_icons", true);
-                    startActivity(intent);
-                    getActivity().finish();
+                    Toast.makeText(getActivity(), "Please enter a search term", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -87,11 +94,26 @@ public class SearchSFragment extends Fragment {
         getActivity().finish();
     }
 
-
-    private void performSearch(String query) {
-        // Perform the search operation here
-        // can use the query to search for items and update the RecyclerView accordingly
-        // For simplicity, let's just show a Toast message with the search query
-        Toast.makeText(getContext(), "Searching for: " + query, Toast.LENGTH_SHORT).show();
-    }
+//    private void performSearch(String query) {
+//        // Query the Firestore database
+//        db.collection("document")
+//                .whereEqualTo("department", query)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                    if (task.isSuccessful()) {
+//                            dataList.clear();
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                // Assuming your data is of type YourDataType
+//                                YourDataType data = document.toObject(YourDataType.class);
+//                                dataList.add(data);
+//                            }
+//                            adapter.notifyDataSetChanged();
+//                        } else {
+//                            Log.d(TAG, "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
+//    }
 }

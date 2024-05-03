@@ -30,11 +30,14 @@ import com.changshi.issa.Adapter.SectionDetails;
 import com.changshi.issa.DatabaseHandler.Details;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.security.AccessController;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -137,20 +140,19 @@ public class AddActivity extends AppCompatActivity {
                         updateImageFromUrl(imageUrl);
                     }
 
-                    private void updateImageFromUrl(String imageUrl)
-                    {
+                    private void updateImageFromUrl(String imageUrl) {
                         Picasso.get().load(imageUrl).into(mImageBanner);
                     }
                 });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
 
                 builder.show();
-                }
+            }
         });
 
         //Intent intent = new Intent(AddActivity.this, HomeActivity.class);
@@ -175,8 +177,9 @@ public class AddActivity extends AppCompatActivity {
 
         mButtonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //submitContent();
+            public void onClick(View v)
+            {
+//                submitContent();
 
             }
         });
@@ -184,48 +187,57 @@ public class AddActivity extends AppCompatActivity {
 
         mButtonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 finish();
             }
         });
-
-    /*
-    private void submitContent() {
-        String title = mEditTitle.getText().toString().trim();
-        String description = mEditDescription.getText().toString().trim();
-        String heading = mEditHeading.getText().toString().trim();
-        String conclusion = mEditConclusion.getText().toString().trim();
-
-        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) || TextUtils.isEmpty(heading) || TextUtils.isEmpty(conclusion)) {
-            Toast.makeText(this, "Title, Description, Heading, and Conclusion cannot be empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to submit?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Save content to Firebase database
-                        String key = mDatabase.push().getKey();
-                        SupportContent supportContent = new SupportContent(title, description, heading, conclusion);
-                        for (int i = 0; i < mLayoutSections.getChildCount(); i++) {
-                            EditText editTextDetail = (EditText) mLayoutSections.getChildAt(i);
-                            String detail = editTextDetail.getText().toString().trim();
-                            supportContent.addDetail(detail);
-                        }
-                        mDatabase.child(key).setValue(supportContent);
-
-                        Toast.makeText(AddActivity.this, "Content submitted successfully", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
     }
-
-     */
-    }
+//
+//
+//    private void submitContent()
+//    {
+//        String title = mEditTitle.getText().toString().trim();
+//        String description = mEditDescription.getText().toString().trim();
+//        String conclusion = mEditConclusion.getText().toString().trim();
+//
+//        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) || TextUtils.isEmpty(heading) || TextUtils.isEmpty(conclusion)) {
+//            Toast.makeText(this, "Title, Description, and Conclusion cannot be empty", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setMessage("Are you sure you want to submit?")
+//                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+//                {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which)
+//                    {
+//                        // Save content to Firebase database
+//                        SupportContent supportContent = new SupportContent(title, description, 0, conclusion);
+//
+//                        CollectionReference Reference = db.collection("Support_Contents");
+//                        Map<String, SupportContent> users = new HashMap<>();
+//
+//                        for (int i = 0; i < SectionsRV.getChildCount(); i++)
+//                        {
+//                            users.put("alanisawesome", new User("June 23, 1912", "Alan Turing"));
+//
+//
+//                            EditText editTextDetail = (EditText) SectionsRV.getChildAt(i);
+//                            String detail = editTextDetail.getText().toString().trim();
+//
+//                            //supportContent.addDetail(detail);
+//                        }
+//
+//                        Reference.add()
+//
+//                        Toast.makeText(AddActivity.this, "Content submitted successfully", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                    }
+//                })
+//                .setNegativeButton("No", null)
+//                .show();
+//        }
+//    }
 }
 

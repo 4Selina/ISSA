@@ -1,164 +1,128 @@
 package com.changshi.issa.Adapter;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.changshi.issa.DatabaseHandler.WebpageItem;
+import com.changshi.issa.Fragment.WebpageFragment;
 import com.changshi.issa.R;
+import com.changshi.issa.UpdateWebpageActivity;
+import com.changshi.issa.ViewHolder;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHolder> {
+public class WebpageAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private FragmentActivity webpageFragment;
+    private ArrayList<WebpageItem> webpageItems;
+    private Context context;
+//    private FirebaseFirestore mFirestore;
 
-    private ArrayList<WebpageItem> mItems;
-    private FirebaseFirestore mFirestore;
 
-    public WebpageAdapter(ArrayList<WebpageItem> items, FirebaseFirestore firestore) {
-        mItems = items;
-        mFirestore = firestore;
+//    public WebpageAdapter(FragmentActivity webpageFragment, ArrayList<WebpageItem> webpageItems, Context context) {
+//        this.webpageFragment = webpageFragment;
+//        this.webpageItems = webpageItems;
+//        this.context = context;
+//    }
+
+    public WebpageAdapter(FragmentActivity webpageFragment, ArrayList<WebpageItem> webpageItems, Context context) {
+        this.webpageFragment = webpageFragment;
+        this.webpageItems = webpageItems;
+        this.context = context;
     }
+
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_web_inform, parent, false);
-        return new ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+        //inflate layout
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_web_inform, parent, false);
+
+        ViewHolder viewHolder = new ViewHolder(itemView);
+
+        //handle item clicks here
+        viewHolder.setOnClickListener(new ViewHolder.ClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //show data in toast on clicking
+                String department = webpageItems.get(position).getDepartment();
+                String email = webpageItems.get(position).getEmail();
+                String contact = webpageItems.get(position).getContact();
+                String address = webpageItems.get(position).getAddress();
+//                Toast.makeText(webpageFragment, department + "\n" + email + "\n" + contact + "\n" + address, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(webpageFragment);
+                //options to display in dialog
+                String[] options = {"Update", "Delete"};
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            //update is clicked
+                            //get data
+                            String id = webpageItems.get(position).getId();
+                            String department = webpageItems.get(position).getDepartment();
+                            String email = webpageItems.get(position).getEmail();
+                            String contact = webpageItems.get(position).getContact();
+                            String address = webpageItems.get(position).getAddress();
+                            //intent to start activity
+                            Intent intent = new Intent(webpageFragment, UpdateWebpageActivity.class);
+                            //put data in intent
+                            intent.putExtra("pId", id);
+                            intent.putExtra("pDepartment", department);
+                            intent.putExtra("pEmail", email);
+                            intent.putExtra("pContact", contact);
+                            intent.putExtra("pAddress", address);
+                            //start activity
+                            webpageFragment.startActivity(intent);
+
+                        }
+                        if (which == 1) {
+                            //delete is clicked
+                            webpageItems.remove(position);
+                            notifyItemRemoved(position);
+                        }
+                    }
+                }).create().show();
+            }
+        });
+        return viewHolder;
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(mItems.get(position));
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        //bind view /set data
+        viewHolder.mDepartmentTextView.setText(webpageItems.get(i).getDepartment());
+        viewHolder.mEmailTextView.setText(webpageItems.get(i).getEmail());
+        viewHolder.mContactTextView.setText(webpageItems.get(i).getContact());
+        viewHolder.mAddressTextView.setText(webpageItems.get(i).getAddress());
+//        viewHolder.mImageView.
+        //use glide to update image
+//        Glide.with(context).load(webpageItems.get(i).getImageUrl()).into(viewHolder.mImageView);
+
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return (webpageItems != null) ? webpageItems.size() : 0;
     }
-
-    public void submitUpdates() {
+    public void updateData(ArrayList<WebpageItem> newWebpageItems) {
+        this.webpageItems = newWebpageItems;
         notifyDataSetChanged();
-    }
-
-    public void saveChangesToFirestore(List<WebpageItem> updatedItems) {
-    }
-
-    public List<WebpageItem> setItems(List<WebpageItem> updatedItems) {
-        return mItems;
-    }
-
-    public List<WebpageItem> getItems() {
-        return mItems;
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView mDepartmentTextView;
-        private TextView mEmailTextView;
-        private TextView mContactTextView;
-        private TextView mAddressTextView;
-        private Button mAddButton;
-        private Button mRemoveButton;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            mDepartmentTextView = itemView.findViewById(R.id.dialog_department);
-            mEmailTextView = itemView.findViewById(R.id.dialog_email);
-            mContactTextView = itemView.findViewById(R.id.dialog_contact);
-            mAddressTextView = itemView.findViewById(R.id.dialog_address);
-            mAddButton = itemView.findViewById(R.id.dialog_add);
-            mRemoveButton = itemView.findViewById(R.id.dialog_remove);
-        }
-
-        public void bind(WebpageItem item) {
-            mDepartmentTextView.setText(item.getDepartment());
-            mEmailTextView.setText(item.getEmail());
-            mContactTextView.setText(item.getContact());
-            mAddressTextView.setText(item.getAddress());
-
-            mAddButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addNewDepartment();
-                }
-            });
-
-            mRemoveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    removeDepartment();
-                }
-            });
-        }
-
-        private void addNewDepartment()
-        {
-            // 创建一个新的 WebpageItem 对象
-            WebpageItem newItem = new WebpageItem();
-            // 设置新部门的属性，您可能需要从用户输入中获取这些值
-            newItem.setDepartment("New Department");
-            newItem.setEmail("Email");
-            newItem.setContact("Contact");
-            newItem.setAddress("Address");
-            // 将新部门添加到列表中
-            mItems.add(newItem);
-            // 通知适配器数据已更改
-            notifyDataSetChanged();
-            // 在这里您还需要将新部门数据保存到数据库中
-            // 可以调用一个方法来执行这个操作
-            //saveToDatabase(newItem);
-        }
-
-        private void removeDepartment() {
-            // 获取当前部门在列表中的位置
-            if(mItems.size() != 1)
-            {
-                int position = getAdapterPosition();
-                if (position != RecyclerView.NO_POSITION)
-                {
-                    // 移除列表中的部门
-                    WebpageItem removedItem = mItems.remove(position);
-                    // 通知适配器数据已更改
-                    notifyDataSetChanged();
-                    // 在这里您还需要从数据库中删除当前部门的数据
-                    // 可以调用一个方法来执行这个操作
-                    //deleteFromDatabase(removedItem);
-                }
-            }
-        }
-
-        private void deleteFromDatabase(WebpageItem removedItem) {
-            mFirestore.collection("webpageItems")
-                    .document(removedItem.getId())
-                    .delete()
-                    .addOnSuccessListener(aVoid -> {
-                        // 成功删除数据
-                        // 可以添加一些逻辑来处理成功删除数据的情况
-                    })
-                    .addOnFailureListener(e -> {
-                        // 发生错误，无法删除数据
-                        // 可以添加一些逻辑来处理删除失败的情况
-                    });
-        }
-
-        private void saveToDatabase(WebpageItem newItem) {
-            mFirestore.collection("webpageItems")
-                    .add(newItem)
-                    .addOnSuccessListener(documentReference -> {
-                        // 成功保存数据到数据库
-                        // 可以添加一些逻辑来处理成功保存数据的情况
-                    })
-                    .addOnFailureListener(e -> {
-                        // 发生错误，无法保存数据
-                        // 可以添加一些逻辑来处理保存失败的情况
-                    });
-        }
     }
 }

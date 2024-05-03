@@ -1,87 +1,114 @@
 package com.changshi.issa.Fragment;
 
+import static android.app.ProgressDialog.show;
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.changshi.issa.Adapter.WebpageAdapter;
-import com.changshi.issa.AddActivity;
 import com.changshi.issa.DatabaseHandler.WebpageItem;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
+import com.changshi.issa.SupportContent;
+import com.changshi.issa.UpdateWebpageActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WebpageFragment extends Fragment {
 
     public static final int REQUEST_CODE_PICK_IMAGE = 1;
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 2;
-    private ImageView imgWebpage, edtWebpageLogo;
-    private TextView contentsTextView;
+    private static final String TAG = "WebpageFragment";
+    private Context context;
+    private ArrayList<WebpageItem> webpageItems;
+    private ImageView imgWebpage;
+    private ImageButton btnWebLogo;
     private Button btnUpdateWebpage;
+    private RecyclerView webpageRV;
+    private WebpageAdapter adapter;
 
-    private HomeActivity ActivityInstance;
+    private Uri image;
 
-    private RecyclerView WebpageRV;
+    private RecyclerView.LayoutManager layoutManager;
+    private FirebaseFirestore db;
 
-    public WebpageFragment() {
-        // Required empty public constructor
+    private ProgressDialog pd;
+    public WebpageFragment(ArrayList<WebpageItem> webpageItems, Context context, FirebaseFirestore db)
+    {
+        this.webpageItems = webpageItems;
+        this.context = context;
+        this.db = db;
     }
 
     @SuppressLint("MissingInflatedId")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_webpage, container, false);
 
-        ActivityInstance = (HomeActivity) getActivity();
+        db = FirebaseFirestore.getInstance();
 
-        imgWebpage = view.findViewById(R.id.imgWebpage);
-        btnUpdateWebpage = view.findViewById(R.id.btnUpdateWebpage);
-        edtWebpageLogo = view.findViewById(R.id.edtWebpageLogo);
+        // Initialize layoutManager
+        layoutManager = new LinearLayoutManager(getActivity());
+        //set recyclerView
+        webpageRV = view.findViewById(R.id.RV_Webpage_Content);
+        webpageRV.setHasFixedSize(true);
+        webpageRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        webpageRV.setAdapter(adapter);
 
-        WebpageRV = view.findViewById(R.id.RV_Webpage_Content);
+        imgWebpage = (ImageView) view.findViewById(R.id.imgWebpage);
 
-        ArrayList<WebpageItem> DefaultArrayList = new ArrayList<>();
-        WebpageItem DefaultItem = new WebpageItem();
+        btnWebLogo = view.findViewById(R.id.edtWebpageLogo);
+        btnUpdateWebpage = view.findViewById(R.id.btnUpdateWebpage); ;
 
-        DefaultArrayList.add(DefaultItem);
 
-        WebpageAdapter Adapter = new WebpageAdapter(DefaultArrayList, FirebaseFirestore.getInstance());
+        pd = new ProgressDialog(getActivity());
+        showData();
 
-        WebpageRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        WebpageRV.setAdapter(Adapter);
+        loadImage();
 
-        // Set initial values
-        imgWebpage.setImageResource(R.drawable.logo);
+        btnWebLogo.setOnClickListener(new View.OnClickListener() {
 
-        // Set the formatted text
-
-        edtWebpageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open a dialog for picking an image
@@ -117,15 +144,13 @@ public class WebpageFragment extends Fragment {
                 builder.create().show();
             }
 
-            private void pickImageFromGallery()
-            {
+            private void pickImageFromGallery() {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, REQUEST_CODE_PICK_IMAGE);
             }
 
-            private void showUrlInputDialog()
-            {
+            private void showUrlInputDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Enter Image URL");
 
@@ -135,26 +160,47 @@ public class WebpageFragment extends Fragment {
                 builder.setView(input);
 
                 // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
-                {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         String imageUrl = input.getText().toString();
+
+                        // Save the image URL to Firestore
+                        saveImageUrlToFirestore(imageUrl);
                         // Update the image using the URL
                         updateImageFromUrl(imageUrl);
+
                     }
 
-                    private void updateImageFromUrl(String imageUrl)
-                    {
+                    private void updateImageFromUrl(String imageUrl) {
+
                         Picasso.get().load(imageUrl).into(imgWebpage);
                     }
+
+
+                    private void saveImageUrlToFirestore(String imageUrl) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("imageUrl", imageUrl);
+                        db.collection("Documents").document("imageUrl")
+                                .set(data)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error writing document", e);
+                                    }
+                                });
+                    }
+
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
-                {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
@@ -163,17 +209,121 @@ public class WebpageFragment extends Fragment {
             }
         });
 
-        btnUpdateWebpage.setOnClickListener(new View.OnClickListener()
-        {
+
+        btnUpdateWebpage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                Log.d("ButtonClicked", "Update button clicked");
-                // Create and show update webpage dialog
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UpdateWebpageActivity.class);
+                startActivity(intent);
 
             }
         });
 
         return view;
     }
+
+
+    private void loadImage() {
+        db.collection("Documents").document("imageUrl")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String imageUrl = document.getString("imageUrl");
+                                Picasso.get().load(imageUrl).into(imgWebpage);
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void showData() {
+//        String imageUrl = "";
+//        Picasso.get()
+//                .load(imageUrl)
+//                .placeholder(R.drawable.edit) // will be displayed while the image loads
+//                .into(imgWebpage);
+
+        //set title of progress dialog
+        pd.setTitle("Loading Data...");
+        pd.show();
+        db.collection("Documents")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        webpageItems.clear();
+                        pd.dismiss();
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null) {
+                                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                    // Load image from Firestore
+                                   // WebpageItem webpageItem = new WebpageItem(document.get)
+                                    Map<String,Object> map = document.getData();
+
+                                    Object imageUrl = map.get("imageUrl");
+
+                                    if (null != imageUrl) {
+                                        String imageUrlstr = imageUrl.toString();
+                                        Picasso.get().load(imageUrlstr).into(imgWebpage);
+                                    } else {
+                                        Picasso.get().load(R.drawable.logo).into(imgWebpage);
+                                        // Load text data into RecyclerView
+                                        if (map != null && !map.isEmpty()) {
+                                            String id = (String) map.get("id");
+                                            String department = (String) map.get("department");
+                                            String email = (String) map.get("email");
+                                            String contact = (String) map.get("contact");
+                                            String address = (String) map.get("address");
+                                            WebpageItem webpageItem = new WebpageItem(id, department, email, contact, address);
+                                            webpageItems.add(webpageItem);
+                                        }
+                                    }
+                                }
+                                // Set adapter for RecyclerView
+                                adapter = new WebpageAdapter(getActivity(), webpageItems, context);
+                                webpageRV.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Log.d(TAG, "No such document");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+    }
+    public void deleteData(int index) {
+        //set title of progress dialog
+        pd.setTitle("Deleting Data...");
+        pd.show();
+        db.collection("Documents").document(webpageItems.get(index).getId())
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        //this will be called when data is added successfully
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Uploaded...", Toast.LENGTH_SHORT).show();
+                   showData();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //this will be called if there is any error while uploading
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 }
