@@ -1,38 +1,33 @@
 package com.changshi.issa.Fragment;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.changshi.issa.Adapter.WebpageAdapter;
-import com.changshi.issa.DatabaseHandler.WebpageItem;
-import com.changshi.issa.HomeActivity;
-import com.changshi.issa.R;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.changshi.issa.Adapter.SupportAdapter;
+import com.changshi.issa.DatabaseHandler.Details;
+import com.changshi.issa.DatabaseHandler.SectionDetails;
+import com.changshi.issa.DatabaseHandler.Supports;
+import com.changshi.issa.HomeActivity;
+import com.changshi.issa.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SearchSFragment extends Fragment {
 
@@ -41,16 +36,14 @@ public class SearchSFragment extends Fragment {
     private ImageView backBtn;
     private RecyclerView searchView;
     private FirebaseFirestore db;
-    private List<WebpageItem> dataList = new ArrayList<>();
-    private WebpageAdapter adapter;
 
     public SearchSFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_s, container, false);
 
@@ -60,12 +53,8 @@ public class SearchSFragment extends Fragment {
         searchView = view.findViewById(R.id.searchRecyclerView);
         db = FirebaseFirestore.getInstance();
 
-
-//        // Initialize your adapter
-//        adapter = new WebpageAdapter(getActivity(), webpageItems, WebpageFragment.this);
-        searchView.setAdapter(adapter);
-
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        backBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
                 navigateToHomeActivity();
@@ -76,9 +65,13 @@ public class SearchSFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String query = searchEditText.getText().toString();
-                if (!query.isEmpty()) {
-//                    performSearch(query);
-                } else {
+
+                if (!query.isEmpty())
+                {
+                    performSearch(query);
+                }
+                else
+                {
                     Toast.makeText(getActivity(), "Please enter a search term", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -87,33 +80,139 @@ public class SearchSFragment extends Fragment {
         return view;
     }
 
-    private void navigateToHomeActivity() {
+    private void navigateToHomeActivity()
+    {
         // Start HomeActivity with add and logout icons
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         startActivity(intent);
         getActivity().finish();
     }
 
-//    private void performSearch(String query) {
-//        // Query the Firestore database
-//        db.collection("document")
-//                .whereEqualTo("department", query)
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                    if (task.isSuccessful()) {
-//                            dataList.clear();
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-//                                // Assuming your data is of type YourDataType
-//                                YourDataType data = document.toObject(YourDataType.class);
-//                                dataList.add(data);
-//                            }
-//                            adapter.notifyDataSetChanged();
-//                        } else {
-//                            Log.d(TAG, "Error getting documents: ", task.getException());
-//                        }
-//                    }
-//                });
-//    }
+    private void performSearch(String query)
+    {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("Support_Contents")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        ArrayList<Supports> AllSupports = new ArrayList<>();
+
+                        for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
+                        {
+                            Supports NewSupports = new Supports();
+
+                            NewSupports.setTitle(SelectedDocument.get("title").toString());
+
+                            if(NewSupports.getTitle().toLowerCase().contains(query.toLowerCase()))
+                            {
+                                NewSupports.setDescription(SelectedDocument.get("description").toString());
+
+                                if(SelectedDocument.contains("bannerUrl"))
+                                {
+                                    NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
+                                }
+
+                                NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
+
+                                // Get the Sections.
+                                ArrayList<Long> SectionIDs= (ArrayList<Long>)SelectedDocument.get("sections");
+
+                                db.collection("Sections")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                            {
+                                                ArrayList<SectionDetails> AllSections = new ArrayList<>();
+
+                                                for (DocumentSnapshot SelectedSection : task.getResult().getDocuments())
+                                                {
+                                                    boolean IDIsCorrect = false;
+
+                                                    for (Long SelectedID : SectionIDs)
+                                                    {
+                                                        if(SelectedID == (Long) SelectedSection.get("id"))
+                                                        {
+                                                            IDIsCorrect = true;
+                                                        }
+                                                    }
+
+                                                    if(IDIsCorrect)
+                                                    {
+                                                        SectionDetails NewSection = new SectionDetails();
+
+                                                        NewSection.setSectionHeading(SelectedSection.get("heading").toString());
+
+                                                        ArrayList<Long> DetailsIDs = (ArrayList<Long>)SelectedSection.get("details");
+
+                                                        db.collection("Details")
+                                                                .get()
+                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                                                {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                                    {
+                                                                        ArrayList<Details> AllDetails = new ArrayList<>();
+
+                                                                        for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
+                                                                        {
+                                                                            boolean IsCorrectID = false;
+
+                                                                            for(Long SelectedDetailID : DetailsIDs)
+                                                                            {
+                                                                                if(SelectedDetailID == (Long) SelectedDetail.get("id"))
+                                                                                {
+                                                                                    IsCorrectID = true;
+                                                                                }
+                                                                            }
+
+                                                                            if(IsCorrectID)
+                                                                            {
+                                                                                Details NewDetail = new Details();
+                                                                                NewDetail.setDetail(SelectedDetail.get("detail").toString());
+
+                                                                                AllDetails.add(NewDetail);
+                                                                            }
+                                                                        }
+
+                                                                        NewSection.setSectionDetails(AllDetails);
+                                                                    }
+                                                                });
+
+                                                        AllSections.add(NewSection);
+                                                    }
+                                                }
+
+                                                NewSupports.setSections(AllSections);
+                                            }
+                                        });
+
+                                if(SelectedDocument.contains("conclusion"))
+                                {
+                                    NewSupports.setConclusion(SelectedDocument.get("conclusion").toString());
+                                }
+
+                                AllSupports.add(NewSupports);
+                            }
+                        }
+
+                        if(AllSupports.isEmpty())
+                        {
+                            Toast.makeText(getActivity(), "No result", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            SupportAdapter mAdapter = new SupportAdapter(getActivity(), AllSupports);
+
+                            searchView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            searchView.setAdapter(mAdapter);
+                        }
+                    }
+                });
+    }
 }
