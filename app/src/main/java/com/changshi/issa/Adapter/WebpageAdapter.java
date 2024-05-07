@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.changshi.issa.DatabaseHandler.WebpageItem;
-import com.changshi.issa.Fragment.WebpageFragment;
 import com.changshi.issa.R;
 import com.changshi.issa.UpdateWebpageActivity;
 import com.changshi.issa.ViewHolder;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -93,8 +93,29 @@ public class WebpageAdapter extends RecyclerView.Adapter<ViewHolder> {
                         }
                         if (which == 1) {
                             //delete is clicked
+                            String id = webpageItems.get(position).getId();
+                            // Remove the item from the ArrayList
                             webpageItems.remove(position);
+                            // Notify the adapter of the removal
                             notifyItemRemoved(position);
+                            // Delete the document from Firestore
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            db.collection("Documents").document(id)
+                                    .delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // Document successfully deleted
+                                            Toast.makeText(context, "Document deleted", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Handle any errors
+                                            Toast.makeText(context, "Error deleting document", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }
                 }).create().show();

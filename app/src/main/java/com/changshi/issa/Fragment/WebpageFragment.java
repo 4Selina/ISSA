@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -56,7 +55,6 @@ public class WebpageFragment extends Fragment {
     private Button btnUpdateWebpage;
     private RecyclerView webpageRV;
     private WebpageAdapter adapter;
-    private Uri image;
 
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseFirestore db;

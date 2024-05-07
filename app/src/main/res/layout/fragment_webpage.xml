@@ -54,7 +54,7 @@
                 android:layout_width="360sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="15sp"
+                android:layout_marginTop="5sp"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:listitem="@layout/item_web_inform"

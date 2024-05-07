@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -98,25 +99,43 @@ public class SupportContentFragment extends Fragment {
         return view;
     }
 
+
     private void LoadData()
     {
-        if(!Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
-        {
+        if (!Strings.isNullOrEmpty(selectedSupport.getBannerUrl())) {
             Picasso.get().load(selectedSupport.getBannerUrl()).into(bannerImgV);
+        } else {
+            bannerImgV.setImageResource(R.drawable.logo);
+
         }
 
-        descriptionTv.setText(selectedSupport.getDescription());
 
-        for (SectionDetails SelectedSection : selectedSupport.getSections())
-        {
-            // Do this for Each Item in Sections.
+        if (!Strings.isNullOrEmpty(selectedSupport.getDescription())) {
+            descriptionTv.setText(selectedSupport.getDescription());
+        } else {
+            Toast.makeText(getContext(), "Description not available", Toast.LENGTH_SHORT).show();
+        }
 
-            for (Details SelectedDetail : SelectedSection.getSectionDetails())
-            {
-                // Do this for each item in Details.
+        if (selectedSupport.getSections() != null) {
+            for (SectionDetails SelectedSection : selectedSupport.getSections()) {
+                // Do this for Each Item in Sections.
+                String heading = SelectedSection.getSectionHeading();
+                if (!Strings.isNullOrEmpty(heading)) {
+                    // Display heading
+                }
+
+                List<Details> detailsList = SelectedSection.getSectionDetails();
+                if (detailsList != null && !detailsList.isEmpty()) {
+                    for (Details SelectedDetail : detailsList) {
+                        // Do this for each item in Details.
+                    }
+                }
             }
         }
 
+        // Display conclusion regardless of whether it is null or empty
         conclusionTv.setText(selectedSupport.getConclusion());
     }
+
+
 }

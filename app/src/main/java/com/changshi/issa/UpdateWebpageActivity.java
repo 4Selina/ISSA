@@ -169,7 +169,7 @@ public class UpdateWebpageActivity extends AppCompatActivity {
         String id = UUID.randomUUID().toString();
 
         Map<String, Object> doc = new HashMap<>();
-        doc.put("id", id);
+//        doc.put("id", id);
         doc.put("department", department);
 
 
