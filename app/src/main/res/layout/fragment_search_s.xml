@@ -11,30 +11,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:elevation="4dp">
+        android:elevation="4sp">
 
 
         <ImageView
             android:id="@+id/backIcon"
-            android:layout_width="50dp"
+            android:layout_width="50sp"
             android:layout_height="wrap_content"
             android:src="@drawable/back"
             android:tint="@color/white"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@color/teal_700"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="8sp"
             tools:ignore="UseAppTint" />
 
         <EditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="25dp"
+            android:textSize="20sp"
             android:hint="Search"
-            android:layout_margin="5dp"
-            android:padding="8dp"
-            android:drawablePadding="5dp"
+            android:layout_margin="5sp"
+            android:padding="8sp"
+            android:drawablePadding="5sp"
             android:inputType="text"
             android:maxLines="1"
             android:singleLine="true"
@@ -48,7 +48,7 @@
             android:text="Search"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8sp"/>
 
     </RelativeLayout>
 
@@ -58,6 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/searchBar"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        />
 
 </RelativeLayout>

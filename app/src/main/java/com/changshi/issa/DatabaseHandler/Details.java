@@ -1,6 +1,8 @@
 package com.changshi.issa.DatabaseHandler;
 
-public class Details
+import java.io.Serializable;
+
+public class Details implements Serializable
 {
     private String Detail;
 

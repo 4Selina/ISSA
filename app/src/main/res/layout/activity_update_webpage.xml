@@ -4,44 +4,44 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="10sp"
     tools:contect=".UpdateWebpageActivity">
 
-        <EditText
-            android:id="@+id/departmentEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter new Department"
-            android:textSize="21dp"
-            android:textStyle="bold"
-            android:layout_marginTop="8sp"
-            android:layout_marginBottom="8sp"/>
+    <EditText
+        android:id="@+id/departmentEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter new Department"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8sp"
+        android:layout_marginBottom="8sp"/>
 
-        <EditText
-            android:id="@+id/emailEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter email"
-            android:textSize="20dp"
-            android:textStyle="italic"
-            android:textColor="@color/purple_700"
-            android:layout_marginBottom="8sp"/>
-        <EditText
-            android:id="@+id/contactEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter contact number"
-            android:textSize="20dp"
-            android:layout_marginBottom="8sp"/>
+    <EditText
+        android:id="@+id/emailEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter email"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:textColor="@color/purple_700"
+        android:layout_marginBottom="8sp"/>
+    <EditText
+        android:id="@+id/contactEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter contact number"
+        android:textSize="20sp"
+        android:layout_marginBottom="8sp"/>
 
-        <EditText
-            android:id="@+id/addressEt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter address"
-            android:textSize="20dp"
-            android:textStyle="italic"
-            android:layout_marginBottom="8sp"/>
+    <EditText
+        android:id="@+id/addressEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter address"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:layout_marginBottom="8sp"/>
 
     <Button
         android:id="@+id/saveWebInfoBTN"
@@ -55,4 +55,4 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="280sp"
         android:text="Cancel" />
-    </LinearLayout>
+</LinearLayout>

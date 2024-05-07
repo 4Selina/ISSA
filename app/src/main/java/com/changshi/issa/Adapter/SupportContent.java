@@ -1,17 +1,14 @@
 package com.changshi.issa;
 
-import android.util.EventLogTags;
-
 import com.changshi.issa.DatabaseHandler.Supports;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SupportContent
 {
     private String title;
     private String description;
-    private String BannerUrl;
+    private String bannerUrl;
     private int ParentCategory;
     private ArrayList<Supports.Section> AllSections;
 
@@ -21,9 +18,10 @@ public class SupportContent
         // Default constructor required for Firebase
     }
 
-    public SupportContent(String title, String description, int parentCategory, String conclusion)
+    public SupportContent(String title, String bannerUrl, String description, int parentCategory, String conclusion)
     {
         this.title = title;
+        this.bannerUrl = bannerUrl;
         this.description = description;
         this.ParentCategory = parentCategory;
         this.Conclusion = conclusion;
@@ -38,7 +36,17 @@ public class SupportContent
         this.title = title;
     }
 
-    public String getDescription() {return description;}
+    public String getBannerUrl() {
+        return bannerUrl;
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl= bannerUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     public void setDescription(String description) {
         this.description = description;

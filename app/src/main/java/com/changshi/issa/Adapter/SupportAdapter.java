@@ -2,13 +2,12 @@ package com.changshi.issa.Adapter;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.changshi.issa.R.drawable.accommodation;
-import static com.changshi.issa.R.drawable.job;
 import static com.changshi.issa.R.drawable.jobsupport;
 import static com.changshi.issa.R.drawable.learn;
 import static com.changshi.issa.R.drawable.social;
 import static com.changshi.issa.R.drawable.transit;
-import static com.changshi.issa.R.drawable.transport;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -20,16 +19,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.changshi.issa.AddActivity;
-import com.changshi.issa.EditActivity;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.Fragment.SupportContentFragment;
-import com.changshi.issa.Fragment.SupportsFragment;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
 import com.google.common.base.Strings;
@@ -40,15 +35,11 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
 
     private Context mContext;
     private ArrayList<Supports> mSupportList;
-    private static SupportItemClickListener mListener;
 
-    public SupportAdapter(Context mContext, ArrayList<Supports> mSupportList, SupportItemClickListener mListener) {
+    public SupportAdapter(Context mContext, ArrayList<Supports> mSupportList)
+    {
         this.mContext = mContext;
         this.mSupportList = mSupportList;
-        this.mListener = mListener;
-    }
-
-    public SupportAdapter(FragmentActivity activity, ArrayList<Supports> allSupports) {
     }
 
     @NonNull
@@ -59,7 +50,7 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Supports currentItem = mSupportList.get(position);
 
         if(Strings.isNullOrEmpty(currentItem.getBannerUrl()))
@@ -103,7 +94,7 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
             @Override
             public void onClick(View v)
             {
-                ((HomeActivity)mContext).openFragment(new SupportContentFragment(new ArrayList<>()), "Learning Support");
+                ((HomeActivity)mContext).openFragment(new SupportContentFragment(mSupportList.get(position)), mSupportList.get(position).getTitle());
             }
         });
 
@@ -114,7 +105,11 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
             @Override
             public void onClick(View v) {
                 Intent NewIntent = new Intent(mContext, AddActivity.class);
-                NewIntent.putExtra("IsEditModeSupport", true);
+
+                Supports SelectedSupport = mSupportList.get(position);
+
+                NewIntent.putExtra("IsEditMode", true);
+                NewIntent.putExtra("SelectedSupport", SelectedSupport);
 
                 mContext.startActivity(NewIntent);
             }
@@ -162,17 +157,6 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
             txtSupportDescription = itemView.findViewById(R.id.txt_support_description);
             editButton = itemView.findViewById(R.id.edit_button);
             deleteButton = itemView.findViewById(R.id.delete_button);
-            editButton.setOnClickListener(v -> {
-                if (mListener != null) {
-                    mListener.onEditClick(getAdapterPosition());
-                }
-            });
-
-            deleteButton.setOnClickListener(v -> {
-                if (mListener != null) {
-                    mListener.onDeleteClick(getAdapterPosition());
-                }
-            });
         }
     }
 }

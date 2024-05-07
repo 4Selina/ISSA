@@ -2,11 +2,7 @@ package com.changshi.issa;
 
 import static com.changshi.issa.Fragment.WebpageFragment.REQUEST_CODE_PICK_IMAGE;
 
-import static java.security.AccessController.*;
-import static java.security.AccessController.getContext;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,46 +10,63 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.SectionAdapter;
-import com.changshi.issa.Adapter.SectionDetails;
 import com.changshi.issa.DatabaseHandler.Details;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.CollectionReference;
+import com.changshi.issa.DatabaseHandler.SectionDetails;
+import com.changshi.issa.DatabaseHandler.Supports;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.common.base.Strings;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
-public class AddActivity extends AppCompatActivity {
-
-
-    private ImageButton mImageBanner;
+public class AddActivity extends AppCompatActivity
+{
+    private ImageView mBannerImg;
+    private ImageButton mImageBannerBtn;
     private EditText mEditTitle;
+
+//    private EditText heading;
+//    private EditText details;
+
+
     private EditText mEditDescription;
+
+    private Spinner category;
 
     private SectionAdapter adapter;
     private RecyclerView SectionsRV;
-
-    private Button mButtonAddDetail;
-    private Button mButtonAddSupportSection;
+    private ArrayList<SectionDetails> sectionDetails;
+    //    private Button mButtonAddDetail;
+//    private Button mButtonAddSupportSection;
     private EditText mEditConclusion;
     private Button mButtonSubmit;
     private Button mButtonCancel;
+
+    String bannerUrl;
+
+    boolean IsEditMode;
+    Supports SelectedSupport;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUrl;
@@ -68,18 +81,37 @@ public class AddActivity extends AppCompatActivity {
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
 
-        mImageBanner = findViewById(R.id.update_support_banner);
+        Intent RecievedIntent = getIntent();
+
+        if(RecievedIntent.hasExtra("IsEditMode"))
+        {
+            IsEditMode = RecievedIntent.getBooleanExtra("IsEditMode", true);
+
+            if(IsEditMode)
+            {
+                SelectedSupport = (Supports)RecievedIntent.getSerializableExtra("SelectedSupport");
+            }
+        }
+
+        mBannerImg = findViewById(R.id.imageView_support_banner);
+        mImageBannerBtn = findViewById(R.id.update_support_banner);
         mEditTitle = findViewById(R.id.edit_support_title);
+
+//        heading = findViewById(R.id.edit_heading);
+//        details = findViewById(R.id.edit_detail_text);
+
         mEditDescription = findViewById(R.id.edit_support_intro);
-        mButtonAddDetail = findViewById(R.id.button_add_detail);
-        mButtonAddSupportSection = findViewById(R.id.button_add_section);
+//        mButtonAddDetail = findViewById(R.id.button_add_detail);
+//        mButtonAddSupportSection = findViewById(R.id.button_add_section);
         mEditConclusion = findViewById(R.id.edit_conclusion_content);
         mButtonSubmit = findViewById(R.id.button_save);
         mButtonCancel = findViewById(R.id.button_cancel);
 
+        category = findViewById(R.id.spinner_function);
+
         SectionsRV = findViewById(R.id.recycler_view_sections);
 
-        mImageBanner.setOnClickListener(new View.OnClickListener() {
+        mImageBannerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Open a dialog for picking an image
@@ -132,19 +164,17 @@ public class AddActivity extends AppCompatActivity {
                 builder.setView(input);
 
                 // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String imageUrl = input.getText().toString();
-                        // Update the image using the URL
-                        updateImageFromUrl(imageUrl);
-                    }
-
-                    private void updateImageFromUrl(String imageUrl) {
-                        Picasso.get().load(imageUrl).into(mImageBanner);
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        bannerUrl = input.getText().toString();
+                        Picasso.get().load(bannerUrl).into(mBannerImg);
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+                {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -155,32 +185,84 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        //Intent intent = new Intent(AddActivity.this, HomeActivity.class);
-        //intent.putExtra("from", "HomeActivity");
-        //startActivityForResult(intent, 1);
+        //init and set Section recyclerView
+        if(!IsEditMode)
+        {
+            ArrayList<SectionDetails> BaseArray = new ArrayList<>();
+            ArrayList<Details> DetailsArray = new ArrayList<>();
 
-        ArrayList<SectionDetails> BaseArray = new ArrayList<>();
-        ArrayList<Details> DetailsArray = new ArrayList<>();
+            Details DetailOne = new Details();
+            DetailsArray.add(DetailOne);
 
-        Details DetailOne = new Details();
-        DetailsArray.add(DetailOne);
+            SectionDetails FirstDetail = new SectionDetails();
+            FirstDetail.setSectionDetails(DetailsArray);
 
-        SectionDetails FirstDetail = new SectionDetails();
-        FirstDetail.setSectionDetails(DetailsArray);
+            BaseArray.add(FirstDetail);
 
-        BaseArray.add(FirstDetail);
+            adapter = new SectionAdapter(BaseArray, this);
 
-        adapter = new SectionAdapter(BaseArray, this);
-
-        SectionsRV.setLayoutManager(new LinearLayoutManager(this));
-        SectionsRV.setAdapter(adapter);
+            SectionsRV.setLayoutManager(new LinearLayoutManager(this));
+            SectionsRV.setAdapter(adapter);
+        }
 
         mButtonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-//                submitContent();
+                boolean AddItem = true;
+                String FailedReason = "";
 
+                Supports NewSupport = new Supports();
+
+                //input data
+                NewSupport.setTitle(mEditTitle.getText().toString().trim());
+
+                if(!Strings.isNullOrEmpty(bannerUrl))
+                {
+                    NewSupport.setBannerUrl(bannerUrl);
+                }
+
+                NewSupport.setDescription(mEditDescription.getText().toString().trim());
+                NewSupport.setParentCategory(category.getSelectedItem().toString());
+
+                ArrayList<SectionDetails> AllSections = new ArrayList<>();
+
+                if(SectionsRV.getAdapter().getItemCount() > 0)
+                {
+                    for(int i = 0; i < SectionsRV.getAdapter().getItemCount(); i++)
+                    {
+                        SectionDetails NewSection = new SectionDetails();
+
+                        if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
+                        {
+                            AddItem = false;
+                            FailedReason = "A Section Heading is Empty.";
+                        }
+
+                        NewSection.setSectionHeading(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading());
+                        NewSection.setSectionDetails(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails());
+
+                        for(Details SelectedDetails : ((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails())
+                        {
+                            if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
+                            {
+                                AddItem = false;
+
+                                FailedReason = "A Detail is Empty.";
+                            }
+                        }
+
+                        AllSections.add(NewSection);
+                    }
+                }
+
+                NewSupport.setSections(AllSections);
+                NewSupport.setConclusion(mEditConclusion.getText().toString().trim());
+
+                if(AddItem)
+                    submitContent(NewSupport);
+                else
+                    Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -191,53 +273,204 @@ public class AddActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-//
-//
-//    private void submitContent()
-//    {
-//        String title = mEditTitle.getText().toString().trim();
-//        String description = mEditDescription.getText().toString().trim();
-//        String conclusion = mEditConclusion.getText().toString().trim();
-//
-//        if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) || TextUtils.isEmpty(heading) || TextUtils.isEmpty(conclusion)) {
-//            Toast.makeText(this, "Title, Description, and Conclusion cannot be empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("Are you sure you want to submit?")
-//                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//                {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which)
-//                    {
-//                        // Save content to Firebase database
-//                        SupportContent supportContent = new SupportContent(title, description, 0, conclusion);
-//
-//                        CollectionReference Reference = db.collection("Support_Contents");
-//                        Map<String, SupportContent> users = new HashMap<>();
-//
-//                        for (int i = 0; i < SectionsRV.getChildCount(); i++)
-//                        {
-//                            users.put("alanisawesome", new User("June 23, 1912", "Alan Turing"));
-//
-//
-//                            EditText editTextDetail = (EditText) SectionsRV.getChildAt(i);
-//                            String detail = editTextDetail.getText().toString().trim();
-//
-//                            //supportContent.addDetail(detail);
-//                        }
-//
-//                        Reference.add()
-//
-//                        Toast.makeText(AddActivity.this, "Content submitted successfully", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                    }
-//                })
-//                .setNegativeButton("No", null)
-//                .show();
-//        }
-//    }
-}
 
+        // retrieve data
+        if(IsEditMode)
+        {
+            showData();
+        }
+    }
+
+    private void showData()
+    {
+        mEditTitle.setText(SelectedSupport.getTitle());
+
+        if(!Strings.isNullOrEmpty(SelectedSupport.getBannerUrl()))
+        {
+            Picasso.get().load(SelectedSupport.getBannerUrl()).into(mBannerImg);
+        }
+
+        mEditDescription.setText(SelectedSupport.getDescription());
+
+        String ParentCategory = SelectedSupport.getParentCategory();
+        int CategoryID = 0;
+
+        if(ParentCategory.equals("Learning Support"))
+            CategoryID = 0;
+        else if(ParentCategory.equals("Social Activities"))
+            CategoryID = 1;
+        else if(ParentCategory.equals("Accommodations"))
+            CategoryID = 2;
+        else if(ParentCategory.equals("Transport"))
+            CategoryID = 3;
+        else if(ParentCategory.equals("Job Supports"))
+            CategoryID = 4;
+
+        category.setSelection(CategoryID);
+
+        adapter = new SectionAdapter(SelectedSupport.getSections(), this);
+
+        SectionsRV.setLayoutManager(new LinearLayoutManager(this));
+        SectionsRV.setAdapter(adapter);
+
+        mEditConclusion.setText(SelectedSupport.getConclusion());
+    }
+
+    private void submitContent(Supports SavedItem)
+    {
+        db.collection("Settings")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        // Create a new document data
+                        Map<String, Object> SupportData = new HashMap<>();
+                        Map<String, Object> SectionsData = new HashMap<>();
+                        Map<String, Object> DetailsData = new HashMap<>();
+
+                        String SupportDocumentID = UUID.randomUUID().toString();
+
+                        Long SupportID = (Long) task.getResult().getDocuments().get(0).get("SupportID");
+                        Long SectionsID = (Long) task.getResult().getDocuments().get(0).get("SectionsID");
+                        Long DetailsID = (Long) task.getResult().getDocuments().get(0).get("DetailsID");
+
+                        SupportID++;
+
+                        SupportData.put("id", SupportID);
+
+                        if(!Strings.isNullOrEmpty(SavedItem.getBannerUrl()))
+                        {
+                            SupportData.put("bannerUrl", SavedItem.getBannerUrl());
+                        }
+
+                        SupportData.put("title", SavedItem.getTitle());
+                        SupportData.put("description", SavedItem.getDescription());
+                        SupportData.put("parentCategory", SavedItem.getParentCategory());
+                        SupportData.put("conclusion", SavedItem.getConclusion());
+
+
+                        if(SavedItem.getSections().size() > 0)
+                        {
+                            ArrayList<Long> SectionsIDs = new ArrayList<>();
+
+                            for (int i = 0; i < SavedItem.getSections().size(); i++)
+                            {
+                                String SectionsDocumentID = UUID.randomUUID().toString();
+
+                                SectionsID++;
+
+                                SectionsData.put("id", SectionsID);
+                                SectionsIDs.add(SectionsID);
+
+                                SectionsData.put("heading", SavedItem.getSections().get(i).getSectionHeading());
+
+                                if(SavedItem.getSections().get(i).getSectionDetails() != null)
+                                {
+                                    if(SavedItem.getSections().get(i).getSectionDetails().size() > 0)
+                                    {
+                                        ArrayList<Long> DetailsList = new ArrayList<>();
+
+                                        for (int j = 0; j < SavedItem.getSections().get(i).getSectionDetails().size(); j++)
+                                        {
+                                            String DetailsDocumentID = UUID.randomUUID().toString();
+
+                                            DetailsID++;
+
+                                            DetailsData.put("id", DetailsID);
+                                            DetailsList.add(DetailsID);
+
+                                            DetailsData.put("detail", SavedItem.getSections().get(i).getSectionDetails().get(j).getDetail());
+
+                                            db.collection("Details")
+                                                    .document(DetailsDocumentID)
+                                                    .set(DetailsData)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>()
+                                                    {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task)
+                                                        {
+                                                            // Leave Empty for now.
+                                                        }
+                                                    });
+                                        }
+
+                                        SectionsData.put("details", DetailsList);
+                                    }
+                                }
+
+                                db.collection("Sections")
+                                        .document(SectionsDocumentID)
+                                        .set(SectionsData)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task)
+                                            {
+                                                // Leave Empty for now.
+                                            }
+                                        });
+                            }
+
+                            SupportData.put("sections", SectionsIDs);
+                        }
+
+                        SupportData.put("conclusion", SavedItem.getConclusion());
+
+                        Long finalDetailsID = DetailsID;
+                        Long finalSectionsID = SectionsID;
+                        Long finalSupportID = SupportID;
+
+                        db.collection("Support_Contents")
+                                .document(SupportDocumentID)
+                                .set(SupportData)
+                                .addOnCompleteListener(new OnCompleteListener<Void>()
+                                {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task)
+                                    {
+                                        db.collection("Settings")
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                                {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                    {
+                                                        Map<String, Object> IDData = new HashMap<>();
+                                                        IDData.put("SupportID", finalSupportID);
+                                                        IDData.put("SectionsID", finalSectionsID);
+                                                        IDData.put("DetailsID", finalDetailsID);
+
+                                                        String Path = task.getResult().getDocuments().get(0).getReference().getId();
+
+                                                        db.collection("Settings")
+                                                                .document(Path)
+                                                                .update(IDData)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>()
+                                                                {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task)
+                                                                    {
+
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener()
+                                {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e)
+                                    {
+                                        Toast.makeText(AddActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                });
+    }
+
+}

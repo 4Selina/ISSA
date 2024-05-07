@@ -1,7 +1,6 @@
 package com.changshi.issa.Fragment;
 
-import static android.app.ProgressDialog.show;
-import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -9,6 +8,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -21,29 +21,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.changshi.issa.Adapter.WebpageAdapter;
 import com.changshi.issa.DatabaseHandler.WebpageItem;
-import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
-import com.changshi.issa.SupportContent;
 import com.changshi.issa.UpdateWebpageActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.base.Strings;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -51,13 +43,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WebpageFragment extends Fragment {
 
     public static final int REQUEST_CODE_PICK_IMAGE = 1;
-    private static final int REQUEST_CODE_CAPTURE_IMAGE = 2;
     private static final String TAG = "WebpageFragment";
     private Context context;
     private ArrayList<WebpageItem> webpageItems;
@@ -66,7 +56,6 @@ public class WebpageFragment extends Fragment {
     private Button btnUpdateWebpage;
     private RecyclerView webpageRV;
     private WebpageAdapter adapter;
-
     private Uri image;
 
     private RecyclerView.LayoutManager layoutManager;
@@ -78,6 +67,11 @@ public class WebpageFragment extends Fragment {
         this.webpageItems = webpageItems;
         this.context = context;
         this.db = db;
+    }
+
+    public WebpageFragment()
+    {
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -95,16 +89,29 @@ public class WebpageFragment extends Fragment {
         webpageRV.setHasFixedSize(true);
         webpageRV.setLayoutManager(new LinearLayoutManager(getContext()));
         webpageRV.setAdapter(adapter);
-
+        //set image and image button
         imgWebpage = (ImageView) view.findViewById(R.id.imgWebpage);
 
         btnWebLogo = view.findViewById(R.id.edtWebpageLogo);
         btnUpdateWebpage = view.findViewById(R.id.btnUpdateWebpage); ;
 
-
         pd = new ProgressDialog(getActivity());
-        showData();
+        pd.setMessage("Loading...");
+        pd.setCancelable(false);
 
+        //hide edit buttons when no login
+        SharedPreferences Pref = getActivity().getSharedPreferences("login_pref", MODE_PRIVATE);
+        boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
+
+        if (!IsLoggedIn) {
+            btnWebLogo.setVisibility(View.GONE);
+            btnUpdateWebpage.setVisibility(View.GONE);
+        }
+
+//        pd = new ProgressDialog(getActivity());
+
+        //retrieve data
+        showData();
         loadImage();
 
         btnWebLogo.setOnClickListener(new View.OnClickListener() {
@@ -172,13 +179,16 @@ public class WebpageFragment extends Fragment {
 
                     }
 
-                    private void updateImageFromUrl(String imageUrl) {
-
-                        Picasso.get().load(imageUrl).into(imgWebpage);
+                    private void updateImageFromUrl(String imageUrl)
+                    {
+                        if(!Strings.isNullOrEmpty(imageUrl))
+                            Picasso.get().load(imageUrl).into(imgWebpage);
+                        else
+                            imgWebpage.setImageResource(R.drawable.logo);
                     }
 
-
-                    private void saveImageUrlToFirestore(String imageUrl) {
+                    private void saveImageUrlToFirestore(String imageUrl)
+                    {
                         Map<String, Object> data = new HashMap<>();
                         data.put("imageUrl", imageUrl);
                         db.collection("Documents").document("imageUrl")
@@ -215,7 +225,6 @@ public class WebpageFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UpdateWebpageActivity.class);
                 startActivity(intent);
-
             }
         });
 
@@ -223,7 +232,8 @@ public class WebpageFragment extends Fragment {
     }
 
 
-    private void loadImage() {
+    private void loadImage()
+    {
         db.collection("Documents").document("imageUrl")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -231,10 +241,17 @@ public class WebpageFragment extends Fragment {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
+                            if (document.exists())
+                            {
                                 String imageUrl = document.getString("imageUrl");
-                                Picasso.get().load(imageUrl).into(imgWebpage);
-                            } else {
+
+                                if(!Strings.isNullOrEmpty(imageUrl))
+                                    Picasso.get().load(imageUrl).into(imgWebpage);
+                                else
+                                    imgWebpage.setImageResource(R.drawable.logo);
+                            }
+                            else
+                            {
                                 Log.d(TAG, "No such document");
                             }
                         } else {
@@ -244,13 +261,8 @@ public class WebpageFragment extends Fragment {
                 });
     }
 
-    private void showData() {
-//        String imageUrl = "";
-//        Picasso.get()
-//                .load(imageUrl)
-//                .placeholder(R.drawable.edit) // will be displayed while the image loads
-//                .into(imgWebpage);
-
+    private void showData()
+    {
         //set title of progress dialog
         pd.setTitle("Loading Data...");
         pd.show();
@@ -259,7 +271,6 @@ public class WebpageFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        webpageItems.clear();
                         pd.dismiss();
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
@@ -271,13 +282,21 @@ public class WebpageFragment extends Fragment {
 
                                     Object imageUrl = map.get("imageUrl");
 
-                                    if (null != imageUrl) {
+                                    if (null != imageUrl)
+                                    {
                                         String imageUrlstr = imageUrl.toString();
-                                        Picasso.get().load(imageUrlstr).into(imgWebpage);
-                                    } else {
+
+                                        if(!Strings.isNullOrEmpty(imageUrlstr))
+                                            Picasso.get().load(imageUrlstr).into(imgWebpage);
+                                        else
+                                            imgWebpage.setImageResource(R.drawable.logo);
+                                    }
+                                    else
+                                    {
                                         Picasso.get().load(R.drawable.logo).into(imgWebpage);
                                         // Load text data into RecyclerView
-                                        if (map != null && !map.isEmpty()) {
+                                        if (map != null && !map.isEmpty())
+                                        {
                                             String id = (String) map.get("id");
                                             String department = (String) map.get("department");
                                             String email = (String) map.get("email");
@@ -301,29 +320,29 @@ public class WebpageFragment extends Fragment {
                     }
                 });
     }
-    public void deleteData(int index) {
-        //set title of progress dialog
-        pd.setTitle("Deleting Data...");
-        pd.show();
-        db.collection("Documents").document(webpageItems.get(index).getId())
-                .delete()
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        //this will be called when data is added successfully
-                        pd.dismiss();
-                        Toast.makeText(getActivity(), "Uploaded...", Toast.LENGTH_SHORT).show();
-                   showData();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //this will be called if there is any error while uploading
-                        pd.dismiss();
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
+//    public void deleteData(int index) {
+//        //set title of progress dialog
+//        pd.setTitle("Deleting Data...");
+//        pd.show();
+//        db.collection("Documents").document(webpageItems.get(index).getId())
+//                .delete()
+//                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Void> task) {
+//                        //this will be called when data is added successfully
+//                        pd.dismiss();
+//                        Toast.makeText(getActivity(), "Uploaded...", Toast.LENGTH_SHORT).show();
+//                   showData();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        //this will be called if there is any error while uploading
+//                        pd.dismiss();
+//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
 }

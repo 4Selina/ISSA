@@ -2,6 +2,8 @@ package com.changshi.issa.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.DatabaseHandler.Details;
+import com.changshi.issa.DatabaseHandler.SectionDetails;
 import com.changshi.issa.R;
 
 import java.util.ArrayList;
@@ -20,12 +23,11 @@ import java.util.List;
 
 public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionViewHolder> {
     private List<SectionDetails> sectionDetailsList;
-    private Context CurrentContext;
+    private Context currentContext;
 
-    public SectionAdapter(List<SectionDetails> sectionDetailsList, Context currentContext)
-    {
+    public SectionAdapter(List<SectionDetails> sectionDetailsList, Context currentContext) {
         this.sectionDetailsList = sectionDetailsList;
-        CurrentContext = currentContext;
+        this.currentContext = currentContext;
     }
 
     @NonNull
@@ -40,10 +42,25 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         SectionDetails sectionDetails = sectionDetailsList.get(position);
         holder.bindData(sectionDetails);
 
-        holder.AddNewSection.setOnClickListener(new View.OnClickListener() {
+        holder.AddNewSection.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 addSection();
+            }
+        });
+
+        holder.sectionTitleEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                sectionDetailsList.get(position).setSectionHeading(s.toString());
             }
         });
 
@@ -56,7 +73,7 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
 
         DetailsAdapter adapter = new DetailsAdapter(sectionDetailsList.get(position).getSectionDetails());
 
-        holder.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(CurrentContext));
+        holder.detailsRecyclerView.setLayoutManager(new LinearLayoutManager(currentContext));
         holder.detailsRecyclerView.setAdapter(adapter);
     }
 
@@ -65,31 +82,31 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         return sectionDetailsList.size();
     }
 
-    public void addSection() {
-        SectionDetails NewSection = new SectionDetails();
-
+    public void addSection()
+    {
+        ArrayList<Details> AllDetails = new ArrayList<>();
         Details DefaultDetail = new Details();
 
-        ArrayList<Details> AllDetails = new ArrayList<>();
         AllDetails.add(DefaultDetail);
 
-        NewSection.setSectionDetails(AllDetails);
+        SectionDetails newSection = new SectionDetails("", AllDetails);
 
-        sectionDetailsList.add(NewSection);
-        notifyItemInserted(sectionDetailsList.size() - 1);
+        sectionDetailsList.add(newSection);
+        notifyItemInserted(sectionDetailsList.size() -1);
     }
 
-    public void removeSection(int position)
-    {
-        if(sectionDetailsList.size() > 1)
-        {
-            sectionDetailsList.remove(sectionDetailsList.get(position));
+    public void removeSection(int position) {
+        if (position >= 0 && position < sectionDetailsList.size()) {
+            sectionDetailsList.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    public class SectionViewHolder extends RecyclerView.ViewHolder
-    {
+    public SectionDetails getItem(int i) {
+        return sectionDetailsList.get(i);
+    }
+
+    public class SectionViewHolder extends RecyclerView.ViewHolder {
         private EditText sectionTitleEditText;
         public RecyclerView detailsRecyclerView;
         public Button AddNewSection;
@@ -99,16 +116,12 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             super(itemView);
             sectionTitleEditText = itemView.findViewById(R.id.edit_heading);
             detailsRecyclerView = itemView.findViewById(R.id.recycler_view_details);
-
             AddNewSection = itemView.findViewById(R.id.button_add_section);
             RemoveSection = itemView.findViewById(R.id.button_remove_section);
         }
 
-        public void bindData(SectionDetails sectionDetails)
-        {
+        public void bindData(SectionDetails sectionDetails) {
             sectionTitleEditText.setText(sectionDetails.getSectionHeading());
-            // 设置 detailsRecyclerView 的 Adapter 为 DetailsAdapter，传入当前部分的详细信息列表
-
             DetailsAdapter detailsAdapter = new DetailsAdapter(sectionDetails.getSectionDetails());
             detailsRecyclerView.setAdapter(detailsAdapter);
         }

@@ -12,14 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.SupportAdapter;
-import com.changshi.issa.Adapter.SupportItemClickListener;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.R;
 
 import java.util.ArrayList;
 
-public class SupportsFragment extends Fragment implements SupportItemClickListener {
-
+public class SupportsFragment extends Fragment
+{
     private RecyclerView mRecyclerView;
     private SupportAdapter mAdapter;
     private ArrayList<Supports> mSupportList;
@@ -35,31 +34,17 @@ public class SupportsFragment extends Fragment implements SupportItemClickListen
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
         View supportRecyclerView = getView().findViewById(R.id.supportRecyclerView);
 
         mRecyclerView = view.findViewById(R.id.supportRecyclerView);
 
-        mAdapter = new SupportAdapter(getActivity(), mSupportList, this);
+        mAdapter = new SupportAdapter(getActivity(), mSupportList);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onImageClick(int position) {
-
-    }
-
-    @Override
-    public void onEditClick(int position) {
-
-    }
-
-    @Override
-    public void onDeleteClick(int position) {
-
     }
 }
 

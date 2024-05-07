@@ -1,6 +1,8 @@
 package com.changshi.issa.Adapter;
 
 import android.annotation.SuppressLint;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.changshi.issa.DatabaseHandler.Details;
 import com.changshi.issa.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
@@ -24,7 +27,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         notifyDataSetChanged();
     }
 
-    public DetailsAdapter(List<Details> supportDetails) {
+    public DetailsAdapter(ArrayList<Details> supportDetails) {
         this.CurrentDetails = supportDetails;
     }
 
@@ -39,6 +42,19 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
     public void onBindViewHolder(@NonNull DetailsViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Details ThisDetail = CurrentDetails.get(position);
         holder.bindData(ThisDetail);
+
+        holder.DetailsText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                CurrentDetails.get(position).setDetail(s.toString());
+            }
+        });
 
         holder.AddDetails.setOnClickListener(new View.OnClickListener() {
             @Override

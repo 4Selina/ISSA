@@ -1,5 +1,7 @@
 package com.changshi.issa.DatabaseHandler;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,17 +14,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
-public class Supports {
+public class Supports implements Serializable
+{
     private String id;
     private String title;
     private String bannerUrl;
     private String parentCategory;
     private String description;
-    private List<Section> sections;
+    private ArrayList<SectionDetails> sections;
 
     private String conclusion;
 
@@ -30,7 +33,7 @@ public class Supports {
         // Default constructor required for Firestore
     }
 
-    public Supports(String id, String title, String bannerUrl, String parentCategory, String description, List<Section> sections, String conclusion) {
+    public Supports(String id, String title, String bannerUrl, String parentCategory, String description, ArrayList<SectionDetails> sections, String conclusion) {
         this.id = id;
         this.title = title;
         this.bannerUrl = bannerUrl;
@@ -80,11 +83,11 @@ public class Supports {
         this.description = description;
     }
 
-    public List<Section> getSections() {
+    public ArrayList<SectionDetails> getSections() {
         return sections;
     }
 
-    public void setSections(List<Section> sections) {
+    public void setSections(ArrayList<SectionDetails> sections) {
         this.sections = sections;
     }
 
@@ -97,7 +100,7 @@ public class Supports {
     }
 
     // Method to create a new support item
-    public void create(Context context, String title, String bannerUrl, String parentCategory, String description, List<Section> sections, String conclusion) {
+    public void create(Context context, String title, String bannerUrl, String parentCategory, String description, ArrayList<SectionDetails> sections, String conclusion) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference newSupportRef = db.collection("supports").document();
         Supports newSupport = new Supports(newSupportRef.getId(), title, bannerUrl, parentCategory, description, sections, conclusion);
@@ -127,7 +130,7 @@ public class Supports {
     }
 
     // Method to update the supports item
-    public void update(Context context, String newTitle, String newBannerUrl, String newParentCategory, String newDescription, List<Section> newSections, String newConclusion) {
+    public void update(Context context, String newTitle, String newBannerUrl, String newParentCategory, String newDescription, ArrayList<SectionDetails> newSections, String newConclusion) {
 
         if (newSections.isEmpty()) {
             // 用户尝试删除所有的 section，可以在这里添加逻辑来提醒用户或者执行其他操作

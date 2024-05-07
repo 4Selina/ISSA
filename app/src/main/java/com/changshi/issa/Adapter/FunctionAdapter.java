@@ -1,16 +1,11 @@
 package com.changshi.issa.Adapter;
 
 import static android.content.Context.MODE_PRIVATE;
-
-import static androidx.core.app.ActivityCompat.startActivityForResult;
 import static com.changshi.issa.Fragment.WebpageFragment.REQUEST_CODE_PICK_IMAGE;
-import static java.security.AccessController.*;
-import static java.security.AccessController.getContext;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.MediaRouteButton;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,29 +15,33 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.changshi.issa.DatabaseHandler.Details;
 import com.changshi.issa.DatabaseHandler.Functions;
+import com.changshi.issa.DatabaseHandler.SectionDetails;
 import com.changshi.issa.DatabaseHandler.Supports;
-import com.changshi.issa.Fragment.AccommodationFragment;
-import com.changshi.issa.Fragment.FunctionsFragment;
-import com.changshi.issa.Fragment.SupportContentFragment;
 import com.changshi.issa.Fragment.SupportsFragment;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
-import com.changshi.issa.SupportContent;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.common.base.Strings;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
-import java.security.AccessController;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyViewHolder> {
 
@@ -54,22 +53,23 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
     {
         this.mContext = _Context;
         this.mFunctionList = _FunctionList;
-
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_function, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position)
+    {
         Functions currentFunction = mFunctionList.get(position);
         holder.txtFunctionTitle.setText(currentFunction.getNameOfFunction());
 
-        if(mFunctionList.get(position).getFunctionURL().equals(""))
+        if(Strings.isNullOrEmpty(mFunctionList.get(position).getFunctionURL()))
         {
             holder.functionImage.setImageResource(mFunctionList.get(position).getFunctionImage());
         }
@@ -87,25 +87,25 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         }
 
         // Click on the Update Image Button
-        holder.updateImageButton.setOnClickListener(new View.OnClickListener() {
+        holder.updateImageButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Show a dialog to select an image
                 mFunctionImageToUpdate = holder.functionImage;
                 showImagePickerDialog();
             }
 
-            private void showImagePickerDialog() {
+            private void showImagePickerDialog()
+            {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Select Image Source")
-                        .setItems(new CharSequence[]{"Gallery", "URL"}, new DialogInterface.OnClickListener() {
+                        .setItems(new CharSequence[]{"URL"}, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 switch (which) {
                                     case 0:
-                                        pickImageFromGallery();
-                                        break;
-                                    case 1:
                                         showUrlInputDialog();
                                         break;
                                 }
@@ -133,13 +133,74 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
                         String imageUrl = input.getText().toString();
-                        Picasso.get().load(imageUrl).into(mFunctionImageToUpdate);
+
+                        if(!Strings.isNullOrEmpty(imageUrl))
+                            Picasso.get().load(imageUrl).into(mFunctionImageToUpdate);
+                        else
+                            holder.functionImage.setImageResource(mFunctionList.get(position).getFunctionImage());
+
+                        mFunctionList.get(position).setFunctionURL(imageUrl);
+
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("Settings")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                    {
+                                        for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
+                                        {
+                                            if(SelectedDocument.contains("AccommodationUrl"))
+                                            {
+                                                Map<String, Object> UrlData = new HashMap<>();
+
+                                                switch (mFunctionList.get(position).getNameOfFunction())
+                                                {
+                                                    case "Learning Support":
+                                                        UrlData.put("LearningSupportUrl", imageUrl);
+                                                        break;
+                                                    case "Social Activities":
+                                                        UrlData.put("SocialActivitiesUrl", imageUrl);
+                                                        break;
+                                                    case "Accommodation":
+                                                        UrlData.put("AccommodationUrl", imageUrl);
+                                                        break;
+                                                    case "Transport":
+                                                        UrlData.put("TransportUrl", imageUrl);
+                                                        break;
+                                                    case "Job Support":
+                                                        UrlData.put("JobSupportUrl", imageUrl);
+                                                        break;
+                                                }
+
+                                                String Path = SelectedDocument.getReference().getId();
+
+                                                db.collection("Settings")
+                                                        .document(Path)
+                                                        .update(UrlData)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
+                                                        {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task)
+                                                            {
+
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    }
+                                });
+
                     }
                 });
+
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -159,132 +220,251 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
             public void onClick(View v)
             {
                 // Create a new Intent.
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                if(holder.txtFunctionTitle.getText() == "Learning Support")
-                {
-                    ArrayList<Supports> LearningSupportFunctions = new ArrayList<>();
+                db.collection("Support_Contents")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task)
+                            {
+                                ArrayList<Supports> AllSupports = new ArrayList<>();
 
-                    Supports CourseSelectionFunction = new Supports();
-                    CourseSelectionFunction.setTitle("Course Selection");
-                    CourseSelectionFunction.setParentCategory("Learning Support");
+                                for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
+                                {
+                                    if(SelectedDocument.get("parentCategory").toString().equals(holder.txtFunctionTitle.getText()))
+                                    {
+                                        Supports NewSupports = new Supports();
 
-                    LearningSupportFunctions.add(CourseSelectionFunction);
+                                        NewSupports.setTitle(SelectedDocument.get("title").toString());
+                                        NewSupports.setDescription(SelectedDocument.get("description").toString());
 
-                    Supports AcademicFunction = new Supports();
-                    AcademicFunction.setTitle("Academic Support");
-                    AcademicFunction.setParentCategory("Learning Support");
+                                        if(SelectedDocument.contains("bannerUrl"))
+                                        {
+                                            NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
+                                        }
 
-                    LearningSupportFunctions.add(AcademicFunction);
+                                        NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
-                    Supports StudentCouncilFunction = new Supports();
-                    StudentCouncilFunction.setTitle("Student Council");
-                    StudentCouncilFunction.setParentCategory("Learning Support");
+                                        // Get the Sections.
+                                        ArrayList<Long> SectionIDs= (ArrayList<Long>)SelectedDocument.get("sections");
 
-                    LearningSupportFunctions.add(StudentCouncilFunction);
+                                        db.collection("Sections")
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                                {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                    {
+                                                        ArrayList<SectionDetails> AllSections = new ArrayList<>();
 
-                    Supports HealthFunction = new Supports();
-                    HealthFunction.setTitle("Health & Wellbeing");
-                    HealthFunction.setParentCategory("Learning Support");
+                                                        for (DocumentSnapshot SelectedSection : task.getResult().getDocuments())
+                                                        {
+                                                            boolean IDIsCorrect = false;
 
-                    // Remove all this Hard Coded information and put it in the Database.
+                                                            for (Long SelectedID : SectionIDs)
+                                                            {
+                                                                if(SelectedID == (Long) SelectedSection.get("id"))
+                                                                {
+                                                                    IDIsCorrect = true;
+                                                                }
+                                                            }
 
-                    // Get Information from DB.
-                    // Add Information from DB to the Array.
+                                                            if(IDIsCorrect)
+                                                            {
+                                                                SectionDetails NewSection = new SectionDetails();
 
-                    LearningSupportFunctions.add(HealthFunction);
-                    ((HomeActivity)mContext).openFragment(new SupportsFragment(LearningSupportFunctions), "Learning Support");
-                }
-                if(holder.txtFunctionTitle.getText() == "Social Activities")
-                {
-                    ArrayList<Supports> SocialActFunctions = new ArrayList<>();
+                                                                NewSection.setSectionHeading(SelectedSection.get("heading").toString());
 
-                    Supports NetworkingFunction = new Supports();
-                    NetworkingFunction.setTitle("Networking");
-                    NetworkingFunction.setParentCategory("Social Activities");
+                                                                ArrayList<Long> DetailsIDs = (ArrayList<Long>)SelectedSection.get("details");
 
-                    SocialActFunctions.add(NetworkingFunction);
+                                                                db.collection("Details")
+                                                                        .get()
+                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                                                        {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                                            {
+                                                                                ArrayList<Details> AllDetails = new ArrayList<>();
 
-                    Supports SportClubFunction = new Supports();
-                    SportClubFunction.setTitle("Sport Club");
-                    SportClubFunction.setParentCategory("Social Activities");
+                                                                                for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
+                                                                                {
+                                                                                    boolean IsCorrectID = false;
 
-                    SocialActFunctions.add(SportClubFunction);
+                                                                                    for(Long SelectedDetailID : DetailsIDs)
+                                                                                    {
+                                                                                        if(SelectedDetailID == (Long) SelectedDetail.get("id"))
+                                                                                        {
+                                                                                            IsCorrectID = true;
+                                                                                        }
+                                                                                    }
 
-                    Supports FoodOptionsFunction = new Supports();
-                    FoodOptionsFunction.setTitle("Food Options");
-                    FoodOptionsFunction.setParentCategory("Social Activities");
+                                                                                    if(IsCorrectID)
+                                                                                    {
+                                                                                        Details NewDetail = new Details();
+                                                                                        NewDetail.setDetail(SelectedDetail.get("detail").toString());
 
-                    SocialActFunctions.add(FoodOptionsFunction);
-                    ((HomeActivity)mContext).openFragment(new SupportsFragment(SocialActFunctions), "Social Activities");
-                }
-                if(holder.txtFunctionTitle.getText() == "Accommodation")
-                {
-                    ArrayList<Supports> AccommodationFunctions = new ArrayList<>();
-//                    ArrayList<Supports> AccommodationFunctions = GetSupports(2);
+                                                                                        AllDetails.add(NewDetail);
+                                                                                    }
+                                                                                }
 
-                    Supports HomeStayFunction = new Supports();
-                    HomeStayFunction.setTitle("Homestay");
-                    HomeStayFunction.setParentCategory("Accommodation");
+                                                                                NewSection.setSectionDetails(AllDetails);
+                                                                            }
+                                                                        });
 
-                    AccommodationFunctions.add(HomeStayFunction);
+                                                                AllSections.add(NewSection);
+                                                            }
+                                                        }
 
-                    Supports RentalFunction = new Supports();
-                    RentalFunction.setTitle("Rental");
-                    RentalFunction.setParentCategory("Accommodation");
+                                                        NewSupports.setSections(AllSections);
+                                                    }
+                                                });
 
-                    AccommodationFunctions.add(RentalFunction);
+                                        if(SelectedDocument.contains("conclusion"))
+                                        {
+                                            NewSupports.setConclusion(SelectedDocument.get("conclusion").toString());
+                                        }
 
-                    ((HomeActivity) mContext).openFragment(new SupportsFragment(AccommodationFunctions), "Accommodation");
-                }
-                if(holder.txtFunctionTitle.getText() == "Transports")
-                {
-                    ArrayList<Supports> TransportsFunction = new ArrayList<>();
+                                        AllSupports.add(NewSupports);
+                                    }
+                                }
 
-                    Supports PublicTranFunction = new Supports();
-                    PublicTranFunction.setTitle("Public Transport System");
-                    PublicTranFunction.setParentCategory("Transports");
+                                ((HomeActivity)mContext).openFragment(new SupportsFragment(AllSupports), holder.txtFunctionTitle.getText().toString());
+                            }
+                        });
 
-                    TransportsFunction.add(PublicTranFunction);
 
-                    Supports AirportFunction = new Supports();
-                    AirportFunction.setTitle("Airport Express");
-                    AirportFunction.setParentCategory("Transports");
-
-                    TransportsFunction.add(AirportFunction);
-
-                    Supports CampusFunction = new Supports();
-                    CampusFunction.setTitle("Campus Transfers");
-                    CampusFunction.setParentCategory("Transports");
-
-                    TransportsFunction.add(CampusFunction);
-
-                    ((HomeActivity) mContext).openFragment(new SupportsFragment(TransportsFunction), "Transports");
-
-                }
-                if(holder.txtFunctionTitle.getText() == "Job Support")
-                {
-                    ArrayList<Supports> JobFunctions = new ArrayList<>();
-
-                    Supports PartTimeFunction = new Supports();
-                    PartTimeFunction.setTitle("Part-time Job");
-                    PartTimeFunction.setParentCategory("Job Support");
-
-                    JobFunctions.add(PartTimeFunction);
-
-                    Supports InternshipFunction = new Supports();
-                    InternshipFunction.setTitle("Internship");
-                    InternshipFunction.setParentCategory("Job Support");
-
-                    JobFunctions.add(InternshipFunction);
-
-                    //Graduate job card
-                    Supports GraduateJobFunction = new Supports();
-                    GraduateJobFunction.setTitle("Graduate Job");
-                    GraduateJobFunction.setParentCategory("Job Support");
-
-                    JobFunctions.add(GraduateJobFunction);
-                    ((HomeActivity)mContext).openFragment(new SupportsFragment(JobFunctions), "Job Support");
-                }
+//                if(holder.txtFunctionTitle.getText() == "Learning Support")
+//                {
+//
+//
+//                    // Read all the Support_Contents from the Database that have the ParentCategory of
+//                    // Learning Support.
+//
+//                    // Set the Data into the LearningSupportFunctions ArrayList.
+//
+//
+//
+////                    Supports CourseSelectionFunction = new Supports();
+////                    CourseSelectionFunction.setTitle("Course Selection");
+////                    CourseSelectionFunction.setParentCategory("Learning Support");
+////
+////                    LearningSupportFunctions.add(CourseSelectionFunction);
+////
+////                    Supports AcademicFunction = new Supports();
+////                    AcademicFunction.setTitle("Academic Support");
+////                    AcademicFunction.setParentCategory("Learning Support");
+////
+////                    LearningSupportFunctions.add(AcademicFunction);
+////
+////                    Supports StudentCouncilFunction = new Supports();
+////                    StudentCouncilFunction.setTitle("Student Council");
+////                    StudentCouncilFunction.setParentCategory("Learning Support");
+////
+////                    LearningSupportFunctions.add(StudentCouncilFunction);
+////
+////                    Supports HealthFunction = new Supports();
+////                    HealthFunction.setTitle("Health & Wellbeing");
+////                    HealthFunction.setParentCategory("Learning Support");
+//
+//                    // Remove all this Hard Coded information and put it in the Database.
+//
+//                    // Get Information from DB.
+//                    // Add Information from DB to the Array.
+//
+//                }
+//                if(holder.txtFunctionTitle.getText() == "Social Activities")
+//                {
+//                    ArrayList<Supports> SocialActFunctions = new ArrayList<>();
+//
+//                    Supports NetworkingFunction = new Supports();
+//                    NetworkingFunction.setTitle("Networking");
+//                    NetworkingFunction.setParentCategory("Social Activities");
+//
+//                    SocialActFunctions.add(NetworkingFunction);
+//
+//                    Supports SportClubFunction = new Supports();
+//                    SportClubFunction.setTitle("Sport Club");
+//                    SportClubFunction.setParentCategory("Social Activities");
+//
+//                    SocialActFunctions.add(SportClubFunction);
+//
+//                    Supports FoodOptionsFunction = new Supports();
+//                    FoodOptionsFunction.setTitle("Food Options");
+//                    FoodOptionsFunction.setParentCategory("Social Activities");
+//
+//                    SocialActFunctions.add(FoodOptionsFunction);
+//                    ((HomeActivity)mContext).openFragment(new SupportsFragment(SocialActFunctions), "Social Activities");
+//                }
+//                if(holder.txtFunctionTitle.getText() == "Accommodation")
+//                {
+//                    ArrayList<Supports> AccommodationFunctions = new ArrayList<>();
+//                    //ArrayList<Supports> AccommodationFunctions = GetSupports("Accommodation");
+//
+//                    Supports HomeStayFunction = new Supports();
+//                    HomeStayFunction.setTitle("Homestay");
+//                    HomeStayFunction.setParentCategory("Accommodation");
+//
+//                    AccommodationFunctions.add(HomeStayFunction);
+//
+//                    Supports RentalFunction = new Supports();
+//                    RentalFunction.setTitle("Rental");
+//                    RentalFunction.setParentCategory("Accommodation");
+//
+//                    AccommodationFunctions.add(RentalFunction);
+//
+//                    ((HomeActivity) mContext).openFragment(new SupportsFragment(AccommodationFunctions), "Accommodation");
+//                }
+//                if(holder.txtFunctionTitle.getText() == "Transports")
+//                {
+//                    ArrayList<Supports> TransportsFunction = new ArrayList<>();
+//
+//                    Supports PublicTranFunction = new Supports();
+//                    PublicTranFunction.setTitle("Public Transport System");
+//                    PublicTranFunction.setParentCategory("Transports");
+//
+//                    TransportsFunction.add(PublicTranFunction);
+//
+//                    Supports AirportFunction = new Supports();
+//                    AirportFunction.setTitle("Airport Express");
+//                    AirportFunction.setParentCategory("Transports");
+//
+//                    TransportsFunction.add(AirportFunction);
+//
+//                    Supports CampusFunction = new Supports();
+//                    CampusFunction.setTitle("Campus Transfers");
+//                    CampusFunction.setParentCategory("Transports");
+//
+//                    TransportsFunction.add(CampusFunction);
+//
+//                    ((HomeActivity) mContext).openFragment(new SupportsFragment(TransportsFunction), "Transports");
+//
+//                }
+//                if(holder.txtFunctionTitle.getText() == "Job Support")
+//                {
+//                    ArrayList<Supports> JobFunctions = new ArrayList<>();
+//
+//                    Supports PartTimeFunction = new Supports();
+//                    PartTimeFunction.setTitle("Part-time Job");
+//                    PartTimeFunction.setParentCategory("Job Support");
+//
+//                    JobFunctions.add(PartTimeFunction);
+//
+//                    Supports InternshipFunction = new Supports();
+//                    InternshipFunction.setTitle("Internship");
+//                    InternshipFunction.setParentCategory("Job Support");
+//
+//                    JobFunctions.add(InternshipFunction);
+//
+//                    //Graduate job card
+//                    Supports GraduateJobFunction = new Supports();
+//                    GraduateJobFunction.setTitle("Graduate Job");
+//                    GraduateJobFunction.setParentCategory("Job Support");
+//
+//                    JobFunctions.add(GraduateJobFunction);
+//                    ((HomeActivity)mContext).openFragment(new SupportsFragment(JobFunctions), "Job Support");
+//                }
 
             }
         });

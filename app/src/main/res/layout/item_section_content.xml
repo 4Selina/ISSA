@@ -4,21 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edt_section_heading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter heading" />
+<!--    <EditText-->
+<!--        android:id="@+id/edt_section_heading"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Enter heading" />-->
 
-    <EditText
-        android:id="@+id/edt_section_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter support details" />
-    <Button
-        android:id="@+id/remove_step_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Remove" />
+<!--    <EditText-->
+<!--        android:id="@+id/edt_section_detail"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Enter support details" />-->
+<!--    <Button-->
+<!--        android:id="@+id/remove_step_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Remove" />-->
 
 </LinearLayout>

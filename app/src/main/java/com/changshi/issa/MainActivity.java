@@ -1,21 +1,16 @@
 package com.changshi.issa;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.changshi.issa.Fragment.FunctionsFragment;
-import com.changshi.issa.Fragment.SearchSFragment;
-import com.changshi.issa.Fragment.TransportFragment;
-import com.changshi.issa.Fragment.WebpageFragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        SharedPreferences Pref = getSharedPreferences("login_pref", MODE_PRIVATE);
+        boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
+
+        if(IsLoggedIn)
+        {
+            btnLogin.setVisibility(View.GONE);
+        }
 
         //admin can login for managing the contents
         btnLogin.setOnClickListener(new View.OnClickListener() {

@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
+    android:paddingStart="16sp"
+    android:paddingEnd="16sp"
+    android:paddingTop="8sp"
+    android:paddingBottom="8sp"
     android:background="@color/background"
     android:gravity="center_vertical"
     android:id="@+id/Layout_Support_Section">
@@ -14,7 +14,7 @@
         <EditText
             android:id="@+id/edit_heading"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="48sp"
             android:textSize="20sp"
             android:hint="Enter Section Title"
             android:inputType="text" />
@@ -29,25 +29,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:paddingStart="16sp"
+            android:paddingEnd="16sp"
+            android:paddingTop="8sp"
+            android:paddingBottom="8sp">
 
                 <Button
                     android:id="@+id/button_add_section"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="48sp"
+                    android:layout_height="48sp"
                     android:text="+"
                     android:textSize="24sp"
                     android:contentDescription="Add section"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="50dp"/>
+                    android:layout_marginLeft="10sp"
+                    android:layout_marginRight="50sp"/>
 
                 <Button
                     android:id="@+id/button_remove_section"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="48sp"
+                    android:layout_height="48sp"
                     android:text="-"
                     android:textSize="24sp"
                     android:contentDescription="Remove section" />

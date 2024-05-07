@@ -1,62 +1,41 @@
 package com.changshi.issa.DatabaseHandler;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import java.util.HashMap;
-import java.util.Map;
-import android.net.Uri;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
-public class DBHandler
-{
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class DBHandler {
 
     private FirebaseFirestore db;
     private CollectionReference supportsRef;
 
     public DBHandler(Context context) {
         db = FirebaseFirestore.getInstance();
-        supportsRef = db.collection("supports");
+        supportsRef = db.collection("support_Contents");
     }
 
     public interface OnImageUploadListener {
         void onImageUpload(String imageUrl);
+
         void onError(Exception exception);
     }
-    public void uploadImage(Uri imageUri, String imageName, final OnImageUploadListener listener) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("images/" + imageName);
-        imageRef.putFile(imageUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                String imageUrl = uri.toString();
-                                listener.onImageUpload(imageUrl);
-                            }
-                        });
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        listener.onError(exception);
-                    }
-                });
-    }
+
     public void addSupport(String title, String bannerUrl, String parentCategory, String description,
-                           Map<String, Object> sections, String conclusion)
-    {
+                           Map<String, Object> sections, String conclusion) {
         Map<String, Object> support = new HashMap<>();
         support.put("title", title);
         support.put("bannerUrl", bannerUrl);
@@ -127,5 +106,113 @@ public class DBHandler
                         // Handle failure, if needed
                     }
                 });
+    }
+
+    public void addSection(String supportId, String heading, List<String> details) {
+        DocumentReference supportRef = supportsRef.document(supportId);
+        supportRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String, Object> sections = (Map<String, Object>) documentSnapshot.get("sections");
+                sections.put(heading, details);
+                supportRef.update("sections", sections)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("FirestoreHandler", "Section added successfully");
+                                // Handle success, if needed
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("FirestoreHandler", "Error adding section", e);
+                                // Handle failure, if needed
+                            }
+                        });
+            }
+        });
+    }
+
+    public void deleteSection(String supportId, String heading) {
+        DocumentReference supportRef = supportsRef.document(supportId);
+        supportRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String, Object> sections = (Map<String, Object>) documentSnapshot.get("sections");
+                sections.remove(heading);
+                supportRef.update("sections", sections)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("FirestoreHandler", "Section deleted successfully");
+                                // Handle success, if needed
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("FirestoreHandler", "Error deleting section", e);
+                                // Handle failure, if needed
+                            }
+                        });
+            }
+        });
+    }
+
+    public void addDetail(String supportId, String heading, String detail) {
+        DocumentReference supportRef = supportsRef.document(supportId);
+        supportRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String, Object> sections = (Map<String, Object>) documentSnapshot.get("sections");
+                List<String> details = (List<String>) sections.get(heading);
+                details.add(detail);
+                sections.put(heading, details);
+                supportRef.update("sections", sections)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("FirestoreHandler", "Detail added successfully");
+                                // Handle success, if needed
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("FirestoreHandler", "Error adding detail", e);
+                                // Handle failure, if needed
+                            }
+                        });
+            }
+        });
+    }
+
+    public void deleteDetail(String supportId, String heading, String detail) {
+        DocumentReference supportRef = supportsRef.document(supportId);
+        supportRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Map<String, Object> sections = (Map<String, Object>) documentSnapshot.get("sections");
+                List<String> details = (List<String>) sections.get(heading);
+                details.remove(detail);
+                sections.put(heading, details);
+                supportRef.update("sections", sections)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("FirestoreHandler", "Detail deleted successfully");
+                                // Handle success, if needed
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("FirestoreHandler", "Error deleting detail", e);
+                                // Handle failure, if needed
+                            }
+                        });
+            }
+        });
     }
 }
