@@ -49,6 +49,12 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
         return new MyViewHolder(view);
     }
 
+    public void AddItem(Supports NewSupports)
+    {
+        mSupportList.add(NewSupports);
+        notifyItemInserted(mSupportList.size() - 1);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Supports currentItem = mSupportList.get(position);
@@ -120,7 +126,10 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setMessage("Are you sure you want to DELETE it？")
                     .setCancelable(false)
-                    .setPositiveButton("Yes", (dialog, id) -> {
+                    .setPositiveButton("Yes", (dialog, id) ->
+                    {
+                        mSupportList.get(position).delete(mContext);
+
                         // yes, delete support
                         mSupportList.remove(position);
                         notifyItemRemoved(position);
@@ -141,7 +150,6 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
     public int getItemCount() {
         return mSupportList.size();
     }
-
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView supportImage;

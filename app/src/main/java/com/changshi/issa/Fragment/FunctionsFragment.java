@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class FunctionsFragment extends Fragment
 {
-
     RecyclerView functionRecyclerView;
 
     private ArrayList<Functions> AllFunctions;

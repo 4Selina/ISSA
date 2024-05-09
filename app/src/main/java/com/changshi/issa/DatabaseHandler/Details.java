@@ -4,15 +4,30 @@ import java.io.Serializable;
 
 public class Details implements Serializable
 {
-    private String Detail;
+    private Long ID;
+    private String DocumentID;
+    private String detail;
+    private String link;
 
-    public String getDetail()
-    {
-        return  Detail;
+    public Long getID(){return this.ID;}
+    public void setID(Long id){this.ID = id;}
+
+    public String getDocumentID(){return this.DocumentID;}
+    public void setDocumentID(String docID){this.DocumentID = docID;}
+
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDetail(String NewDetail)
-    {
-        Detail = NewDetail;
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 }

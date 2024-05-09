@@ -1,8 +1,10 @@
 package com.changshi.issa.DatabaseHandler;
 
-public class WebpageItem {
-    private String id;
+public class WebpageItem
+{
+    private Long id;
     private String department;
+    private String DocumentID;
     private String email;
     private String address;
     private String contact;
@@ -12,7 +14,8 @@ public class WebpageItem {
     public WebpageItem(){
 
     }
-    public WebpageItem( String id, String department, String email, String contact, String address){
+
+    public WebpageItem( Long id, String department, String email, String contact, String address){
 
         this.id = id;
         this.department = department;
@@ -29,11 +32,16 @@ public class WebpageItem {
 //        this.address = address;
 //        this.imageUrl = imageUrl;
 //    }
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public String getDocumentID() {
+        return DocumentID;
+    }
+
+    public void setDocumentID(String docID){ DocumentID = docID; }
+    public void setId(Long id) {
         this.id = id;
     }
 

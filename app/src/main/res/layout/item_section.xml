@@ -24,7 +24,7 @@
             android:id="@+id/recycler_view_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,6 +51,7 @@
                     android:layout_height="48sp"
                     android:text="-"
                     android:textSize="24sp"
-                    android:contentDescription="Remove section" />
+                    android:contentDescription="Remove section"
+                    />
         </LinearLayout>
 </LinearLayout>

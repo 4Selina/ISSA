@@ -16,12 +16,11 @@ import com.changshi.issa.DatabaseHandler.Details;
 import com.changshi.issa.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
-    private List<Details> CurrentDetails;
+    private ArrayList<Details> CurrentDetails;
 
-    public void setData(List<Details> supportDetails)
+    public void setData(ArrayList<Details> supportDetails)
     {
         this.CurrentDetails = supportDetails;
         notifyDataSetChanged();
@@ -43,7 +42,8 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         Details ThisDetail = CurrentDetails.get(position);
         holder.bindData(ThisDetail);
 
-        holder.DetailsText.addTextChangedListener(new TextWatcher() {
+        holder.DetailsText.addTextChangedListener(new TextWatcher()
+        {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -53,6 +53,21 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             @Override
             public void afterTextChanged(Editable s) {
                 CurrentDetails.get(position).setDetail(s.toString());
+            }
+        });
+
+        holder.linkET.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                CurrentDetails.get(position).setLink(s.toString());
             }
         });
 
@@ -95,7 +110,9 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
     }
 
     public static class DetailsViewHolder extends RecyclerView.ViewHolder {
+
         private EditText DetailsText;
+        private EditText linkET;
 
         public Button AddDetails;
         public Button RemoveDetails;
@@ -103,6 +120,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         public DetailsViewHolder(@NonNull View itemView) {
             super(itemView);
             DetailsText = itemView.findViewById(R.id.edit_detail_text);
+            linkET = itemView.findViewById(R.id.linkET);
 
             AddDetails = itemView.findViewById(R.id.button_add_detail);
             RemoveDetails = itemView.findViewById(R.id.button_remove_detail);
@@ -112,4 +130,5 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             DetailsText.setText(details.getDetail());
         }
     }
+
 }

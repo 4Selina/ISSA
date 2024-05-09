@@ -57,7 +57,7 @@
     <string name="select">Select Support Functions</string>
     <string-array name="function_array">
         <item>Learning Support</item>
-        <item>Social Activity</item>
+        <item>Social Activities</item>
         <item>Accommodation</item>
         <item>Transports</item>
         <item>Job Support</item>

@@ -111,9 +111,12 @@ public class LoginActivity extends AppCompatActivity {
 
                         for(DocumentSnapshot SelectedDocument : AllUsers)
                         {
-                            if (SelectedDocument.get("Username").equals(username))
+                            Object documentUsername = SelectedDocument.get("Username");
+                            Object documentPassword = SelectedDocument.get("Password");
+
+                            if (documentUsername != null && documentUsername.equals(username))
                             {
-                                if(SelectedDocument.get("Password").equals(password))
+                                if(documentPassword != null && documentPassword.equals(password))
                                 {
                                     UserExists = true;
                                 }
@@ -151,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if the username and password match the admin credentials
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("Settings")
+        db.collection("User")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
                 {

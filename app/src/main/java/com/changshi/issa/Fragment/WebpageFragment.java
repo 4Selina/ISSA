@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -41,6 +42,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,6 +89,7 @@ public class WebpageFragment extends Fragment {
         webpageRV = view.findViewById(R.id.RV_Webpage_Content);
         webpageRV.setHasFixedSize(true);
         webpageRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new WebpageAdapter(this, getActivity(), webpageItems, context);
         webpageRV.setAdapter(adapter);
         //set image and image button
         imgWebpage = (ImageView) view.findViewById(R.id.imgWebpage);
@@ -264,6 +268,7 @@ public class WebpageFragment extends Fragment {
         //set title of progress dialog
         pd.setTitle("Loading Data...");
         pd.show();
+
         db.collection("Documents")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -273,7 +278,8 @@ public class WebpageFragment extends Fragment {
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null) {
-                                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                for (DocumentSnapshot document : querySnapshot.getDocuments())
+                                {
                                     // Load image from Firestore
                                    // WebpageItem webpageItem = new WebpageItem(document.get)
                                     Map<String,Object> map = document.getData();
@@ -295,21 +301,38 @@ public class WebpageFragment extends Fragment {
                                         // Load text data into RecyclerView
                                         if (map != null && !map.isEmpty())
                                         {
-                                            String id = (String) map.get("id");
+                                            Long id = (Long) map.get("id");
+                                            String DocumentID = document.getId();
                                             String department = (String) map.get("department");
                                             String email = (String) map.get("email");
                                             String contact = (String) map.get("contact");
                                             String address = (String) map.get("address");
+
                                             WebpageItem webpageItem = new WebpageItem(id, department, email, contact, address);
+                                            webpageItem.setDocumentID(DocumentID);
+
                                             webpageItems.add(webpageItem);
                                         }
                                     }
                                 }
+
+                                Collections.sort(webpageItems, new Comparator<WebpageItem>()
+                                {
+                                    @Override
+                                    public int compare(WebpageItem ItemOne, WebpageItem ItemTwo)
+                                    {
+                                        return (int)(ItemOne.getId() - ItemTwo.getId());
+                                    }
+                                });
+
                                 // Set adapter for RecyclerView
-                                adapter = new WebpageAdapter(getActivity(), webpageItems, context);
+                                adapter = new WebpageAdapter( WebpageFragment.this, getActivity(), webpageItems, context);
                                 webpageRV.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
-                            } else {
+
+                            }
+                            else
+                            {
                                 Log.d(TAG, "No such document");
                             }
                         } else {
@@ -318,29 +341,34 @@ public class WebpageFragment extends Fragment {
                     }
                 });
     }
-//    public void deleteData(int index) {
-//        //set title of progress dialog
-//        pd.setTitle("Deleting Data...");
-//        pd.show();
-//        db.collection("Documents").document(webpageItems.get(index).getId())
-//                .delete()
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        //this will be called when data is added successfully
-//                        pd.dismiss();
-//                        Toast.makeText(getActivity(), "Uploaded...", Toast.LENGTH_SHORT).show();
-//                   showData();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        //this will be called if there is any error while uploading
-//                        pd.dismiss();
-//                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
+
+    public void deleteData(int index)
+    {
+        //set title of progress dialog
+        pd.setTitle("Deleting Data...");
+        pd.show();
+        db.collection("Documents")
+                .document(webpageItems.get(index).getDocumentID())
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        //this will be called when data is added successfully
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), "Delete...", Toast.LENGTH_SHORT).show();
+                        showData();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //this will be called if there is any error while uploading
+                        pd.dismiss();
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
 }

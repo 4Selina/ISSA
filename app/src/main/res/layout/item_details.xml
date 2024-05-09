@@ -3,36 +3,72 @@
     android:id="@+id/layout_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingStart="16sp"
     android:paddingEnd="16sp"
     android:paddingTop="8sp"
     android:paddingBottom="8sp"
-    android:gravity="center_vertical"
-    >
+    android:gravity="center_vertical">
 
-    <EditText
-        android:id="@+id/edit_detail_text"
-        android:layout_width="0sp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="20sp"
-        android:hint="Details eg. Email or Links" />
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/button_add_detail"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
-        android:text="+"
-        android:textSize="24sp"
-        android:contentDescription="Add detail" />
+        <EditText
+            android:id="@+id/edit_detail_text"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:hint="Detail"
+            />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_remove_detail"
-        android:layout_width="48sp"
-        android:layout_height="48sp"
-        android:text="-"
-        android:textSize="24sp"
-        android:contentDescription="Remove detail" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        >
+        <EditText
+            android:id="@+id/linkET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@color/purple_700"
+            android:textStyle="italic"
+            android:hint="Web links" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+
+        <Button
+            android:id="@+id/button_add_detail"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:text="+"
+            android:textSize="24sp"
+            android:contentDescription="Add detail"
+            android:backgroundTint="@color/DetailBTN"
+            />
+
+        <Button
+            android:id="@+id/button_remove_detail"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:text="-"
+            android:textSize="24sp"
+            android:layout_marginLeft="50sp"
+            android:contentDescription="Remove detail"
+            android:backgroundTint="@color/DetailBTN"
+            />
+    </LinearLayout>
 </LinearLayout>

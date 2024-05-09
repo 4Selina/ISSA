@@ -43,8 +43,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyViewHolder> {
-
+public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyViewHolder>
+{
     private Context mContext;
     private ArrayList<Functions> mFunctionList;
     private ImageView mFunctionImageToUpdate;
@@ -64,7 +64,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position)
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position)
     {
         Functions currentFunction = mFunctionList.get(position);
         holder.txtFunctionTitle.setText(currentFunction.getNameOfFunction());
@@ -237,6 +237,8 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                     {
                                         Supports NewSupports = new Supports();
 
+                                        NewSupports.setId((Long)SelectedDocument.get("id"));
+                                        NewSupports.setDocumentID(SelectedDocument.getReference().getId());
                                         NewSupports.setTitle(SelectedDocument.get("title").toString());
                                         NewSupports.setDescription(SelectedDocument.get("description").toString());
 
@@ -248,7 +250,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                         NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
                                         // Get the Sections.
-                                        ArrayList<Long> SectionIDs= (ArrayList<Long>)SelectedDocument.get("sections");
+                                        ArrayList<Long> SectionIDs = (ArrayList<Long>)SelectedDocument.get("sections");
 
                                         db.collection("Sections")
                                                 .get()
@@ -274,6 +276,8 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                             if(IDIsCorrect)
                                                             {
                                                                 SectionDetails NewSection = new SectionDetails();
+                                                                NewSection.setID((Long)SelectedSection.get("id"));
+                                                                NewSection.setDocumentID(SelectedSection.getReference().getId());
 
                                                                 NewSection.setSectionHeading(SelectedSection.get("heading").toString());
 
@@ -303,7 +307,13 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                                                     if(IsCorrectID)
                                                                                     {
                                                                                         Details NewDetail = new Details();
+                                                                                        NewDetail.setID((Long)SelectedDetail.get("id"));
+                                                                                        NewDetail.setDocumentID(SelectedDetail.getReference().getId());
+
                                                                                         NewDetail.setDetail(SelectedDetail.get("detail").toString());
+
+                                                                                        if(SelectedDetail.contains("link"))
+                                                                                            NewDetail.setLink(SelectedDetail.getString("link"));
 
                                                                                         AllDetails.add(NewDetail);
                                                                                     }

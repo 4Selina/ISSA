@@ -10,7 +10,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -65,7 +64,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_sections"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    />
 
                 <EditText
                     android:id="@+id/edit_conclusion_content"
@@ -73,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Conclusion"
                     android:textSize="22sp"
-                    android:layout_marginTop="15dp" />
+                    android:layout_marginTop="15dp"
+                    />
 
             </LinearLayout>
         </ScrollView>
@@ -91,7 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Cancel"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                />
 
             <Button
                 android:id="@+id/button_save"
@@ -100,8 +102,7 @@
                 android:layout_weight="1"
                 android:layout_marginLeft="50sp"
                 android:text="Save"
-                android:layout_gravity="center" />
-
+                android:layout_gravity="center"
+                />
         </LinearLayout>
-
     </LinearLayout>

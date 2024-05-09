@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="16sp"
     android:id="@+id/layout_support_Fragment">
@@ -29,7 +30,8 @@
             android:id="@+id/recycler_view_sections"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"/>
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_display_section"/>
 
         <!-- Conclusion -->
         <TextView
@@ -40,11 +42,19 @@
             android:textSize="18sp"
             android:padding="8sp"/>
 
+        <!-- Edit Button -->
         <Button
             android:id="@+id/button_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Edit"
-            android:layout_marginTop="10sp"
+            android:layout_marginTop="16sp"
             android:textStyle="bold"/>
+
+        <!-- WebView -->
+        <WebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 </LinearLayout>

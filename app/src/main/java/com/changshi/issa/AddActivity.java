@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
@@ -40,15 +39,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AddActivity extends AppCompatActivity
+public class  AddActivity extends AppCompatActivity
 {
     private ImageView mBannerImg;
     private ImageButton mImageBannerBtn;
     private EditText mEditTitle;
-
-//    private EditText heading;
-//    private EditText details;
-
 
     private EditText mEditDescription;
 
@@ -63,13 +58,13 @@ public class AddActivity extends AppCompatActivity
     private Button mButtonSubmit;
     private Button mButtonCancel;
 
-    String bannerUrl;
+    private String bannerUrl;
 
-    boolean IsEditMode;
-    Supports SelectedSupport;
+    private boolean IsEditMode;
+    private Supports SelectedSupport;
 
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private Uri mImageUrl;
+//    private static final int PICK_IMAGE_REQUEST = 1;
+//    private Uri mImageUrl;
 
     private FirebaseFirestore db;
 
@@ -113,7 +108,8 @@ public class AddActivity extends AppCompatActivity
 
         mImageBannerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 // Open a dialog for picking an image
                 showImagePickerDialog();
             }
@@ -147,13 +143,15 @@ public class AddActivity extends AppCompatActivity
                 builder.create().show();
             }
 
-            private void pickImageFromGallery() {
+            private void pickImageFromGallery()
+            {
                 Intent galleryIntent = new Intent(Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, REQUEST_CODE_PICK_IMAGE);
             }
 
-            private void showUrlInputDialog() {
+            private void showUrlInputDialog()
+            {
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
 
                 builder.setTitle("Enter Image URL");
@@ -205,71 +203,149 @@ public class AddActivity extends AppCompatActivity
             SectionsRV.setAdapter(adapter);
         }
 
-        mButtonSubmit.setOnClickListener(new View.OnClickListener() {
+        mButtonSubmit.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v)
             {
                 boolean AddItem = true;
                 String FailedReason = "";
 
-                Supports NewSupport = new Supports();
-
-                //input data
-                NewSupport.setTitle(mEditTitle.getText().toString().trim());
-
-                if(!Strings.isNullOrEmpty(bannerUrl))
+                if(!IsEditMode)
                 {
-                    NewSupport.setBannerUrl(bannerUrl);
-                }
+                    Supports NewSupport = new Supports();
 
-                NewSupport.setDescription(mEditDescription.getText().toString().trim());
-                NewSupport.setParentCategory(category.getSelectedItem().toString());
+                    //input data
+                    NewSupport.setTitle(mEditTitle.getText().toString().trim());
 
-                ArrayList<SectionDetails> AllSections = new ArrayList<>();
-
-                if(SectionsRV.getAdapter().getItemCount() > 0)
-                {
-                    for(int i = 0; i < SectionsRV.getAdapter().getItemCount(); i++)
+                    if(!Strings.isNullOrEmpty(bannerUrl))
                     {
-                        SectionDetails NewSection = new SectionDetails();
+                        NewSupport.setBannerUrl(bannerUrl);
+                    }
 
-                        if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
+                    NewSupport.setDescription(mEditDescription.getText().toString().trim());
+                    NewSupport.setParentCategory(category.getSelectedItem().toString());
+
+                    ArrayList<SectionDetails> AllSections = new ArrayList<>();
+
+                    if(SectionsRV.getAdapter().getItemCount() > 0)
+                    {
+                        for(int i = 0; i < SectionsRV.getAdapter().getItemCount(); i++)
                         {
-                            AddItem = false;
-                            FailedReason = "A Section Heading is Empty.";
-                        }
+                            SectionDetails NewSection = new SectionDetails();
 
-                        NewSection.setSectionHeading(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading());
-                        NewSection.setSectionDetails(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails());
-
-                        for(Details SelectedDetails : ((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails())
-                        {
-                            if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
+                            if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
                             {
                                 AddItem = false;
-
-                                FailedReason = "A Detail is Empty.";
+                                FailedReason = "A Section Heading is Empty.";
                             }
+
+                            NewSection.setSectionHeading(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading());
+                            NewSection.setSectionDetails(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails());
+
+                            for(Details SelectedDetails : ((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails())
+                            {
+                                if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
+                                {
+                                    AddItem = false;
+                                    FailedReason = "A Detail is Empty.";
+                                }
+
+                                if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
+                                {
+                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://") || !SelectedDetails.getLink().contains("www."))
+                                    {
+                                        AddItem = false;
+                                        FailedReason = "Link not in Correct Format.";
+                                    }
+                                }
+                            }
+
+                            AllSections.add(NewSection);
                         }
-
-                        AllSections.add(NewSection);
                     }
+
+                    NewSupport.setSections(AllSections);
+                    NewSupport.setConclusion(mEditConclusion.getText().toString().trim());
+
+                    if(AddItem)
+                        submitContent(NewSupport);
+                    else
+                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
                 }
-
-                NewSupport.setSections(AllSections);
-                NewSupport.setConclusion(mEditConclusion.getText().toString().trim());
-
-                if(AddItem)
-                    submitContent(NewSupport);
                 else
-                    Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                {
+                    SelectedSupport.setTitle(mEditTitle.getText().toString().trim());
+
+                    if(!Strings.isNullOrEmpty(bannerUrl))
+                    {
+                        SelectedSupport.setBannerUrl(bannerUrl);
+                    }
+
+                    SelectedSupport.setDescription(mEditDescription.getText().toString().trim());
+                    SelectedSupport.setParentCategory(category.getSelectedItem().toString());
+
+                    ArrayList<SectionDetails> OldSections = SelectedSupport.getSections();
+                    ArrayList<SectionDetails> AllSections = new ArrayList<>();
+
+                    if(SectionsRV.getAdapter().getItemCount() > 0)
+                    {
+                        for(int i = 0; i < SectionsRV.getAdapter().getItemCount(); i++)
+                        {
+                            SectionDetails NewSection = new SectionDetails();
+
+                            if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
+                            {
+                                AddItem = false;
+                                FailedReason = "A Section Heading is Empty.";
+                            }
+
+                            NewSection.setSectionHeading(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading());
+                            NewSection.setSectionDetails(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails());
+
+                            for(Details SelectedDetails : ((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionDetails())
+                            {
+                                if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
+                                {
+                                    AddItem = false;
+                                    FailedReason = "A Detail is Empty.";
+                                }
+
+                                if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
+                                {
+                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://") || !SelectedDetails.getLink().contains("www."))
+                                    {
+                                        AddItem = false;
+                                        FailedReason = "Link not in Correct Format.";
+                                    }
+                                }
+                            }
+
+                            AllSections.add(NewSection);
+                        }
+                    }
+
+                    SelectedSupport.setSections(AllSections);
+                    SelectedSupport.setConclusion(mEditConclusion.getText().toString().trim());
+
+                    if(AddItem)
+                        editContent(SelectedSupport, OldSections);
+                    else
+                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
 
-        mButtonCancel.setOnClickListener(new View.OnClickListener() {
+        mButtonCancel.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                // Open URL in Browser.
+                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.getText().toString()));
+                //startActivity(browserIntent);
+
                 finish();
             }
         });
@@ -350,7 +426,6 @@ public class AddActivity extends AppCompatActivity
                         SupportData.put("parentCategory", SavedItem.getParentCategory());
                         SupportData.put("conclusion", SavedItem.getConclusion());
 
-
                         if(SavedItem.getSections().size() > 0)
                         {
                             ArrayList<Long> SectionsIDs = new ArrayList<>();
@@ -382,6 +457,9 @@ public class AddActivity extends AppCompatActivity
                                             DetailsList.add(DetailsID);
 
                                             DetailsData.put("detail", SavedItem.getSections().get(i).getSectionDetails().get(j).getDetail());
+
+                                            if(!Strings.isNullOrEmpty(SavedItem.getSections().get(i).getSectionDetails().get(j).getLink()))
+                                                DetailsData.put("link", SavedItem.getSections().get(i).getSectionDetails().get(j).getLink());
 
                                             db.collection("Details")
                                                     .document(DetailsDocumentID)
@@ -458,6 +536,10 @@ public class AddActivity extends AppCompatActivity
                                                     }
                                                 });
 
+                                        Intent SendData = new Intent(getApplicationContext(), HomeActivity.class);
+                                        SendData.putExtra("AddData", SavedItem);
+                                        startActivityForResult(SendData, 1000);
+
                                         finish();
                                     }
                                 })
@@ -471,6 +553,191 @@ public class AddActivity extends AppCompatActivity
                                 });
                     }
                 });
+
+
     }
 
+    private void editContent(Supports EditedItem, ArrayList<SectionDetails> OldSections)
+    {
+        // Run through all the Old Sections and Details and Delete Them.
+        for(int i = 0; i < OldSections.size(); i++)
+        {
+            // Deleting all Details attached to This Section.
+            for(int j = 0; j < OldSections.get(i).getSectionDetails().size(); j++)
+            {
+                db.collection("Details")
+                        .document(OldSections.get(i).getSectionDetails().get(j).getDocumentID())
+                        .delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>()
+                        {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task)
+                            {
+
+                            }
+                        });
+            }
+
+            db.collection("Sections")
+                    .document(OldSections.get(i).getDocumentID())
+                    .delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task)
+                        {
+
+                        }
+                    });
+
+            db.collection("Settings")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
+                            // Create a new document data
+                            Map<String, Object> SupportData = new HashMap<>();
+                            Map<String, Object> SectionsData = new HashMap<>();
+                            Map<String, Object> DetailsData = new HashMap<>();
+
+                            String SupportDocumentID = EditedItem.getDocumentID();
+
+                            Long SectionsID = (Long) task.getResult().getDocuments().get(0).get("SectionsID");
+                            Long DetailsID = (Long) task.getResult().getDocuments().get(0).get("DetailsID");
+
+                            if(!Strings.isNullOrEmpty(EditedItem.getBannerUrl()))
+                            {
+                                SupportData.put("bannerUrl", EditedItem.getBannerUrl());
+                            }
+
+                            SupportData.put("title", EditedItem.getTitle());
+                            SupportData.put("description", EditedItem.getDescription());
+                            SupportData.put("parentCategory", EditedItem.getParentCategory());
+                            SupportData.put("conclusion", EditedItem.getConclusion());
+
+                            if(EditedItem.getSections().size() > 0)
+                            {
+                                ArrayList<Long> SectionsIDs = new ArrayList<>();
+
+                                for (int i = 0; i < EditedItem.getSections().size(); i++)
+                                {
+                                    String SectionsDocumentID = UUID.randomUUID().toString();
+
+                                    SectionsID++;
+
+                                    SectionsData.put("id", SectionsID);
+                                    SectionsIDs.add(SectionsID);
+
+                                    SectionsData.put("heading", EditedItem.getSections().get(i).getSectionHeading());
+
+                                    if(EditedItem.getSections().get(i).getSectionDetails() != null)
+                                    {
+                                        if(EditedItem.getSections().get(i).getSectionDetails().size() > 0)
+                                        {
+                                            ArrayList<Long> DetailsList = new ArrayList<>();
+
+                                            for (int j = 0; j < EditedItem.getSections().get(i).getSectionDetails().size(); j++)
+                                            {
+                                                String DetailsDocumentID = UUID.randomUUID().toString();
+
+                                                DetailsID++;
+
+                                                DetailsData.put("id", DetailsID);
+                                                DetailsList.add(DetailsID);
+
+                                                DetailsData.put("detail", EditedItem.getSections().get(i).getSectionDetails().get(j).getDetail());
+
+                                                db.collection("Details")
+                                                        .document(DetailsDocumentID)
+                                                        .set(DetailsData)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
+                                                        {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task)
+                                                            {
+                                                                // Leave Empty for now.
+                                                            }
+                                                        });
+                                            }
+
+                                            SectionsData.put("details", DetailsList);
+                                        }
+                                    }
+
+                                    db.collection("Sections")
+                                            .document(SectionsDocumentID)
+                                            .set(SectionsData)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>()
+                                            {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task)
+                                                {
+                                                    // Leave Empty for now.
+                                                }
+                                            });
+                                }
+
+                                SupportData.put("sections", SectionsIDs);
+                            }
+
+                            SupportData.put("conclusion", EditedItem.getConclusion());
+
+                            Long finalDetailsID = DetailsID;
+                            Long finalSectionsID = SectionsID;
+
+                            db.collection("Support_Contents")
+                                    .document(SupportDocumentID)
+                                    .update(SupportData)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>()
+                                    {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            db.collection("Settings")
+                                                    .get()
+                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                                    {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                        {
+                                                            Map<String, Object> IDData = new HashMap<>();
+                                                            IDData.put("SectionsID", finalSectionsID);
+                                                            IDData.put("DetailsID", finalDetailsID);
+
+                                                            String Path = task.getResult().getDocuments().get(0).getReference().getId();
+
+                                                            db.collection("Settings")
+                                                                    .document(Path)
+                                                                    .update(IDData)
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>()
+                                                                    {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task)
+                                                                        {
+
+                                                                        }
+                                                                    });
+                                                        }
+                                                    });
+
+
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener()
+                                    {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e)
+                                        {
+                                            Toast.makeText(AddActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    });
+        }
+
+
+    }
 }

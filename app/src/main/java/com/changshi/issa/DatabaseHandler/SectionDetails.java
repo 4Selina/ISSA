@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 public class SectionDetails implements Serializable
 {
+    Long ID;
+    String DocumentID;
     private String heading;
     private ArrayList<Details> details;
 
@@ -18,6 +20,12 @@ public class SectionDetails implements Serializable
     {
 
     }
+
+    public Long getID(){return this.ID;}
+    public void setID(Long id){this.ID = id;}
+
+    public String getDocumentID(){return this.DocumentID;}
+    public void setDocumentID(String docID){this.DocumentID = docID;}
 
     public String getSectionHeading() {
         return heading;

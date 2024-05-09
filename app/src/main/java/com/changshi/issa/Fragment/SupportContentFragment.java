@@ -13,23 +13,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.changshi.issa.Adapter.DisplaySectionAdapter;
 import com.changshi.issa.AddActivity;
-import com.changshi.issa.DatabaseHandler.Details;
-import com.changshi.issa.DatabaseHandler.SectionDetails;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.R;
-import com.changshi.issa.SupportContent;
 import com.google.common.base.Strings;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 public class SupportContentFragment extends Fragment {
 
@@ -42,7 +38,6 @@ public class SupportContentFragment extends Fragment {
 
     private ProgressDialog pd;
 
-    private List<SupportContent> supportContentList;
     FirebaseFirestore db;
 
     public SupportContentFragment(Supports SelectedSupport)
@@ -99,43 +94,20 @@ public class SupportContentFragment extends Fragment {
         return view;
     }
 
-
     private void LoadData()
     {
-        if (!Strings.isNullOrEmpty(selectedSupport.getBannerUrl())) {
+        if(!Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
+        {
             Picasso.get().load(selectedSupport.getBannerUrl()).into(bannerImgV);
-        } else {
-            bannerImgV.setImageResource(R.drawable.logo);
-
         }
 
+        descriptionTv.setText(selectedSupport.getDescription());
 
-        if (!Strings.isNullOrEmpty(selectedSupport.getDescription())) {
-            descriptionTv.setText(selectedSupport.getDescription());
-        } else {
-            Toast.makeText(getContext(), "Description not available", Toast.LENGTH_SHORT).show();
-        }
+        DisplaySectionAdapter adapter = new DisplaySectionAdapter(selectedSupport.getSections());
 
-        if (selectedSupport.getSections() != null) {
-            for (SectionDetails SelectedSection : selectedSupport.getSections()) {
-                // Do this for Each Item in Sections.
-                String heading = SelectedSection.getSectionHeading();
-                if (!Strings.isNullOrEmpty(heading)) {
-                    // Display heading
-                }
+        rVSection.setLayoutManager(new LinearLayoutManager(getContext()));
+        rVSection.setAdapter(adapter);
 
-                List<Details> detailsList = SelectedSection.getSectionDetails();
-                if (detailsList != null && !detailsList.isEmpty()) {
-                    for (Details SelectedDetail : detailsList) {
-                        // Do this for each item in Details.
-                    }
-                }
-            }
-        }
-
-        // Display conclusion regardless of whether it is null or empty
         conclusionTv.setText(selectedSupport.getConclusion());
     }
-
-
 }

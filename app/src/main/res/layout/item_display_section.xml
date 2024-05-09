@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:paddingStart="16sp"
+    android:paddingEnd="16sp"
+    android:paddingTop="8sp"
+    android:paddingBottom="8sp"
+    android:id="@+id/rv_display_section">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5sp"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp">
+
+        <TextView
+            android:id="@+id/headingTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Heading"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="8sp"
+            android:layout_marginBottom="10sp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_display_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/item_display_details"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

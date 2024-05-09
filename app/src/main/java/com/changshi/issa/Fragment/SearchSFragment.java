@@ -105,6 +105,8 @@ public class SearchSFragment extends Fragment {
                         {
                             Supports NewSupports = new Supports();
 
+                            NewSupports.setId((Long)SelectedDocument.get("id"));
+                            NewSupports.setDocumentID(SelectedDocument.getReference().getId());
                             NewSupports.setTitle(SelectedDocument.get("title").toString());
 
                             if(NewSupports.getTitle().toLowerCase().contains(query.toLowerCase()))
@@ -146,6 +148,8 @@ public class SearchSFragment extends Fragment {
                                                     {
                                                         SectionDetails NewSection = new SectionDetails();
 
+                                                        NewSection.setID((Long)SelectedSection.get("id"));
+                                                        NewSection.setDocumentID(SelectedSection.getReference().getId());
                                                         NewSection.setSectionHeading(SelectedSection.get("heading").toString());
 
                                                         ArrayList<Long> DetailsIDs = (ArrayList<Long>)SelectedSection.get("details");
@@ -174,7 +178,13 @@ public class SearchSFragment extends Fragment {
                                                                             if(IsCorrectID)
                                                                             {
                                                                                 Details NewDetail = new Details();
+
+                                                                                NewDetail.setID((Long)SelectedDetail.get("id"));
+                                                                                NewDetail.setDocumentID(SelectedDetail.getReference().getId());
                                                                                 NewDetail.setDetail(SelectedDetail.get("detail").toString());
+
+                                                                                if(SelectedDetail.contains("link"))
+                                                                                    NewDetail.setLink(SelectedDetail.getString("link"));
 
                                                                                 AllDetails.add(NewDetail);
                                                                             }
