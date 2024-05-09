@@ -65,7 +65,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        mDbHandler = new DBHandler(this);
+//        mDbHandler = new DBHandler(this);
 
         AllFunctions = new ArrayList<>();
 
@@ -74,6 +74,35 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Functions AccommodationFunction = new Functions();
         Functions TransportsFunction = new Functions();
         Functions JobSupportFunction = new Functions();
+
+        db.collection("Settings")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        for(DocumentSnapshot SelectedSnapshot : task.getResult().getDocuments())
+                        {
+                            if(SelectedSnapshot.contains("AccommodationUrl"))
+                            {
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("LearningSupportUrl").toString()))
+                                    LearningSupportFunction.setFunctionURL(SelectedSnapshot.get("LearningSupportUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("SocialActivitiesUrl").toString()))
+                                    SocialActivitiesFunction.setFunctionURL(SelectedSnapshot.get("SocialActivitiesUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("AccommodationUrl").toString()))
+                                    AccommodationFunction.setFunctionURL(SelectedSnapshot.get("AccommodationUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("TransportUrl").toString()))
+                                    TransportsFunction.setFunctionURL(SelectedSnapshot.get("TransportUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("JobSupportUrl").toString()))
+                                    JobSupportFunction.setFunctionURL(SelectedSnapshot.get("JobSupportUrl").toString());
+                            }
+                        }
+                    }
+                });
 
         LearningSupportFunction.setNameOfFunction("Learning Support");
         LearningSupportFunction.setFunctionImage(R.drawable.learn);
@@ -213,6 +242,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
         }
 
+        db.collection("Settings")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        for(DocumentSnapshot SelectedSnapshot : task.getResult().getDocuments())
+                        {
+                            if(SelectedSnapshot.contains("AccommodationUrl"))
+                            {
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("LearningSupportUrl").toString()))
+                                {
+                                    LearningSupportFunction.setFunctionURL(SelectedSnapshot.get("LearningSupportUrl").toString());
+                                }
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("SocialActivitiesUrl").toString()))
+                                    SocialActivitiesFunction.setFunctionURL(SelectedSnapshot.get("SocialActivitiesUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("AccommodationUrl").toString()))
+                                    AccommodationFunction.setFunctionURL(SelectedSnapshot.get("AccommodationUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("TransportUrl").toString()))
+                                    TransportsFunction.setFunctionURL(SelectedSnapshot.get("TransportUrl").toString());
+
+                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("JobSupportUrl").toString()))
+                                    JobSupportFunction.setFunctionURL(SelectedSnapshot.get("JobSupportUrl").toString());
+                            }
+                        }
+                    }
+                });
+
+
         /*
         String fragmentClassName = getIntent().getStringExtra("fragment_class");
         if (fragmentClassName != null) {
@@ -285,7 +345,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     openFragment(new SearchSFragment(), " ");
                     break;
                 case "webpage":
-                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Whitireia & WelTec");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
                     break;
             }
         } else {
@@ -315,13 +375,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
+    {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.nav_home) {
+        if (itemId == R.id.nav_home)
+        {
             openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
-        } else if (itemId == R.id.nav_LearningSupport)
+        }
+        else if (itemId == R.id.nav_LearningSupport)
             ParentCategory = "Learning Support";
         else if (itemId == R.id.nav_Accommodation)
             ParentCategory = "Accommodation";
@@ -331,9 +395,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             ParentCategory = "Social Activities";
         else if (itemId == R.id.nav_JobSupport)
             ParentCategory = "Job Support";
-        else if (itemId == R.id.nav_Webpage) {
-            openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Whitireia & WelTec");
-        } else if (itemId == R.id.nav_login) {
+        else if (itemId == R.id.nav_Webpage)
+        {
+            openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
+        }
+        else if (itemId == R.id.nav_login)
+        {
             SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("is_logged_in", false);
@@ -342,7 +409,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(intent);
             finish(); // Close the current activity ;
-        } else if (itemId == R.id.nav_logout) {
+        }
+        else if (itemId == R.id.nav_logout)
+        {
             SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("is_logged_in", false);
@@ -354,74 +423,91 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         drawerLayout.closeDrawer(GravityCompat.START);
 
-        if (!Strings.isNullOrEmpty(ParentCategory)) {
+        if(!Strings.isNullOrEmpty(ParentCategory))
+        {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             String finalParentCategory = ParentCategory;
             db.collection("Support_Contents")
                     .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                    {
                         @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                        {
                             ArrayList<Supports> AllSupports = new ArrayList<>();
 
-                            for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments()) {
-                                if (SelectedDocument != null && SelectedDocument.get("parentCategory") != null &&
-                                        SelectedDocument.get("parentCategory").toString().equals(finalParentCategory)) {
+                            for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
+                            {
+                                if(SelectedDocument.get("parentCategory").toString().equals(finalParentCategory))
+                                {
                                     Supports NewSupports = new Supports();
 
                                     NewSupports.setTitle(SelectedDocument.get("title").toString());
                                     NewSupports.setDescription(SelectedDocument.get("description").toString());
 
-                                    if (SelectedDocument.contains("bannerUrl")) {
+                                    if(SelectedDocument.contains("bannerUrl"))
+                                    {
                                         NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
                                     }
 
                                     NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
                                     // Get the Sections.
-                                    ArrayList<Long> SectionIDs = (ArrayList<Long>) SelectedDocument.get("sections");
+                                    ArrayList<Long> SectionIDs= (ArrayList<Long>)SelectedDocument.get("sections");
 
                                     db.collection("Sections")
                                             .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                            {
                                                 @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                {
                                                     ArrayList<SectionDetails> AllSections = new ArrayList<>();
 
-                                                    for (DocumentSnapshot SelectedSection : task.getResult().getDocuments()) {
+                                                    for (DocumentSnapshot SelectedSection : task.getResult().getDocuments())
+                                                    {
                                                         boolean IDIsCorrect = false;
 
-                                                        for (Long SelectedID : SectionIDs) {
-                                                            if (SelectedID == (Long) SelectedSection.get("id")) {
+                                                        for (Long SelectedID : SectionIDs)
+                                                        {
+                                                            if(SelectedID == (Long) SelectedSection.get("id"))
+                                                            {
                                                                 IDIsCorrect = true;
                                                             }
                                                         }
 
-                                                        if (IDIsCorrect) {
+                                                        if(IDIsCorrect)
+                                                        {
                                                             SectionDetails NewSection = new SectionDetails();
 
                                                             NewSection.setSectionHeading(SelectedSection.get("heading").toString());
 
-                                                            ArrayList<Long> DetailsIDs = (ArrayList<Long>) SelectedSection.get("details");
+                                                            ArrayList<Long> DetailsIDs = (ArrayList<Long>)SelectedSection.get("details");
 
                                                             db.collection("Details")
                                                                     .get()
-                                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                                                                    {
                                                                         @Override
-                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                        public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                                                        {
                                                                             ArrayList<Details> AllDetails = new ArrayList<>();
 
-                                                                            for (DocumentSnapshot SelectedDetail : task.getResult().getDocuments()) {
+                                                                            for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
+                                                                            {
                                                                                 boolean IsCorrectID = false;
 
-                                                                                for (Long SelectedDetailID : DetailsIDs) {
-                                                                                    if (SelectedDetailID == (Long) SelectedDetail.get("id")) {
+                                                                                for(Long SelectedDetailID : DetailsIDs)
+                                                                                {
+                                                                                    if(SelectedDetailID == (Long) SelectedDetail.get("id"))
+                                                                                    {
                                                                                         IsCorrectID = true;
                                                                                     }
                                                                                 }
 
-                                                                                if (IsCorrectID) {
+                                                                                if(IsCorrectID)
+                                                                                {
                                                                                     Details NewDetail = new Details();
                                                                                     NewDetail.setDetail(SelectedDetail.get("detail").toString());
 
@@ -447,39 +533,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             }
 
-                            if (AllSupports.isEmpty()) {
-                                openFragment(new SupportsFragment(new ArrayList<>()), finalParentCategory);
-                            } else {
-                                openFragment(new SupportsFragment(AllSupports), finalParentCategory);
-                            }
+                            openFragment(new SupportsFragment(AllSupports), finalParentCategory);
                         }
                     });
         }
 
         return false;
     }
+
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            if (fragmentManager.getBackStackEntryCount() > 0) {
-                fragmentManager.popBackStack(); // Go back to the previous Fragment
-            } else {
-                super.onBackPressed();
-            }
+        }else {
+            super.onBackPressed();
         }
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-//            drawerLayout.closeDrawer(GravityCompat.START);
-//        }else {
-//            super.onBackPressed();
-//        }
-//    }
     public void openFragment(Fragment fragment, String title){
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);

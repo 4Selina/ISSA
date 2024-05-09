@@ -63,10 +63,10 @@ public class AddActivity extends AppCompatActivity
     private Button mButtonSubmit;
     private Button mButtonCancel;
 
-    String bannerUrl;
+    private String bannerUrl;
 
-    boolean IsEditMode;
-    Supports SelectedSupport;
+    private boolean IsEditMode;
+    private Supports SelectedSupport;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri mImageUrl;

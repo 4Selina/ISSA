@@ -16,12 +16,11 @@ import com.changshi.issa.DatabaseHandler.Details;
 import com.changshi.issa.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
-    private List<Details> CurrentDetails;
+    private ArrayList<Details> CurrentDetails;
 
-    public void setData(List<Details> supportDetails)
+    public void setData(ArrayList<Details> supportDetails)
     {
         this.CurrentDetails = supportDetails;
         notifyDataSetChanged();
@@ -112,4 +111,5 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             DetailsText.setText(details.getDetail());
         }
     }
+
 }

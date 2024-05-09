@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Details implements Serializable
 {
     private String Detail;
+    private String Link;
 
     public String getDetail()
     {
@@ -15,4 +16,8 @@ public class Details implements Serializable
     {
         Detail = NewDetail;
     }
+
+    public String getLink() { return Link;  }
+    public void setLink(String NewLink) { Link = NewLink; }
+
 }

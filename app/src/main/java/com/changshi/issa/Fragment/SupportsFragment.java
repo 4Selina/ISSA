@@ -23,6 +23,9 @@ public class SupportsFragment extends Fragment
     private SupportAdapter mAdapter;
     private ArrayList<Supports> mSupportList;
 
+    public SupportsFragment() {
+        // Required empty public constructor
+    }
     public SupportsFragment(ArrayList<Supports> allSupports) {
         this.mSupportList = allSupports;
     }

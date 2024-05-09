@@ -4,10 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -17,9 +17,6 @@ import com.changshi.issa.DatabaseHandler.WebpageItem;
 import com.changshi.issa.R;
 import com.changshi.issa.UpdateWebpageActivity;
 import com.changshi.issa.ViewHolder;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -64,17 +61,19 @@ public class WebpageAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
 
             @Override
-            public void onItemLongClick(View view, final int position) {
+            public void onItemLongClick(View view, final int position)
+            {
                 AlertDialog.Builder builder = new AlertDialog.Builder(webpageFragment);
                 //options to display in dialog
                 String[] options = {"Update", "Delete"};
                 builder.setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
+                        if (which == 0)
+                        {
                             //update is clicked
                             //get data
-                            String id = webpageItems.get(position).getId();
+                            Long id = webpageItems.get(position).getId();
                             String department = webpageItems.get(position).getDepartment();
                             String email = webpageItems.get(position).getEmail();
                             String contact = webpageItems.get(position).getContact();
@@ -93,29 +92,9 @@ public class WebpageAdapter extends RecyclerView.Adapter<ViewHolder> {
                         }
                         if (which == 1) {
                             //delete is clicked
-                            String id = webpageItems.get(position).getId();
-                            // Remove the item from the ArrayList
                             webpageItems.remove(position);
-                            // Notify the adapter of the removal
                             notifyItemRemoved(position);
-                            // Delete the document from Firestore
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            db.collection("Documents").document(id)
-                                    .delete()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            // Document successfully deleted
-                                            Toast.makeText(context, "Document deleted", Toast.LENGTH_SHORT).show();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            // Handle any errors
-                                            Toast.makeText(context, "Error deleting document", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+
                         }
                     }
                 }).create().show();
@@ -127,16 +106,53 @@ public class WebpageAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        //bind view /set data
-        viewHolder.mDepartmentTextView.setText(webpageItems.get(i).getDepartment());
-        viewHolder.mEmailTextView.setText(webpageItems.get(i).getEmail());
-        viewHolder.mContactTextView.setText(webpageItems.get(i).getContact());
-        viewHolder.mAddressTextView.setText(webpageItems.get(i).getAddress());
-//        viewHolder.mImageView.
-        //use glide to update image
-//        Glide.with(context).load(webpageItems.get(i).getImageUrl()).into(viewHolder.mImageView);
+        WebpageItem item = webpageItems.get(i);
 
+        // Set department
+        if (!TextUtils.isEmpty(item.getDepartment())) {
+            viewHolder.mDepartmentTextView.setText(item.getDepartment());
+            viewHolder.mDepartmentTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.mDepartmentTextView.setVisibility(View.GONE);
+        }
+
+        // Set email
+        if (!TextUtils.isEmpty(item.getEmail())) {
+            viewHolder.mEmailTextView.setText(item.getEmail());
+            viewHolder.mEmailTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.mEmailTextView.setVisibility(View.GONE);
+        }
+
+        // Set contact
+        if (!TextUtils.isEmpty(item.getContact())) {
+            viewHolder.mContactTextView.setText(item.getContact());
+            viewHolder.mContactTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.mContactTextView.setVisibility(View.GONE);
+        }
+
+        // Set address
+        if (!TextUtils.isEmpty(item.getAddress())) {
+            viewHolder.mAddressTextView.setText(item.getAddress());
+            viewHolder.mAddressTextView.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.mAddressTextView.setVisibility(View.GONE);
+        }
     }
+
+//    @Override
+//    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+//        //bind view /set data
+//        viewHolder.mDepartmentTextView.setText(webpageItems.get(i).getDepartment());
+//        viewHolder.mEmailTextView.setText(webpageItems.get(i).getEmail());
+//        viewHolder.mContactTextView.setText(webpageItems.get(i).getContact());
+//        viewHolder.mAddressTextView.setText(webpageItems.get(i).getAddress());
+////        viewHolder.mImageView.
+//        //use glide to update image
+////        Glide.with(context).load(webpageItems.get(i).getImageUrl()).into(viewHolder.mImageView);
+//
+//    }
 
     @Override
     public int getItemCount() {

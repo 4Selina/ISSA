@@ -35,8 +35,9 @@ public class PostTest {
         }
 
         @Test
-        public void testSetters() {
-            post.setId(1);
+        public void testSetters()
+        {
+            post.setId(1L);
 //            post.setThumbUpCounts(10);
 //            post.setCollectedCounts(5);
 

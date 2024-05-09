@@ -41,6 +41,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -264,6 +266,7 @@ public class WebpageFragment extends Fragment {
         //set title of progress dialog
         pd.setTitle("Loading Data...");
         pd.show();
+
         db.collection("Documents")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -295,21 +298,35 @@ public class WebpageFragment extends Fragment {
                                         // Load text data into RecyclerView
                                         if (map != null && !map.isEmpty())
                                         {
-                                            String id = (String) map.get("id");
+                                            Long id = (Long) map.get("id");
                                             String department = (String) map.get("department");
                                             String email = (String) map.get("email");
                                             String contact = (String) map.get("contact");
                                             String address = (String) map.get("address");
+
                                             WebpageItem webpageItem = new WebpageItem(id, department, email, contact, address);
                                             webpageItems.add(webpageItem);
                                         }
                                     }
                                 }
+
+                                Collections.sort(webpageItems, new Comparator<WebpageItem>()
+                                {
+                                    @Override
+                                    public int compare(WebpageItem ItemOne, WebpageItem ItemTwo)
+                                    {
+                                        return (int)(ItemOne.getId() - ItemTwo.getId());
+                                    }
+                                });
+
                                 // Set adapter for RecyclerView
                                 adapter = new WebpageAdapter(getActivity(), webpageItems, context);
                                 webpageRV.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
-                            } else {
+
+                            }
+                            else
+                            {
                                 Log.d(TAG, "No such document");
                             }
                         } else {

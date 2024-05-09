@@ -16,7 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -149,6 +151,7 @@ public class UpdateWebpageActivity extends AppCompatActivity {
                         //this will be called when data is updated successfully
                         pd.dismiss();
                         Toast.makeText(UpdateWebpageActivity.this, "Updated...", Toast.LENGTH_SHORT).show();
+//                        return false;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -160,39 +163,81 @@ public class UpdateWebpageActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void uploadData(String department, String email, String contact, String address, String s) {
+    private void uploadData(String department, String email, String contact, String address, String s)
+    {
         //Set title and show progress bar
         pd.setTitle("Adding Data to Firestore");
         pd.show();
 
         //random id for each data to be stored
-        String id = UUID.randomUUID().toString();
-
-        Map<String, Object> doc = new HashMap<>();
-//        doc.put("id", id);
-        doc.put("department", department);
-
-
-        doc.put("email", email);
-        doc.put("contact", contact);
-        doc.put("address", address);
-
-        //add this data
-        db.collection("Documents").document(id).set(doc)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+        db.collection("Settings")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
+                {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        //this will be called when data is added successfully
-                        pd.dismiss();
-                        Toast.makeText(UpdateWebpageActivity.this, "Uploaded...", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //this will be called if there is any error while uploading
-                        pd.dismiss();
-                        Toast.makeText(UpdateWebpageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    public void onComplete(@NonNull Task<QuerySnapshot> task)
+                    {
+                        for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
+                        {
+                            if(SelectedDocument.contains("DocumentsID"))
+                            {
+                                Long DocumentID = (Long) SelectedDocument.get("DocumentsID");
+                                DocumentID++;
+
+                                String id = UUID.randomUUID().toString();
+
+                                Map<String, Object> doc = new HashMap<>();
+
+                                doc.put("id", DocumentID);
+                                doc.put("department", department);
+
+                                doc.put("email", email);
+                                doc.put("contact", contact);
+                                doc.put("address", address);
+
+                                //add this data
+                                Long finalDocumentID = DocumentID;
+                                db.collection("Documents")
+                                        .document(id)
+                                        .set(doc)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>()
+                                        {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task)
+                                            {
+                                                //this will be called when data is added successfully
+                                                pd.dismiss();
+                                                Toast.makeText(UpdateWebpageActivity.this, "Uploaded...", Toast.LENGTH_SHORT).show();
+                                                // return false;
+
+                                                Map<String, Object> IDData = new HashMap<>();
+                                                IDData.put("DocumentsID", finalDocumentID);
+
+                                                db.collection("Settings")
+                                                        .document(SelectedDocument.getReference().getId())
+                                                        .update(IDData)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
+                                                        {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task)
+                                                            {
+
+                                                            }
+                                                        });
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener()
+                                        {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e)
+                                            {
+                                                //this will be called if there is any error while uploading
+                                                pd.dismiss();
+                                                Toast.makeText(UpdateWebpageActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
                     }
                 });
     }
