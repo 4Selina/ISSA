@@ -253,7 +253,7 @@ public class  AddActivity extends AppCompatActivity
 
                                 if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
                                 {
-                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://") || !SelectedDetails.getLink().contains("www."))
+                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
                                     {
                                         AddItem = false;
                                         FailedReason = "Link not in Correct Format.";
