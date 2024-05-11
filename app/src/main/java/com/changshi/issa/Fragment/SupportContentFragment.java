@@ -3,10 +3,10 @@ package com.changshi.issa.Fragment;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +21,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.DisplaySectionAdapter;
 import com.changshi.issa.AddActivity;
+import com.changshi.issa.BackPressHandler;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.R;
 import com.google.common.base.Strings;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
-public class SupportContentFragment extends Fragment {
+public class SupportContentFragment extends Fragment implements BackPressHandler {
 
     private ImageView bannerImgV;
     private Supports selectedSupport;
@@ -35,10 +36,8 @@ public class SupportContentFragment extends Fragment {
     private RecyclerView rVSection;
     private TextView conclusionTv;
     private Button buttonEdit;
-
-    private ProgressDialog pd;
-
-    FirebaseFirestore db;
+    private Button buttonBack;
+    public FirebaseFirestore db;
 
     public SupportContentFragment(Supports SelectedSupport)
     {
@@ -52,14 +51,10 @@ public class SupportContentFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-        pd = new ProgressDialog(getContext());
-        pd.setTitle("Loading Data...");
-
         //set recyclerView
         rVSection = view.findViewById(R.id.recycler_view_sections);
 
         bannerImgV = view.findViewById(R.id.image_banner);
-//        //display title in support card view???????
 
         descriptionTv = view.findViewById(R.id.text_description);
         conclusionTv = view.findViewById(R.id.text_conclusion);
@@ -94,6 +89,8 @@ public class SupportContentFragment extends Fragment {
         return view;
     }
 
+
+    //read and show data from Firestore
     private void LoadData()
     {
         if(!Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
@@ -108,6 +105,18 @@ public class SupportContentFragment extends Fragment {
         rVSection.setLayoutManager(new LinearLayoutManager(getContext()));
         rVSection.setAdapter(adapter);
 
-        conclusionTv.setText(selectedSupport.getConclusion());
+        //if conclusion is empty, it will be hidden.
+        if (TextUtils.isEmpty(selectedSupport.getConclusion())) {
+            conclusionTv.setVisibility(View.GONE);
+        } else {
+            conclusionTv.setVisibility(View.VISIBLE);
+            conclusionTv.setText(selectedSupport.getConclusion());
+        }
+    }
+
+    @Override
+    public boolean handleBackPress() {
+        // Let the system handle the back press
+        return false;
     }
 }

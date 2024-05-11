@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.FunctionAdapter;
+import com.changshi.issa.BackPressHandler;
 import com.changshi.issa.DatabaseHandler.Functions;
 import com.changshi.issa.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class FunctionsFragment extends Fragment
+public class FunctionsFragment extends Fragment implements BackPressHandler
 {
     RecyclerView functionRecyclerView;
 
@@ -67,25 +68,35 @@ public class FunctionsFragment extends Fragment
                         {
                             if(SelectedSnapshot.contains("AccommodationUrl"))
                             {
-                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("LearningSupportUrl").toString()))
-                                    AllFunctions.get(0).setFunctionURL(SelectedSnapshot.get("LearningSupportUrl").toString());
+                                Object learningSupportUrl = SelectedSnapshot.get("LearningSupportUrl");
+                                if(learningSupportUrl != null && !Strings.isNullOrEmpty(learningSupportUrl.toString()))
+                                    AllFunctions.get(0).setFunctionURL(learningSupportUrl.toString());
 
-                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("SocialActivitiesUrl").toString()))
-                                    AllFunctions.get(1).setFunctionURL(SelectedSnapshot.get("SocialActivitiesUrl").toString());
+                                Object socialActivitiesUrl = SelectedSnapshot.get("SocialActivitiesUrl");
+                                if(socialActivitiesUrl != null && !Strings.isNullOrEmpty(socialActivitiesUrl.toString()))
+                                    AllFunctions.get(1).setFunctionURL(socialActivitiesUrl.toString());
 
-                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("AccommodationUrl").toString()))
-                                    AllFunctions.get(2).setFunctionURL(SelectedSnapshot.get("AccommodationUrl").toString());
+                                Object accommodationUrl = SelectedSnapshot.get("AccommodationUrl");
+                                if(accommodationUrl != null && !Strings.isNullOrEmpty(accommodationUrl.toString()))
+                                    AllFunctions.get(2).setFunctionURL(accommodationUrl.toString());
 
-                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("TransportUrl").toString()))
-                                    AllFunctions.get(3).setFunctionURL(SelectedSnapshot.get("TransportUrl").toString());
+                                Object transportUrl = SelectedSnapshot.get("TransportUrl");
+                                if(transportUrl != null && !Strings.isNullOrEmpty(transportUrl.toString()))
+                                    AllFunctions.get(3).setFunctionURL(transportUrl.toString());
 
-                                if(!Strings.isNullOrEmpty(SelectedSnapshot.get("JobSupportUrl").toString()))
-                                    AllFunctions.get(4).setFunctionURL(SelectedSnapshot.get("JobSupportUrl").toString());
+                                Object jobSupportUrl = SelectedSnapshot.get("JobSupportUrl");
+                                if(jobSupportUrl != null && !Strings.isNullOrEmpty(jobSupportUrl.toString()))
+                                    AllFunctions.get(4).setFunctionURL(jobSupportUrl.toString());
 
                                 functionRecyclerView.getAdapter().notifyDataSetChanged();
                             }
                         }
                     }
                 });
+    }
+
+    @Override
+    public boolean handleBackPress() {
+        return false;
     }
 }

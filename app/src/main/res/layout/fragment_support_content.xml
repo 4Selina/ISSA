@@ -53,6 +53,7 @@
                     android:layout_height="40sp"
                     android:text="Edit"
                     android:layout_marginTop="16sp"
+                    android:layout_gravity="center"
                     android:textStyle="bold" />
 
         </LinearLayout>

@@ -22,7 +22,7 @@ public class DisplayDetailsAdapter extends RecyclerView.Adapter<DisplayDetailsAd
     private List<Details> detailsList;
 
     public DisplayDetailsAdapter(List<Details> detailsList) {
-        this.detailsList = detailsList;
+        this.detailsList = detailsList != null ? detailsList : new ArrayList<>();
     }
 
     @NonNull
@@ -33,49 +33,37 @@ public class DisplayDetailsAdapter extends RecyclerView.Adapter<DisplayDetailsAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position)
-    {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Details details = detailsList.get(position);
-        holder.detailsTv.setText(details.getDetail());
+        if (details != null) {
+            holder.detailsTv.setText(details.getDetail());
 
-        if(!Strings.isNullOrEmpty(details.getLink()))
-        {
-            holder.openLinkBn.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
+            if (!Strings.isNullOrEmpty(details.getLink())) {
+                holder.openLinkBn.setOnClickListener(v -> {
                     Intent OpenLinkIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(details.getLink()));
                     holder.itemView.getContext().startActivity(OpenLinkIntent);
-                }
-            });
-        }
-        else
-        {
-            holder.openLinkBn.setVisibility(View.GONE);
+                });
+            } else {
+                holder.openLinkBn.setVisibility(View.GONE);
+            }
         }
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return detailsList.size();
     }
 
-    public void setDetailsList(ArrayList<Details> detailsList)
-    {
-        // update adapter
-        this.detailsList = detailsList;
+    public void setDetailsList(ArrayList<Details> detailsList) {
+        this.detailsList = detailsList != null ? detailsList : new ArrayList<>();
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView detailsTv;
         Button openLinkBn;
 
-        public ViewHolder(@NonNull View itemView)
-        {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             detailsTv = itemView.findViewById(R.id.detailsTv);
             openLinkBn = itemView.findViewById(R.id.openLinkBn);

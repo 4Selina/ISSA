@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private NavigationView NavView;
 
     SharedPreferences Pref;
-    SharedPreferences.Editor PrefEditor;
+
 
     public boolean IsLoggedIn;
     private ArrayList<Functions> AllFunctions;
@@ -62,7 +62,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        mDbHandler = new DBHandler(this);
 
         AllFunctions = new ArrayList<>();
 
@@ -559,13 +558,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else {
-            super.onBackPressed();
+        } else {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof BackPressHandler) {
+                boolean handled = ((BackPressHandler) currentFragment).handleBackPress();
+                if (!handled) {
+                    super.onBackPressed();
+                }
+            } else {
+                super.onBackPressed();
+            }
         }
     }
     public void openFragment(Fragment fragment, String title){
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null); // Add this line
         transaction.commit();
         getSupportActionBar().setTitle(title); //display fragment title on the toolbar
 

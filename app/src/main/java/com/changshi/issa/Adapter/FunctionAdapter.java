@@ -1,16 +1,12 @@
 package com.changshi.issa.Adapter;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.changshi.issa.Fragment.WebpageFragment.REQUEST_CODE_PICK_IMAGE;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,11 +114,6 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                             }
                         });
                 builder.create().show();
-            }
-
-            private void pickImageFromGallery() {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                ((Activity) mContext).startActivityForResult(galleryIntent, REQUEST_CODE_PICK_IMAGE);
             }
 
             private void showUrlInputDialog() {
@@ -326,7 +317,6 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                                 AllSections.add(NewSection);
                                                             }
                                                         }
-
                                                         NewSupports.setSections(AllSections);
                                                     }
                                                 });
@@ -343,139 +333,6 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                 ((HomeActivity)mContext).openFragment(new SupportsFragment(AllSupports), holder.txtFunctionTitle.getText().toString());
                             }
                         });
-
-
-//                if(holder.txtFunctionTitle.getText() == "Learning Support")
-//                {
-//
-//
-//                    // Read all the Support_Contents from the Database that have the ParentCategory of
-//                    // Learning Support.
-//
-//                    // Set the Data into the LearningSupportFunctions ArrayList.
-//
-//
-//
-////                    Supports CourseSelectionFunction = new Supports();
-////                    CourseSelectionFunction.setTitle("Course Selection");
-////                    CourseSelectionFunction.setParentCategory("Learning Support");
-////
-////                    LearningSupportFunctions.add(CourseSelectionFunction);
-////
-////                    Supports AcademicFunction = new Supports();
-////                    AcademicFunction.setTitle("Academic Support");
-////                    AcademicFunction.setParentCategory("Learning Support");
-////
-////                    LearningSupportFunctions.add(AcademicFunction);
-////
-////                    Supports StudentCouncilFunction = new Supports();
-////                    StudentCouncilFunction.setTitle("Student Council");
-////                    StudentCouncilFunction.setParentCategory("Learning Support");
-////
-////                    LearningSupportFunctions.add(StudentCouncilFunction);
-////
-////                    Supports HealthFunction = new Supports();
-////                    HealthFunction.setTitle("Health & Wellbeing");
-////                    HealthFunction.setParentCategory("Learning Support");
-//
-//                    // Remove all this Hard Coded information and put it in the Database.
-//
-//                    // Get Information from DB.
-//                    // Add Information from DB to the Array.
-//
-//                }
-//                if(holder.txtFunctionTitle.getText() == "Social Activities")
-//                {
-//                    ArrayList<Supports> SocialActFunctions = new ArrayList<>();
-//
-//                    Supports NetworkingFunction = new Supports();
-//                    NetworkingFunction.setTitle("Networking");
-//                    NetworkingFunction.setParentCategory("Social Activities");
-//
-//                    SocialActFunctions.add(NetworkingFunction);
-//
-//                    Supports SportClubFunction = new Supports();
-//                    SportClubFunction.setTitle("Sport Club");
-//                    SportClubFunction.setParentCategory("Social Activities");
-//
-//                    SocialActFunctions.add(SportClubFunction);
-//
-//                    Supports FoodOptionsFunction = new Supports();
-//                    FoodOptionsFunction.setTitle("Food Options");
-//                    FoodOptionsFunction.setParentCategory("Social Activities");
-//
-//                    SocialActFunctions.add(FoodOptionsFunction);
-//                    ((HomeActivity)mContext).openFragment(new SupportsFragment(SocialActFunctions), "Social Activities");
-//                }
-//                if(holder.txtFunctionTitle.getText() == "Accommodation")
-//                {
-//                    ArrayList<Supports> AccommodationFunctions = new ArrayList<>();
-//                    //ArrayList<Supports> AccommodationFunctions = GetSupports("Accommodation");
-//
-//                    Supports HomeStayFunction = new Supports();
-//                    HomeStayFunction.setTitle("Homestay");
-//                    HomeStayFunction.setParentCategory("Accommodation");
-//
-//                    AccommodationFunctions.add(HomeStayFunction);
-//
-//                    Supports RentalFunction = new Supports();
-//                    RentalFunction.setTitle("Rental");
-//                    RentalFunction.setParentCategory("Accommodation");
-//
-//                    AccommodationFunctions.add(RentalFunction);
-//
-//                    ((HomeActivity) mContext).openFragment(new SupportsFragment(AccommodationFunctions), "Accommodation");
-//                }
-//                if(holder.txtFunctionTitle.getText() == "Transports")
-//                {
-//                    ArrayList<Supports> TransportsFunction = new ArrayList<>();
-//
-//                    Supports PublicTranFunction = new Supports();
-//                    PublicTranFunction.setTitle("Public Transport System");
-//                    PublicTranFunction.setParentCategory("Transports");
-//
-//                    TransportsFunction.add(PublicTranFunction);
-//
-//                    Supports AirportFunction = new Supports();
-//                    AirportFunction.setTitle("Airport Express");
-//                    AirportFunction.setParentCategory("Transports");
-//
-//                    TransportsFunction.add(AirportFunction);
-//
-//                    Supports CampusFunction = new Supports();
-//                    CampusFunction.setTitle("Campus Transfers");
-//                    CampusFunction.setParentCategory("Transports");
-//
-//                    TransportsFunction.add(CampusFunction);
-//
-//                    ((HomeActivity) mContext).openFragment(new SupportsFragment(TransportsFunction), "Transports");
-//
-//                }
-//                if(holder.txtFunctionTitle.getText() == "Job Support")
-//                {
-//                    ArrayList<Supports> JobFunctions = new ArrayList<>();
-//
-//                    Supports PartTimeFunction = new Supports();
-//                    PartTimeFunction.setTitle("Part-time Job");
-//                    PartTimeFunction.setParentCategory("Job Support");
-//
-//                    JobFunctions.add(PartTimeFunction);
-//
-//                    Supports InternshipFunction = new Supports();
-//                    InternshipFunction.setTitle("Internship");
-//                    InternshipFunction.setParentCategory("Job Support");
-//
-//                    JobFunctions.add(InternshipFunction);
-//
-//                    //Graduate job card
-//                    Supports GraduateJobFunction = new Supports();
-//                    GraduateJobFunction.setTitle("Graduate Job");
-//                    GraduateJobFunction.setParentCategory("Job Support");
-//
-//                    JobFunctions.add(GraduateJobFunction);
-//                    ((HomeActivity)mContext).openFragment(new SupportsFragment(JobFunctions), "Job Support");
-//                }
-
             }
         });
     }
@@ -502,11 +359,4 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         }
 
     }
-
-//    public ArrayList<Supports> GetSupports(int CategoryID)
-//    {
-//        ArrayList<Supports> CurrentSupports = new ArrayList<>();
-//
-//        return CurrentSupports;
-//    }
 }

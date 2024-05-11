@@ -183,7 +183,7 @@ public class  AddActivity extends AppCompatActivity
             }
         });
 
-        //init and set Section recyclerView
+        //init and set Section recyclerView for the editing data or creating
         if(!IsEditMode)
         {
             ArrayList<SectionDetails> BaseArray = new ArrayList<>();
@@ -203,6 +203,8 @@ public class  AddActivity extends AppCompatActivity
             SectionsRV.setAdapter(adapter);
         }
 
+
+        //click submit button
         mButtonSubmit.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -313,7 +315,7 @@ public class  AddActivity extends AppCompatActivity
 
                                 if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
                                 {
-                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://") || !SelectedDetails.getLink().contains("www."))
+                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
                                     {
                                         AddItem = false;
                                         FailedReason = "Link not in Correct Format.";
@@ -336,16 +338,12 @@ public class  AddActivity extends AppCompatActivity
             }
         });
 
-
+        ////cancel creating or editing date
         mButtonCancel.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                // Open URL in Browser.
-                //Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link.getText().toString()));
-                //startActivity(browserIntent);
-
                 finish();
             }
         });

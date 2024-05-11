@@ -12,14 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.SupportAdapter;
+import com.changshi.issa.BackPressHandler;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.R;
 
 import java.util.ArrayList;
 
-public class SupportsFragment extends Fragment
+public class SupportsFragment extends Fragment implements BackPressHandler
 {
-    private boolean IsFirstTime = true;
     private RecyclerView mRecyclerView;
     private SupportAdapter mAdapter;
     private ArrayList<Supports> mSupportList;
@@ -37,6 +37,12 @@ public class SupportsFragment extends Fragment
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_supports, container, false);
     }
+    @Override
+    public boolean handleBackPress() {
+        // Let the system handle the back press
+        return false;
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
@@ -50,6 +56,9 @@ public class SupportsFragment extends Fragment
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    public class Fragment extends androidx.fragment.app.Fragment {
     }
 }
 
