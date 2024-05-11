@@ -205,8 +205,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         });
 
         // Click on the Card and Do Code.
-        holder.mainCard.setOnClickListener(new View.OnClickListener()
-        {
+        holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
@@ -317,6 +316,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                                 AllSections.add(NewSection);
                                                             }
                                                         }
+
                                                         NewSupports.setSections(AllSections);
                                                     }
                                                 });
@@ -335,6 +335,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                         });
             }
         });
+
     }
 
     @Override
@@ -359,4 +360,5 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         }
 
     }
+
 }

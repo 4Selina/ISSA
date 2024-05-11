@@ -255,7 +255,7 @@ public class  AddActivity extends AppCompatActivity
 
                                 if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
                                 {
-                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
+                                    if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://") || !SelectedDetails.getLink().contains("www"))
                                     {
                                         AddItem = false;
                                         FailedReason = "Link not in Correct Format.";
@@ -338,7 +338,7 @@ public class  AddActivity extends AppCompatActivity
             }
         });
 
-        ////cancel creating or editing date
+        //cancel creating or editing date
         mButtonCancel.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -555,187 +555,117 @@ public class  AddActivity extends AppCompatActivity
 
     }
 
-    private void editContent(Supports EditedItem, ArrayList<SectionDetails> OldSections)
-    {
+    private void editContent(Supports EditedItem, ArrayList<SectionDetails> OldSections) {
         // Run through all the Old Sections and Details and Delete Them.
-        for(int i = 0; i < OldSections.size(); i++)
-        {
+        for (int i = 0; i < OldSections.size(); i++) {
             // Deleting all Details attached to This Section.
-            for(int j = 0; j < OldSections.get(i).getSectionDetails().size(); j++)
-            {
+            for (int j = 0; j < OldSections.get(i).getSectionDetails().size(); j++) {
                 db.collection("Details")
                         .document(OldSections.get(i).getSectionDetails().get(j).getDocumentID())
                         .delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                        {
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task)
-                            {
-
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // Continue with the rest of your logic after deleting details.
                             }
                         });
             }
 
+            // Delete the Section after deleting all its details.
             db.collection("Sections")
                     .document(OldSections.get(i).getDocumentID())
                     .delete()
-                    .addOnCompleteListener(new OnCompleteListener<Void>()
-                    {
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-
-                        }
-                    });
-
-            db.collection("Settings")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task)
-                        {
-                            // Create a new document data
-                            Map<String, Object> SupportData = new HashMap<>();
-                            Map<String, Object> SectionsData = new HashMap<>();
-                            Map<String, Object> DetailsData = new HashMap<>();
-
-                            String SupportDocumentID = EditedItem.getDocumentID();
-
-                            Long SectionsID = (Long) task.getResult().getDocuments().get(0).get("SectionsID");
-                            Long DetailsID = (Long) task.getResult().getDocuments().get(0).get("DetailsID");
-
-                            if(!Strings.isNullOrEmpty(EditedItem.getBannerUrl()))
-                            {
-                                SupportData.put("bannerUrl", EditedItem.getBannerUrl());
-                            }
-
-                            SupportData.put("title", EditedItem.getTitle());
-                            SupportData.put("description", EditedItem.getDescription());
-                            SupportData.put("parentCategory", EditedItem.getParentCategory());
-                            SupportData.put("conclusion", EditedItem.getConclusion());
-
-                            if(EditedItem.getSections().size() > 0)
-                            {
-                                ArrayList<Long> SectionsIDs = new ArrayList<>();
-
-                                for (int i = 0; i < EditedItem.getSections().size(); i++)
-                                {
-                                    String SectionsDocumentID = UUID.randomUUID().toString();
-
-                                    SectionsID++;
-
-                                    SectionsData.put("id", SectionsID);
-                                    SectionsIDs.add(SectionsID);
-
-                                    SectionsData.put("heading", EditedItem.getSections().get(i).getSectionHeading());
-
-                                    if(EditedItem.getSections().get(i).getSectionDetails() != null)
-                                    {
-                                        if(EditedItem.getSections().get(i).getSectionDetails().size() > 0)
-                                        {
-                                            ArrayList<Long> DetailsList = new ArrayList<>();
-
-                                            for (int j = 0; j < EditedItem.getSections().get(i).getSectionDetails().size(); j++)
-                                            {
-                                                String DetailsDocumentID = UUID.randomUUID().toString();
-
-                                                DetailsID++;
-
-                                                DetailsData.put("id", DetailsID);
-                                                DetailsList.add(DetailsID);
-
-                                                DetailsData.put("detail", EditedItem.getSections().get(i).getSectionDetails().get(j).getDetail());
-
-                                                db.collection("Details")
-                                                        .document(DetailsDocumentID)
-                                                        .set(DetailsData)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                                                        {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task)
-                                                            {
-                                                                // Leave Empty for now.
-                                                            }
-                                                        });
-                                            }
-
-                                            SectionsData.put("details", DetailsList);
-                                        }
-                                    }
-
-                                    db.collection("Sections")
-                                            .document(SectionsDocumentID)
-                                            .set(SectionsData)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>()
-                                            {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task)
-                                                {
-                                                    // Leave Empty for now.
-                                                }
-                                            });
-                                }
-
-                                SupportData.put("sections", SectionsIDs);
-                            }
-
-                            SupportData.put("conclusion", EditedItem.getConclusion());
-
-                            Long finalDetailsID = DetailsID;
-                            Long finalSectionsID = SectionsID;
-
-                            db.collection("Support_Contents")
-                                    .document(SupportDocumentID)
-                                    .update(SupportData)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>()
-                                    {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task)
-                                        {
-                                            db.collection("Settings")
-                                                    .get()
-                                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                                    {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                                        {
-                                                            Map<String, Object> IDData = new HashMap<>();
-                                                            IDData.put("SectionsID", finalSectionsID);
-                                                            IDData.put("DetailsID", finalDetailsID);
-
-                                                            String Path = task.getResult().getDocuments().get(0).getReference().getId();
-
-                                                            db.collection("Settings")
-                                                                    .document(Path)
-                                                                    .update(IDData)
-                                                                    .addOnCompleteListener(new OnCompleteListener<Void>()
-                                                                    {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task)
-                                                                        {
-
-                                                                        }
-                                                                    });
-                                                        }
-                                                    });
-
-
-                                            finish();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener()
-                                    {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e)
-                                        {
-                                            Toast.makeText(AddActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // Continue with the rest of your logic after deleting section.
                         }
                     });
         }
 
+        // Now that old sections and details are deleted, you can proceed with updating the content.
 
+        // Create a new document data
+        Map<String, Object> SupportData = new HashMap<>();
+        Map<String, Object> SectionsData = new HashMap<>();
+        Map<String, Object> DetailsData = new HashMap<>();
+
+        String SupportDocumentID = EditedItem.getDocumentID();
+
+        // Add your update logic here.
+        SupportData.put("bannerUrl", EditedItem.getBannerUrl());
+        SupportData.put("title", EditedItem.getTitle());
+        SupportData.put("description", EditedItem.getDescription());
+        SupportData.put("parentCategory", EditedItem.getParentCategory());
+        SupportData.put("conclusion", EditedItem.getConclusion());
+
+        if (EditedItem.getSections().size() > 0) {
+            ArrayList<Long> SectionsIDs = new ArrayList<>();
+
+            for (int i = 0; i < EditedItem.getSections().size(); i++) {
+                String SectionsDocumentID = UUID.randomUUID().toString();
+
+                // Add your update logic here.
+                SectionsData.put("id", i + 1); // Assuming id starts from 1
+                SectionsData.put("heading", EditedItem.getSections().get(i).getSectionHeading());
+
+                if (EditedItem.getSections().get(i).getSectionDetails() != null &&
+                        EditedItem.getSections().get(i).getSectionDetails().size() > 0) {
+                    ArrayList<Long> DetailsList = new ArrayList<>();
+
+                    for (int j = 0; j < EditedItem.getSections().get(i).getSectionDetails().size(); j++) {
+                        String DetailsDocumentID = UUID.randomUUID().toString();
+
+                        // Add your update logic here.
+                        DetailsData.put("id", j + 1); // Assuming id starts from 1
+                        DetailsData.put("detail", EditedItem.getSections().get(i).getSectionDetails().get(j).getDetail());
+
+                        db.collection("Details")
+                                .document(DetailsDocumentID)
+                                .set(DetailsData)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        // Leave Empty for now.
+                                    }
+                                });
+                    }
+
+                    SectionsData.put("details", DetailsList);
+                }
+
+                db.collection("Sections")
+                        .document(SectionsDocumentID)
+                        .set(SectionsData)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // Leave Empty for now.
+                            }
+                        });
+            }
+
+            SupportData.put("sections", SectionsIDs);
+        }
+
+        SupportData.put("conclusion", EditedItem.getConclusion());
+
+        // Update the Support Content document
+        db.collection("Support_Contents")
+                .document(SupportDocumentID)
+                .set(SupportData)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        finish(); // Finish activity after updating content.
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AddActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
+
 }

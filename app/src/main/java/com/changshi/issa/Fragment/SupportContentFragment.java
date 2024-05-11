@@ -39,6 +39,10 @@ public class SupportContentFragment extends Fragment implements BackPressHandler
     private Button buttonBack;
     public FirebaseFirestore db;
 
+    public SupportContentFragment() {
+        // Required empty public constructor
+    }
+
     public SupportContentFragment(Supports SelectedSupport)
     {
         this.selectedSupport = SelectedSupport;
@@ -91,11 +95,17 @@ public class SupportContentFragment extends Fragment implements BackPressHandler
 
 
     //read and show data from Firestore
+    //read and show data from Firestore
     private void LoadData()
     {
         if(!Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
         {
             Picasso.get().load(selectedSupport.getBannerUrl()).into(bannerImgV);
+        }
+        else
+        {
+            // 如果 BannerUrl 为空，则显示默认图片
+            bannerImgV.setImageResource(R.drawable.logo);
         }
 
         descriptionTv.setText(selectedSupport.getDescription());
@@ -114,6 +124,8 @@ public class SupportContentFragment extends Fragment implements BackPressHandler
         }
     }
 
+
+    //go back to the previous fragment layout
     @Override
     public boolean handleBackPress() {
         // Let the system handle the back press

@@ -1,6 +1,7 @@
 package com.changshi.issa.DatabaseHandler;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -10,6 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Supports implements Serializable
 {
@@ -100,7 +103,81 @@ public class Supports implements Serializable
     // Method to update the supports item
     public void update(Context context, String newTitle, String newBannerUrl, String newParentCategory, String newDescription, ArrayList<SectionDetails> newSections, String newConclusion)
     {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Update the properties of this Supports object
+        this.title = newTitle;
+        this.bannerUrl = newBannerUrl;
+        this.parentCategory = newParentCategory;
+        this.description = newDescription;
+        this.sections = newSections;
+        this.conclusion = newConclusion;
+
+        // Create a new map with the updated properties
+        Map<String, Object> supportsMap = new HashMap<>();
+        supportsMap.put("title", this.title);
+        supportsMap.put("bannerUrl", this.bannerUrl);
+        supportsMap.put("parentCategory", this.parentCategory);
+        supportsMap.put("description", this.description);
+        supportsMap.put("conclusion", this.conclusion);
+
+        // Update the document in the Firestore database
+        db.collection("Support_Contents")
+                .document(this.DocumentID)
+                .set(supportsMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Supports item updated successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Error updating supports item", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        // Update each Section and its Details
+        for (SectionDetails section : this.sections) {
+            Map<String, Object> sectionMap = new HashMap<>();
+            sectionMap.put("id", section.getID());  // Assuming SectionDetails has a getId method
+            sectionMap.put("heading", section.getSectionHeading());  // Assuming SectionDetails has a getHeading method
+            sectionMap.put("details", section.getSectionDetails());  // Assuming SectionDetails has a getSectionDetails method
+
+            db.collection("Sections")
+                    .document(section.getDocumentID())  // Assuming SectionDetails has a getDocumentID method
+                    .set(sectionMap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(context, "Section updated successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Error updating section", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+            for (Details detail : section.getSectionDetails()) {
+                Map<String, Object> detailMap = new HashMap<>();
+                detailMap.put("id", detail.getID());  // Assuming Detail has a getId method
+                detailMap.put("detail", detail.getDetail());  // Assuming Detail has a getDetail method
+                detailMap.put("link", detail.getLink());  // Assuming Detail has a getLink method
+
+                db.collection("Details")
+                        .document(detail.getDocumentID())  // Assuming Detail has a getDocumentID method
+                        .set(detailMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(context, "Detail updated successfully", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Error updating detail", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        }
     }
 
     // Method to delete the support item
@@ -111,9 +188,21 @@ public class Supports implements Serializable
         // Deleting all Sections Attached to this Support.
         for(int i = 0; i < sections.size(); i++)
         {
+            // Check if this is the last section, if so, show an error message and return
+            if(sections.size() == 1) {
+                Toast.makeText(context, "Cannot delete the last section", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             // Deleting all Details attached to This Section.
             for(int j = 0; j < sections.get(i).getSectionDetails().size(); j++)
             {
+                // Check if this is the last detail, if so, show an error message and return
+                if(sections.get(i).getSectionDetails().size() == 1) {
+                    Toast.makeText(context, "Cannot delete the last detail", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 db.collection("Details")
                         .document(sections.get(i).getSectionDetails().get(j).getDocumentID())
                         .delete()

@@ -42,5 +42,8 @@ public class SectionDetails implements Serializable
     public void setSectionDetails(ArrayList<Details> newDetails) {
         this.details = newDetails;
     }
+
+
+
 }
 
