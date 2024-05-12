@@ -41,8 +41,8 @@ import java.util.Map;
 
 public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyViewHolder>
 {
-    private Context mContext;
-    private ArrayList<Functions> mFunctionList;
+    private final Context mContext;
+    private final ArrayList<Functions> mFunctionList;
     private ImageView mFunctionImageToUpdate;
 
     public FunctionAdapter(Context _Context,  ArrayList<Functions> _FunctionList)
@@ -97,22 +97,15 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Select Image Source")
-                        .setItems(new CharSequence[]{"URL"}, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        showUrlInputDialog();
-                                        break;
-                                }
+                        .setItems(new CharSequence[]{"URL"}, (dialog, which) -> {
+                            switch (which) {
+                                case 0:
+                                    showUrlInputDialog();
+                                    break;
                             }
                         })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
                 builder.create().show();
             }
 
@@ -257,7 +250,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
 
                                                             for (Long SelectedID : SectionIDs)
                                                             {
-                                                                if(SelectedID == (Long) SelectedSection.get("id"))
+                                                                if(SelectedID.equals(SelectedSection.get("id")))
                                                                 {
                                                                     IDIsCorrect = true;
                                                                 }
@@ -288,7 +281,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
 
                                                                                     for(Long SelectedDetailID : DetailsIDs)
                                                                                     {
-                                                                                        if(SelectedDetailID == (Long) SelectedDetail.get("id"))
+                                                                                        if(SelectedDetailID.equals(SelectedDetail.get("id")))
                                                                                         {
                                                                                             IsCorrectID = true;
                                                                                         }
@@ -343,12 +336,12 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         return mFunctionList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView txtFunctionTitle;
-        private ImageView functionImage;
-        private ImageButton updateImageButton;
-        private ConstraintLayout mainCard;
+        private final TextView txtFunctionTitle;
+        private final ImageView functionImage;
+        private final ImageButton updateImageButton;
+        private final ConstraintLayout mainCard;
 
         @SuppressLint("WrongViewCast")
         public MyViewHolder(@NonNull View itemView) {
