@@ -29,7 +29,7 @@
             android:layout_below="@id/btnLogin"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="Whitireia WelTec"
+            android:text="@string/school"
             android:textColor="@color/black"
             android:textSize="30dp"
             android:textStyle="bold" />

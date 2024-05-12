@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="20sp"
-            android:hint="Detail"
+            android:hint="@string/details"
             />
     </LinearLayout>
 
@@ -39,7 +39,7 @@
             android:textSize="19sp"
             android:textColor="@color/purple_700"
             android:textStyle="italic"
-            android:hint="Web links" />
+            android:hint="@string/links" />
 
     </LinearLayout>
 
@@ -54,9 +54,9 @@
             android:id="@+id/button_add_detail"
             android:layout_width="48sp"
             android:layout_height="48sp"
-            android:text="+"
+            android:text="@string/created"
             android:textSize="24sp"
-            android:contentDescription="Add detail"
+            android:contentDescription="@string/addDetails"
             android:backgroundTint="@color/DetailBTN"
             />
 
@@ -64,10 +64,10 @@
             android:id="@+id/button_remove_detail"
             android:layout_width="48sp"
             android:layout_height="48sp"
-            android:text="-"
+            android:text="@string/removeId"
             android:textSize="24sp"
             android:layout_marginLeft="50sp"
-            android:contentDescription="Remove detail"
+            android:contentDescription="@string/remove"
             android:backgroundTint="@color/DetailBTN"
             />
     </LinearLayout>

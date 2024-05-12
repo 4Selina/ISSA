@@ -43,13 +43,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="22sp"
-                    android:hint="Support Title" />
+                    android:hint="@string/support_title" />
 
                 <EditText
                     android:id="@+id/edit_support_intro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Description"
+                    android:hint="@string/description"
                     android:textSize="18sp" />
 
                 <!-- Add Spinners for function and sub-function selection -->
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:entries="@array/function_array"
-                    android:prompt="@string/select_function"
+                    android:prompt="@string/select_Function"
                     android:layout_marginBottom="15dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -71,7 +71,7 @@
                     android:id="@+id/edit_conclusion_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Conclusion"
+                    android:hint="@string/conclusion"
                     android:textSize="22sp"
                     android:layout_marginTop="15dp"
                     />
@@ -91,7 +91,7 @@
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:layout_gravity="center"
                 />
 
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginLeft="50sp"
-                android:text="Save"
+                android:text="@string/save"
                 android:layout_gravity="center"
                 />
         </LinearLayout>

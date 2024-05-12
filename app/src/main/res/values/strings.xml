@@ -6,54 +6,27 @@
         \n\n
         This app will serve as a resource hub for information and support you may need while you are settling into studying with us.</string>
 
-    <string name="school">Whitireia and WelTec</string>
+    <string name="school">Whitireia | WelTec</string>
 
     --Home layout--
     <string name="nav_header">Whitireia WelTec</string>
     <string name="fab">Add Task</string>
-
-    <string name="functionTitle">International Students Support</string>
-    <string name="function_1">Learning Support</string>
-    <string name="function_2">Social Activities</string>
-    <string name="function_3">Accommodation</string>
-    <string name="function_4">Job Support</string>
-    <string name="function_5">Transport Support</string>
     <string name="function_button">Edit</string>
     --Login layout--
     <string name="edtUsername">Username</string>
     <string name="edtPassword">Password</string>
     <string name="btnLogin">Login</string>
     <string name="btnSkip">Skip</string>
-    <string name="txtForgotPassword">Forgot password?</string>
-    <string name="txtTerm">Term ......</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Fragment</string>
 
-
     --Webpage--
-    <string name="WelTecContent">For International Enquiries: \n
-    International.support@wandw.ac.nz \n\n
-    For International Admissions: \n
-    International-admissions@wandw.ac.nz \n\n
-
-        Physical Locations \n\n
-
-    Petone campus: \n
-    Te Whare Wānanga o te Awakairangi (WelTec)\n
-        21 Kensington Avenue, Petone, New Zealand, 5012 \n\n
-    Porirua campus: \n
-    Te Kura Matatini o Whitireia (Whitireia) \n
-        3 Wi Neera Drive, Porirua, New Zealand, 5022 \n\n
-    Te Kahui Auaha campus: \n
-        65 Dixon Street, Te Aro, Wellington, 6011 \n\n
-</string>
-
     <string name="navigation_drawer_open" />
     <string name="navigation_drawer_close" />
 
 
-    --Add new content layout--
+    --Add Activity layout--
     <string name="select">Select Support Functions</string>
     <string-array name="function_array">
         <item>Learning Support</item>
@@ -62,10 +35,56 @@
         <item>Transports</item>
         <item>Job Support</item>
     </string-array>
-    <string name="select_function">Select Function</string>
+    <string name="support_title">Support title</string>
+    <string name="description">Description</string>
+    <string name="select_Function">Select Function </string>
+    <string name="conclusion">Conclusion</string>
+    <string name="save">Save </string>
+    <string name="cancel">Cancel</string>
+
+    --SupportFragment layout--
+    <string name="supportCard">Description, links, emails</string>
+
+    --UpdateWebpage layout--
+    <string name="enterDepartment">Enter new Department</string>
+    <string name="enterEmail">Enter Email</string>
+    <string name="enterContact">Enter Contact Number</string>
+    <string name="enterAddress">Enter Address</string>
+    <string name="update">Update</string>
+    <string name="editWbImage">edit the webpage banner</string>
+
+    --SearchFragment layout--
+    <string name="search">Search</string>
+
+    --SupportContentFragment layout--
+    <string name="bannerImage">Banner Image</string>
+    <string name="introduction">Introduction</string>
+    <string name="edit">Edit</string>
+
+    <string name="click_here">Click Here</string>
+    <string name="heading">Heading</string>
+    <string name="details">Detail</string>
+
+    <string name="content">Content</string>
+    <string name="links">Web Links</string>
+
+    <string name="email">Email</string>
+    <string name="contact">Contact Number</string>
+
+    <string name="created">+</string>
+    <string name="removeId">-</string>
+
+    <string name="function">Function Title</string>
+    <string name="functionImage">Add function image</string>
+
+    <string name="add">Add new support</string>
+    <string name="addDetails">Add new details</string>
+    <string name="remove">Remover</string>
+
+    <string name="address">Address</string>
+    <string name="enter_Section">Enter section title</string>
 
 
-    --Welcome layout--
 
 
 </resources>
