@@ -225,10 +225,10 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                         NewSupports.setTitle(SelectedDocument.get("title").toString());
                                         NewSupports.setDescription(SelectedDocument.get("description").toString());
 
-                                        if(SelectedDocument.contains("bannerUrl"))
-                                        {
+                                        if (SelectedDocument.contains("bannerUrl") && SelectedDocument.get("bannerUrl") != null) {
                                             NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
                                         }
+
 
                                         NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
@@ -250,7 +250,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
 
                                                             for (Long SelectedID : SectionIDs)
                                                             {
-                                                                if(SelectedID.equals(SelectedSection.get("id")))
+                                                                if(SelectedID == (Long) SelectedSection.get("id"))
                                                                 {
                                                                     IDIsCorrect = true;
                                                                 }
@@ -281,7 +281,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
 
                                                                                     for(Long SelectedDetailID : DetailsIDs)
                                                                                     {
-                                                                                        if(SelectedDetailID.equals(SelectedDetail.get("id")))
+                                                                                        if(SelectedDetailID == (Long) SelectedDetail.get("id"))
                                                                                         {
                                                                                             IsCorrectID = true;
                                                                                         }
@@ -336,12 +336,12 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
         return mFunctionList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView txtFunctionTitle;
         private final ImageView functionImage;
         private final ImageButton updateImageButton;
-        private final ConstraintLayout mainCard;
+        private ConstraintLayout mainCard;
 
         @SuppressLint("WrongViewCast")
         public MyViewHolder(@NonNull View itemView) {

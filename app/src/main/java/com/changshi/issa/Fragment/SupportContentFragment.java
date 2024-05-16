@@ -98,30 +98,30 @@ public class SupportContentFragment extends Fragment implements BackPressHandler
 
     private void LoadData()
     {
-        if(selectedSupport != null && !Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
+        //check if the support is not empty
+        if (selectedSupport != null)
         {
-            Picasso.get().load(selectedSupport.getBannerUrl()).into(bannerImgV);
-        }
+            if (!Strings.isNullOrEmpty(selectedSupport.getBannerUrl())) {
+                Picasso.get().load(selectedSupport.getBannerUrl()).into(bannerImgV);
+            } else {
+                // if BannerUrl is null or empty, it shows the default image
+                bannerImgV.setImageResource(R.drawable.logo);
+            }
 
-        else
-        {
-            // 如果 BannerUrl 为空，则显示默认图片
-            bannerImgV.setImageResource(R.drawable.logo);
-        }
+            descriptionTv.setText(selectedSupport.getDescription());
 
-        descriptionTv.setText(selectedSupport.getDescription());
+            DisplaySectionAdapter adapter = new DisplaySectionAdapter(selectedSupport.getSections());
 
-        DisplaySectionAdapter adapter = new DisplaySectionAdapter(selectedSupport.getSections());
+            rVSection.setLayoutManager(new LinearLayoutManager(getContext()));
+            rVSection.setAdapter(adapter);
 
-        rVSection.setLayoutManager(new LinearLayoutManager(getContext()));
-        rVSection.setAdapter(adapter);
-
-        //if conclusion is empty, it will be hidden.
-        if (TextUtils.isEmpty(selectedSupport.getConclusion())) {
-            conclusionTv.setVisibility(View.GONE);
-        } else {
-            conclusionTv.setVisibility(View.VISIBLE);
-            conclusionTv.setText(selectedSupport.getConclusion());
+            //if conclusion is empty, it will be hidden.
+            if (TextUtils.isEmpty(selectedSupport.getConclusion())) {
+                conclusionTv.setVisibility(View.GONE);
+            } else {
+                conclusionTv.setVisibility(View.VISIBLE);
+                conclusionTv.setText(selectedSupport.getConclusion());
+            }
         }
     }
 

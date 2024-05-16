@@ -11,6 +11,12 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="testLoginWithMissingPassword()">
+        <State />
+      </entry>
+      <entry key="testLoginWithMissingUsername()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

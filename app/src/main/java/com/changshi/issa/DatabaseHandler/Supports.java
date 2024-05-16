@@ -68,6 +68,7 @@ public class Supports implements Serializable
         this.bannerUrl = bannerUrl;
     }
 
+
     public String getParentCategory() {
         return parentCategory;
     }
@@ -229,4 +230,6 @@ public class Supports implements Serializable
                     }
                 });
     }
+
+
 }
