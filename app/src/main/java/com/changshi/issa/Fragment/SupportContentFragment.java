@@ -95,13 +95,14 @@ public class SupportContentFragment extends Fragment implements BackPressHandler
 
 
     //read and show data from Firestore
-    //read and show data from Firestore
+
     private void LoadData()
     {
-        if(!Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
+        if(selectedSupport != null && !Strings.isNullOrEmpty(selectedSupport.getBannerUrl()))
         {
             Picasso.get().load(selectedSupport.getBannerUrl()).into(bannerImgV);
         }
+
         else
         {
             // 如果 BannerUrl 为空，则显示默认图片

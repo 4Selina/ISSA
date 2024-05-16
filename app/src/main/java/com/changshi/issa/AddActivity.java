@@ -577,7 +577,7 @@ public class  AddActivity extends AppCompatActivity
                             @Override
                             public void onComplete(@NonNull Task<Void> task)
                             {
-                                // Continue with the rest of your logic after deleting details.
+                                // Continue with the rest of logic after deleting details.
                             }
                         });
             }
@@ -596,7 +596,7 @@ public class  AddActivity extends AppCompatActivity
                     });
         }
 
-        // Now that old sections and details are deleted, you can proceed with updating the content.
+        // Now that old sections and details are deleted, can proceed with updating the content.
 
         // Create a new document data
         db.collection("Settings")
@@ -619,7 +619,7 @@ public class  AddActivity extends AppCompatActivity
 
                                 String SupportDocumentID = EditedItem.getDocumentID();
 
-                                // Add your update logic here.
+                                // Add update logic here.
                                 SupportData.put("bannerUrl", EditedItem.getBannerUrl());
                                 SupportData.put("title", EditedItem.getTitle());
                                 SupportData.put("description", EditedItem.getDescription());
