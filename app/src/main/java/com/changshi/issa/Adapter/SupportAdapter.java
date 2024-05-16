@@ -129,8 +129,8 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
                     .setPositiveButton("Yes", (dialog, id) ->
                     {
                         mSupportList.get(position).delete(mContext);
-
                         // yes, delete support
+
                         mSupportList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mSupportList.size());

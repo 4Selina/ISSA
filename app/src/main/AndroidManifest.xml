@@ -16,21 +16,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ISSA"
         tools:targetApi="31">
-        <activity
-            android:name=".CourseSelectActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SupportContentActivity"
-            android:exported="false" />
+
         <activity
             android:name=".UpdateWebpageActivity"
             android:exported="false" />
-        <activity
-            android:name=".CategoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".EditeActivity"
-            android:exported="false" />
+
         <activity
             android:name=".AddActivity"
             android:exported="false" />

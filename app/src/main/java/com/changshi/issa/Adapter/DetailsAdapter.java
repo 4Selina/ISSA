@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.DatabaseHandler.Details;
 import com.changshi.issa.R;
+import com.google.common.base.Strings;
 
 import java.util.ArrayList;
 
@@ -126,8 +127,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             RemoveDetails = itemView.findViewById(R.id.button_remove_detail);
         }
 
-        public void bindData(Details details) {
+        public void bindData(Details details)
+        {
             DetailsText.setText(details.getDetail());
+
+            if(!Strings.isNullOrEmpty(details.getLink()))
+                linkET.setText(details.getLink());
         }
     }
 

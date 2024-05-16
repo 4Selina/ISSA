@@ -188,21 +188,9 @@ public class Supports implements Serializable
         // Deleting all Sections Attached to this Support.
         for(int i = 0; i < sections.size(); i++)
         {
-            // Check if this is the last section, if so, show an error message and return
-            if(sections.size() == 1) {
-                Toast.makeText(context, "Cannot delete the last section", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             // Deleting all Details attached to This Section.
             for(int j = 0; j < sections.get(i).getSectionDetails().size(); j++)
             {
-                // Check if this is the last detail, if so, show an error message and return
-                if(sections.get(i).getSectionDetails().size() == 1) {
-                    Toast.makeText(context, "Cannot delete the last detail", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 db.collection("Details")
                         .document(sections.get(i).getSectionDetails().get(j).getDocumentID())
                         .delete()

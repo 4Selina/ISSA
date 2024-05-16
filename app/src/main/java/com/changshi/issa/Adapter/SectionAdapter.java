@@ -51,7 +51,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             }
         });
 
-        holder.sectionTitleEditText.addTextChangedListener(new TextWatcher() {
+        holder.sectionTitleEditText.addTextChangedListener(new TextWatcher()
+        {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -59,7 +60,8 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s)
+            {
                 sectionDetailsList.get(position).setSectionHeading(s.toString());
             }
         });
@@ -95,8 +97,10 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
         notifyItemInserted(sectionDetailsList.size() -1);
     }
 
-    public void removeSection(int position) {
-        if (position >= 0 && position < sectionDetailsList.size()) {
+    public void removeSection(int position)
+    {
+        if (position >= 0 && position < sectionDetailsList.size())
+        {
             sectionDetailsList.remove(position);
             notifyItemRemoved(position);
         }
@@ -120,8 +124,20 @@ public class SectionAdapter extends RecyclerView.Adapter<SectionAdapter.SectionV
             RemoveSection = itemView.findViewById(R.id.button_remove_section);
         }
 
-        public void bindData(SectionDetails sectionDetails) {
+        public void bindData(SectionDetails sectionDetails)
+        {
             sectionTitleEditText.setText(sectionDetails.getSectionHeading());
+
+            if(sectionDetails.getSectionDetails().size() == 0)
+            {
+                Details DefaultDetail = new Details();
+                ArrayList<Details> AllDetails = new ArrayList<>();
+
+                AllDetails.add(DefaultDetail);
+
+                sectionDetails.setSectionDetails(AllDetails);
+            }
+
             DetailsAdapter detailsAdapter = new DetailsAdapter(sectionDetails.getSectionDetails());
             detailsRecyclerView.setAdapter(detailsAdapter);
         }
