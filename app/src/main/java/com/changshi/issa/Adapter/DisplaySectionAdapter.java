@@ -9,10 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.changshi.issa.DatabaseHandler.Details;
 import com.changshi.issa.DatabaseHandler.SectionDetails;
 import com.changshi.issa.R;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class DisplaySectionAdapter extends RecyclerView.Adapter<DisplaySectionAdapter.ViewHolder> {
     private ArrayList<SectionDetails> sectionList;
@@ -37,7 +40,9 @@ public class DisplaySectionAdapter extends RecyclerView.Adapter<DisplaySectionAd
         holder.headingTv.setText(section.getSectionHeading());
 
         holder.rvDisplayDetails.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-        holder.displayDetailsAdapter = new DisplayDetailsAdapter(section.getSectionDetails());
+        ArrayList<Details> details = section.getSectionDetails();
+        ArrayList<Details> orderedDetails = (ArrayList)details.stream().sorted(Comparator.comparingLong(Details::getID)).collect(Collectors.toList());
+        holder.displayDetailsAdapter = new DisplayDetailsAdapter(orderedDetails);
         holder.rvDisplayDetails.setAdapter(holder.displayDetailsAdapter);
     }
 

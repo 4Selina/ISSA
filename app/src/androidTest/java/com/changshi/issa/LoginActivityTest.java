@@ -84,7 +84,7 @@ public class LoginActivityTest {
     }
     @Test
     public void testLoginWithMissingPassword() {
-        // Set missing username
+        // Set missing password
         String username = "admin";
 
         // Start LoginActivity
@@ -92,10 +92,10 @@ public class LoginActivityTest {
 
         // Perform login
         scenario.onActivity(activity -> {
-            EditText edtUsername = activity.findViewById(R.id.edtPassword);
-            edtUsername.setText("");
             EditText edtPassword = activity.findViewById(R.id.edtUserName);
             edtPassword.setText(username);
+            EditText edtUsername = activity.findViewById(R.id.edtPassword);
+            edtUsername.setText("");
             activity.findViewById(R.id.btnLogin).performClick();
         });
 
@@ -108,6 +108,35 @@ public class LoginActivityTest {
         // Close LoginActivity
         scenario.close();
     }
+    @Test
+    public void testSuccessfulLogin() {
+        // Set valid input credentials
+        String username = "admin";
+        String password = "admin";
+
+        // Start LoginActivity
+        ActivityScenario<LoginActivity> scenario = ActivityScenario.launch(LoginActivity.class);
 
 
+        // Perform login
+        scenario.onActivity(activity -> {
+            EditText edtUsername = activity.findViewById(R.id.edtPassword);
+            edtUsername.setText(password);
+            EditText edtPassword = activity.findViewById(R.id.edtUserName);
+            edtPassword.setText(username);
+            activity.findViewById(R.id.btnLogin).performClick();
+        });
+
+
+        // Check if logged in
+        scenario.onActivity(activity -> {
+            SharedPreferences sharedPref = activity.getSharedPreferences("login_pref", Context.MODE_PRIVATE);
+            assertTrue(sharedPref.getBoolean("is_logged_in", false));
+            assertEquals(username, sharedPref.getString("username", ""));
+        });
+
+        // Close LoginActivity
+        scenario.close();
+
+    }
 }

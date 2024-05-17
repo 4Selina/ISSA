@@ -22,11 +22,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.changshi.issa.Adapter.DisplaySectionAdapter;
 import com.changshi.issa.AddActivity;
 import com.changshi.issa.BackPressHandler;
+import com.changshi.issa.DatabaseHandler.SectionDetails;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.R;
 import com.google.common.base.Strings;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class SupportContentFragment extends Fragment implements BackPressHandler {
 
@@ -110,7 +115,9 @@ public class SupportContentFragment extends Fragment implements BackPressHandler
 
             descriptionTv.setText(selectedSupport.getDescription());
 
-            DisplaySectionAdapter adapter = new DisplaySectionAdapter(selectedSupport.getSections());
+            ArrayList<SectionDetails> sections = selectedSupport.getSections();
+            ArrayList<SectionDetails> orderedSections = (ArrayList)sections.stream().sorted(Comparator.comparingLong(SectionDetails::getID)).collect(Collectors.toList());
+            DisplaySectionAdapter adapter = new DisplaySectionAdapter(orderedSections);
 
             rVSection.setLayoutManager(new LinearLayoutManager(getContext()));
             rVSection.setAdapter(adapter);

@@ -17,6 +17,9 @@
       <entry key="testLoginWithMissingUsername()">
         <State />
       </entry>
+      <entry key="testSuccessfulLogin()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

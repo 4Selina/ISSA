@@ -216,9 +216,9 @@ public class  AddActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                boolean AddItem = true;
                 String FailedReason = "";
 
+                //add
                 if(!IsEditMode)
                 {
                     Supports NewSupport = new Supports();
@@ -244,8 +244,9 @@ public class  AddActivity extends AppCompatActivity
 
                             if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
                             {
-                                AddItem = false;
                                 FailedReason = "A Section Heading is Empty.";
+                                Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                return;
                             }
 
                             NewSection.setSectionHeading(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading());
@@ -255,16 +256,18 @@ public class  AddActivity extends AppCompatActivity
                             {
                                 if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
                                 {
-                                    AddItem = false;
                                     FailedReason = "A Detail is Empty.";
+                                    Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
 
                                 if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
                                 {
                                     if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
                                     {
-                                        AddItem = false;
                                         FailedReason = "Link not in Correct Format.";
+                                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                        return;
                                     }
                                 }
                             }
@@ -276,12 +279,13 @@ public class  AddActivity extends AppCompatActivity
                     NewSupport.setSections(AllSections);
                     NewSupport.setConclusion(mEditConclusion.getText().toString().trim());
 
-                    if(AddItem)
+                    submitContent(NewSupport);
+                   /* if(AddItem)
                         submitContent(NewSupport);
                     else
-                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();*/
                 }
-                else
+                else //update
                 {
                     SelectedSupport.setTitle(mEditTitle.getText().toString().trim());
 
@@ -304,8 +308,9 @@ public class  AddActivity extends AppCompatActivity
 
                             if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
                             {
-                                AddItem = false;
                                 FailedReason = "A Section Heading is Empty.";
+                                Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                return;
                             }
 
                             NewSection.setSectionHeading(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading());
@@ -315,16 +320,18 @@ public class  AddActivity extends AppCompatActivity
                             {
                                 if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
                                 {
-                                    AddItem = false;
                                     FailedReason = "A Detail is Empty.";
+                                    Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                    return;
                                 }
 
                                 if(!Strings.isNullOrEmpty(SelectedDetails.getLink()))
                                 {
                                     if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
                                     {
-                                        AddItem = false;
                                         FailedReason = "Link not in Correct Format.";
+                                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                        return;
                                     }
                                 }
                             }
@@ -336,10 +343,11 @@ public class  AddActivity extends AppCompatActivity
                     SelectedSupport.setSections(AllSections);
                     SelectedSupport.setConclusion(mEditConclusion.getText().toString().trim());
 
-                    if(AddItem)
+                    editContent(SelectedSupport, OldSections);
+                   /* if(AddItem)
                         editContent(SelectedSupport, OldSections);
                     else
-                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();*/
                 }
             }
         });

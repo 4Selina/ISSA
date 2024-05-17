@@ -54,21 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnSkip = findViewById(R.id.btnSkip);
 
-//        txtForgotPassword = findViewById(R.id.txtForgotPassword);
-//        txtForgotPassword.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-//                builder.setMessage("Please contact the International Department to request the admin password.")
-//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int id) {
-//                                // Do nothing, just close the dialog
-//                            }
-//                        });
-//                // Create the AlertDialog object and show it
-//                builder.create().show();
-//            }
-//        });
 
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override

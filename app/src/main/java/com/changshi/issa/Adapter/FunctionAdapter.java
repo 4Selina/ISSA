@@ -277,17 +277,27 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
 
                                                                                 for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
                                                                                 {
-                                                                                    boolean IsCorrectID = false;
+                                                                                    //boolean IsCorrectID = false;
 
                                                                                     for(Long SelectedDetailID : DetailsIDs)
                                                                                     {
-                                                                                        if(SelectedDetailID == (Long) SelectedDetail.get("id"))
+                                                                                        if(SelectedDetailID.equals(SelectedDetail.getData().get("id")) )
                                                                                         {
-                                                                                            IsCorrectID = true;
+                                                                                            //IsCorrectID = true;
+                                                                                            Details NewDetail = new Details();
+                                                                                            NewDetail.setID((Long)SelectedDetail.getData().get("id"));
+                                                                                            NewDetail.setDocumentID(SelectedDetail.getReference().getId());
+
+                                                                                            NewDetail.setDetail(SelectedDetail.get("detail").toString());
+
+                                                                                            if(SelectedDetail.contains("link"))
+                                                                                                NewDetail.setLink(SelectedDetail.getString("link"));
+
+                                                                                            AllDetails.add(NewDetail);
                                                                                         }
                                                                                     }
 
-                                                                                    if(IsCorrectID)
+                                                                                   /* if(IsCorrectID)
                                                                                     {
                                                                                         Details NewDetail = new Details();
                                                                                         NewDetail.setID((Long)SelectedDetail.get("id"));
@@ -299,7 +309,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                                                             NewDetail.setLink(SelectedDetail.getString("link"));
 
                                                                                         AllDetails.add(NewDetail);
-                                                                                    }
+                                                                                    }*/
                                                                                 }
 
                                                                                 NewSection.setSectionDetails(AllDetails);

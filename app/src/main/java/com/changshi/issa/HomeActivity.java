@@ -158,7 +158,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 else if(itemId == R.id.addBTM)
                 {
+                    //todo
                     Intent intent = new Intent(HomeActivity.this, AddActivity.class);
+                    intent.putExtra("IsEditMode", false);
                     startActivity(intent);
                     return true;
                 }
@@ -503,21 +505,31 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                                                                             for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
                                                                             {
-                                                                                boolean IsCorrectID = false;
+                                                                                //boolean IsCorrectID = false;
 
                                                                                 for(Long SelectedDetailID : DetailsIDs)
                                                                                 {
-                                                                                    if(SelectedDetailID == (Long) SelectedDetail.get("id"))
+                                                                                    if(SelectedDetailID.equals(SelectedDetail.getData().get("id")))
                                                                                     {
-                                                                                        IsCorrectID = true;
+                                                                                        //IsCorrectID = true;
+                                                                                        Details NewDetail = new Details();
+
+                                                                                        NewDetail.setID((Long)SelectedDetail.getData().get("id"));
+                                                                                        NewDetail.setDocumentID(SelectedDetail.getReference().getId());
+                                                                                        NewDetail.setDetail(SelectedDetail.get("detail").toString());
+
+                                                                                        if(SelectedDetail.contains("link"))
+                                                                                            NewDetail.setLink(SelectedDetail.getString("link"));
+
+                                                                                        AllDetails.add(NewDetail);
                                                                                     }
                                                                                 }
 
-                                                                                if(IsCorrectID)
+                                                                                /*if(IsCorrectID)
                                                                                 {
                                                                                     Details NewDetail = new Details();
 
-                                                                                    NewDetail.setID((Long)SelectedDetail.get("id"));
+                                                                                    NewDetail.setID((Long)SelectedDetail.getData().get("id"));
                                                                                     NewDetail.setDocumentID(SelectedDetail.getReference().getId());
                                                                                     NewDetail.setDetail(SelectedDetail.get("detail").toString());
 
@@ -525,7 +537,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                                                         NewDetail.setLink(SelectedDetail.getString("link"));
 
                                                                                     AllDetails.add(NewDetail);
-                                                                                }
+                                                                                }*/
                                                                             }
 
                                                                             NewSection.setSectionDetails(AllDetails);
