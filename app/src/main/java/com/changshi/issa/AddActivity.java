@@ -43,22 +43,15 @@ public class  AddActivity extends AppCompatActivity
     private ImageView mBannerImg;
     private ImageButton mImageBannerBtn;
     private EditText mEditTitle;
-
     private EditText mEditDescription;
-
     private Spinner category;
-
     private SectionAdapter adapter;
     private RecyclerView SectionsRV;
     private ArrayList<SectionDetails> sectionDetails;
-    //    private Button mButtonAddDetail;
-//    private Button mButtonAddSupportSection;
     private EditText mEditConclusion;
     private Button mButtonSubmit;
     private Button mButtonCancel;
-
     private String bannerUrl;
-
     private boolean IsEditMode;
     private Supports SelectedSupport;
 
@@ -68,18 +61,16 @@ public class  AddActivity extends AppCompatActivity
     private FirebaseFirestore db;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
 
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
-        // Initialize Firestore
+        // Initialize Firestore database
         db = FirebaseFirestore.getInstance();
-
         Intent RecievedIntent = getIntent();
-
+        // Initialize this is go to edite Support content or create a new one
         if(RecievedIntent.hasExtra("IsEditMode"))
         {
             IsEditMode = RecievedIntent.getBooleanExtra("IsEditMode", true);
@@ -93,21 +84,14 @@ public class  AddActivity extends AppCompatActivity
         mBannerImg = findViewById(R.id.imageView_support_banner);
         mImageBannerBtn = findViewById(R.id.update_support_banner);
         mEditTitle = findViewById(R.id.edit_support_title);
-
-//        heading = findViewById(R.id.edit_heading);
-//        details = findViewById(R.id.edit_detail_text);
-
         mEditDescription = findViewById(R.id.edit_support_intro);
-//        mButtonAddDetail = findViewById(R.id.button_add_detail);
-//        mButtonAddSupportSection = findViewById(R.id.button_add_section);
         mEditConclusion = findViewById(R.id.edit_conclusion_content);
         mButtonSubmit = findViewById(R.id.button_save);
         mButtonCancel = findViewById(R.id.button_cancel);
-
         category = findViewById(R.id.spinner_function);
-
         SectionsRV = findViewById(R.id.recycler_view_sections);
 
+        //click banner edite button to update image by Url.
         mImageBannerBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -218,7 +202,7 @@ public class  AddActivity extends AppCompatActivity
             {
                 String FailedReason = "";
 
-                //add
+                //add new support content
                 if(!IsEditMode)
                 {
                     Supports NewSupport = new Supports();
@@ -244,8 +228,7 @@ public class  AddActivity extends AppCompatActivity
 
                             if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
                             {
-                                FailedReason = "A Section Heading is Empty.";
-                                Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddActivity.this, "A Section Heading is Empty.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
@@ -256,8 +239,7 @@ public class  AddActivity extends AppCompatActivity
                             {
                                 if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
                                 {
-                                    FailedReason = "A Detail is Empty.";
-                                    Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddActivity.this, "A Detail is Empty.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
@@ -265,8 +247,8 @@ public class  AddActivity extends AppCompatActivity
                                 {
                                     if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
                                     {
-                                        FailedReason = "Link not in Correct Format.";
-                                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+
+                                        Toast.makeText(AddActivity.this,"Link not in Correct Format.", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
                                 }
@@ -280,12 +262,9 @@ public class  AddActivity extends AppCompatActivity
                     NewSupport.setConclusion(mEditConclusion.getText().toString().trim());
 
                     submitContent(NewSupport);
-                   /* if(AddItem)
-                        submitContent(NewSupport);
-                    else
-                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();*/
+
                 }
-                else //update
+                else //update selected support content
                 {
                     SelectedSupport.setTitle(mEditTitle.getText().toString().trim());
 
@@ -308,8 +287,7 @@ public class  AddActivity extends AppCompatActivity
 
                             if(Strings.isNullOrEmpty(((SectionAdapter)SectionsRV.getAdapter()).getItem(i).getSectionHeading()))
                             {
-                                FailedReason = "A Section Heading is Empty.";
-                                Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddActivity.this, "A Section Heading is Empty.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
@@ -320,8 +298,7 @@ public class  AddActivity extends AppCompatActivity
                             {
                                 if(Strings.isNullOrEmpty(SelectedDetails.getDetail()))
                                 {
-                                    FailedReason = "A Detail is Empty.";
-                                    Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddActivity.this, "A Detail is Empty.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
@@ -329,8 +306,7 @@ public class  AddActivity extends AppCompatActivity
                                 {
                                     if(!SelectedDetails.getLink().contains("http") || !SelectedDetails.getLink().contains("://"))
                                     {
-                                        FailedReason = "Link not in Correct Format.";
-                                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddActivity.this, "Link not in Correct Format.", Toast.LENGTH_SHORT).show();
                                         return;
                                     }
                                 }
@@ -344,15 +320,11 @@ public class  AddActivity extends AppCompatActivity
                     SelectedSupport.setConclusion(mEditConclusion.getText().toString().trim());
 
                     editContent(SelectedSupport, OldSections);
-                   /* if(AddItem)
-                        editContent(SelectedSupport, OldSections);
-                    else
-                        Toast.makeText(AddActivity.this, FailedReason, Toast.LENGTH_SHORT).show();*/
                 }
             }
         });
 
-        //cancel creating or editing date
+        //cancel creating/editing date
         mButtonCancel.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -369,6 +341,7 @@ public class  AddActivity extends AppCompatActivity
         }
     }
 
+    //pass data to support content layout
     private void showData()
     {
         mEditTitle.setText(SelectedSupport.getTitle());
@@ -404,6 +377,7 @@ public class  AddActivity extends AppCompatActivity
         mEditConclusion.setText(SelectedSupport.getConclusion());
     }
 
+    //collect data to save into Firestore
     private void submitContent(Supports SavedItem)
     {
         db.collection("Settings")
@@ -569,22 +543,18 @@ public class  AddActivity extends AppCompatActivity
 
     }
 
-    private void editContent(Supports EditedItem, ArrayList<SectionDetails> OldSections)
-    {
+    //update support content for adding new details and sections
+    private void editContent(Supports EditedItem, ArrayList<SectionDetails> OldSections) {
         // Run through all the Old Sections and Details and Delete Them.
-        for (int i = 0; i < OldSections.size(); i++)
-        {
+        for (int i = 0; i < OldSections.size(); i++) {
             // Deleting all Details attached to This Section.
-            for (int j = 0; j < OldSections.get(i).getSectionDetails().size(); j++)
-            {
+            for (int j = 0; j < OldSections.get(i).getSectionDetails().size(); j++) {
                 db.collection("Details")
                         .document(OldSections.get(i).getSectionDetails().get(j).getDocumentID())
                         .delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                        {
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task)
-                            {
+                            public void onComplete(@NonNull Task<Void> task) {
                                 // Continue with the rest of logic after deleting details.
                             }
                         });
@@ -594,11 +564,9 @@ public class  AddActivity extends AppCompatActivity
             db.collection("Sections")
                     .document(OldSections.get(i).getDocumentID())
                     .delete()
-                    .addOnCompleteListener(new OnCompleteListener<Void>()
-                    {
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
+                        public void onComplete(@NonNull Task<Void> task) {
                             // Continue with the rest of your logic after deleting section.
                         }
                     });
@@ -609,15 +577,11 @@ public class  AddActivity extends AppCompatActivity
         // Create a new document data
         db.collection("Settings")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                {
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                    {
-                        for(DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
-                        {
-                            if(SelectedDocument.contains("SupportID"))
-                            {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments()) {
+                            if (SelectedDocument.contains("SupportID")) {
                                 Long DetailsID = (Long) SelectedDocument.get("DetailsID");
                                 Long SectionsID = (Long) SelectedDocument.get("SectionsID");
 
@@ -634,12 +598,10 @@ public class  AddActivity extends AppCompatActivity
                                 SupportData.put("parentCategory", EditedItem.getParentCategory());
                                 SupportData.put("conclusion", EditedItem.getConclusion());
 
-                                if (EditedItem.getSections().size() > 0)
-                                {
+                                if (EditedItem.getSections().size() > 0) {
                                     ArrayList<Long> SectionsIDs = new ArrayList<>();
 
-                                    for (int i = 0; i < EditedItem.getSections().size(); i++)
-                                    {
+                                    for (int i = 0; i < EditedItem.getSections().size(); i++) {
                                         SectionsID++;
                                         SectionsIDs.add(SectionsID);
 
@@ -649,12 +611,10 @@ public class  AddActivity extends AppCompatActivity
                                         SectionsData.put("id", SectionsID);
                                         SectionsData.put("heading", EditedItem.getSections().get(i).getSectionHeading());
 
-                                        if (EditedItem.getSections().get(i).getSectionDetails() != null && EditedItem.getSections().get(i).getSectionDetails().size() > 0)
-                                        {
+                                        if (EditedItem.getSections().get(i).getSectionDetails() != null && EditedItem.getSections().get(i).getSectionDetails().size() > 0) {
                                             ArrayList<Long> DetailsList = new ArrayList<>();
 
-                                            for (int j = 0; j < EditedItem.getSections().get(i).getSectionDetails().size(); j++)
-                                            {
+                                            for (int j = 0; j < EditedItem.getSections().get(i).getSectionDetails().size(); j++) {
                                                 DetailsID++;
                                                 DetailsList.add(DetailsID);
 
@@ -664,17 +624,15 @@ public class  AddActivity extends AppCompatActivity
                                                 DetailsData.put("id", DetailsID);
                                                 DetailsData.put("detail", EditedItem.getSections().get(i).getSectionDetails().get(j).getDetail());
 
-                                                if(!Strings.isNullOrEmpty(EditedItem.getSections().get(i).getSectionDetails().get(j).getLink()))
+                                                if (!Strings.isNullOrEmpty(EditedItem.getSections().get(i).getSectionDetails().get(j).getLink()))
                                                     DetailsData.put("link", EditedItem.getSections().get(i).getSectionDetails().get(j).getLink());
 
                                                 db.collection("Details")
                                                         .document(DetailsDocumentID)
                                                         .set(DetailsData)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                                                        {
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<Void> task)
-                                                            {
+                                                            public void onComplete(@NonNull Task<Void> task) {
                                                                 // Leave Empty for now.
                                                             }
                                                         });
@@ -686,11 +644,9 @@ public class  AddActivity extends AppCompatActivity
                                         db.collection("Sections")
                                                 .document(SectionsDocumentID)
                                                 .set(SectionsData)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>()
-                                                {
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<Void> task)
-                                                    {
+                                                    public void onComplete(@NonNull Task<Void> task) {
                                                         // Leave Empty for now.
                                                     }
                                                 });
@@ -708,11 +664,9 @@ public class  AddActivity extends AppCompatActivity
                                 db.collection("Support_Contents")
                                         .document(SupportDocumentID)
                                         .update(SupportData)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                                        {
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task)
-                                            {
+                                            public void onComplete(@NonNull Task<Void> task) {
                                                 Map<String, Object> SettingsData = new HashMap<>();
 
                                                 SettingsData.put("DetailsID", finalDetailsID);
@@ -720,12 +674,17 @@ public class  AddActivity extends AppCompatActivity
 
                                                 db.document(SelectedDocument.getReference().getPath())
                                                         .update(SettingsData)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                                                        {
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<Void> task)
-                                                            {
-
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                // Final update completed
+                                                                if (task.isSuccessful()) {
+                                                                    // Successfully updated the settings
+                                                                    Toast.makeText(AddActivity.this, "Support Content updated successfully.", Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    // Handle the failure
+                                                                    Toast.makeText(AddActivity.this, "Failed to update settings.", Toast.LENGTH_SHORT).show();
+                                                                }
                                                             }
                                                         });
                                             }
@@ -734,7 +693,6 @@ public class  AddActivity extends AppCompatActivity
                         }
                     }
                 });
-
-
     }
+
 }

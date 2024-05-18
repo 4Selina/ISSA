@@ -61,6 +61,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Initialize Firestore instance
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         AllFunctions = new ArrayList<>();
@@ -129,7 +131,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.layout_HomeActivity);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
 
@@ -139,6 +141,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigationDrawer);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Initialize BottomNavigationView
         bottomNavigationView = findViewById(R.id.bottomNavigationMenu);
         bottomNavigationView.setBackground(null);
 
@@ -158,7 +161,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 else if(itemId == R.id.addBTM)
                 {
-                    //todo
                     Intent intent = new Intent(HomeActivity.this, AddActivity.class);
                     intent.putExtra("IsEditMode", false);
                     startActivity(intent);
@@ -214,7 +216,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             switch (fragmentName)
             {
                 case "learningSupport":
-                    openFragment(new SearchSFragment(), "Learning Support");
+                    openFragment(new  WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Learning Support");
                     break;
                 case "social":
                     openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Social Activities");
@@ -232,7 +234,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     openFragment(new SearchSFragment(), " ");
                     break;
                 case "webpage":
-                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Whitireia WelTec");
+                    openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "WelTec");
                     break;
             }
         } else {
@@ -326,7 +328,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             switch (fragmentName)
             {
                 case "learningSupport":
-                    openFragment(new SearchSFragment(), "Learning Support");
+                    openFragment(new  WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Learning Support");
                     break;
                 case "social":
                     openFragment(new WebpageFragment(new ArrayList<>(), HomeActivity.this, FirebaseFirestore.getInstance()), "Social Activities");
@@ -453,10 +455,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                     NewSupports.setTitle(SelectedDocument.get("title").toString());
                                     NewSupports.setDescription(SelectedDocument.get("description").toString());
 
-                                    if(SelectedDocument.contains("bannerUrl"))
-                                    {
+
+                                    if (SelectedDocument.contains("bannerUrl") && SelectedDocument.get("bannerUrl") != null) {
                                         NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
                                     }
+
 
                                     NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
@@ -524,20 +527,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                                                         AllDetails.add(NewDetail);
                                                                                     }
                                                                                 }
-
-                                                                                /*if(IsCorrectID)
-                                                                                {
-                                                                                    Details NewDetail = new Details();
-
-                                                                                    NewDetail.setID((Long)SelectedDetail.getData().get("id"));
-                                                                                    NewDetail.setDocumentID(SelectedDetail.getReference().getId());
-                                                                                    NewDetail.setDetail(SelectedDetail.get("detail").toString());
-
-                                                                                    if(SelectedDetail.contains("link"))
-                                                                                        NewDetail.setLink(SelectedDetail.getString("link"));
-
-                                                                                    AllDetails.add(NewDetail);
-                                                                                }*/
                                                                             }
 
                                                                             NewSection.setSectionDetails(AllDetails);

@@ -11,8 +11,7 @@ import org.junit.runner.RunWith;
 public class HomeActivityTest {
 
     @Rule
-    public ActivityTestRule<HomeActivity> activityRule = new ActivityTestRule<>(HomeActivity.class);
-
+    public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<>(LoginActivity.class);
     @Test
     public void testNavigationButtonsVisibilityWhenNotLoggedIn() {
 //        // Ensure that the user is not logged in

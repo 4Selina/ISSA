@@ -148,8 +148,9 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return mSupportList.size();
+        return mSupportList != null ? mSupportList.size() : 0;
     }
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView supportImage;

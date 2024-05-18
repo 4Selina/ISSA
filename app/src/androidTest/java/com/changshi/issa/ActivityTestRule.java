@@ -1,7 +1,7 @@
 package com.changshi.issa;
 
 public class ActivityTestRule<T> {
-    public ActivityTestRule(Class<HomeActivity> loginActivityClass) {
+    public ActivityTestRule(Class<LoginActivity> loginActivityClass) {
     }
 
     public T getActivity() {

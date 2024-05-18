@@ -93,15 +93,21 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 showImagePickerDialog();
             }
 
+            //open a dialog to allow user update image
             private void showImagePickerDialog()
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Select Image Source")
                         .setItems(new CharSequence[]{"URL"}, (dialog, which) -> {
                             switch (which) {
+                                //update image by url
                                 case 0:
                                     showUrlInputDialog();
                                     break;
+                                    // update image by local phone
+//                                case 1:
+//                                    localImageDialog();
+//                                    break;
                             }
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -109,6 +115,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 builder.create().show();
             }
 
+            //function image url input
             private void showUrlInputDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Enter Image URL");
@@ -117,6 +124,8 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
+                //submit the input url
+
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -124,6 +133,7 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                     {
                         String imageUrl = input.getText().toString();
 
+                        //if no update image, the function image will be default one
                         if(!Strings.isNullOrEmpty(imageUrl))
                             Picasso.get().load(imageUrl).into(mFunctionImageToUpdate);
                         else
@@ -324,10 +334,10 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                     }
                                                 });
 
-                                        if(SelectedDocument.contains("conclusion"))
-                                        {
+                                        if (SelectedDocument.contains("conclusion") && SelectedDocument.get("conclusion") != null) {
                                             NewSupports.setConclusion(SelectedDocument.get("conclusion").toString());
                                         }
+
 
                                         AllSupports.add(NewSupports);
                                     }
