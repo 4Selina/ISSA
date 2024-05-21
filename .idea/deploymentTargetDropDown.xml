@@ -2,22 +2,22 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="LoginActivityTest">
+      <entry key="HomeActivityTest">
+        <State />
+      </entry>
+      <entry key="MenuActivityTest">
         <State />
       </entry>
       <entry key="app">
         <State />
       </entry>
-      <entry key="testLoginWithMissingPassword()">
+      <entry key="testHomeNoLogin()">
         <State />
       </entry>
-      <entry key="testLoginWithValidCredentials()">
+      <entry key="testHomePage()">
         <State />
       </entry>
-      <entry key="testLoginWithValidCredentialsAndCheckHomeActivity()">
-        <State />
-      </entry>
-      <entry key="testSuccessfulLogin()">
+      <entry key="testLogout()">
         <State />
       </entry>
     </value>
