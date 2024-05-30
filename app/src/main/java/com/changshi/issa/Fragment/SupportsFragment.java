@@ -23,6 +23,7 @@ public class SupportsFragment extends Fragment implements BackPressHandler
     private RecyclerView mRecyclerView;
     private SupportAdapter mAdapter;
     private ArrayList<Supports> mSupportList;
+    private String FragmentTitle;
 
     public SupportsFragment()
     {
@@ -43,6 +44,9 @@ public class SupportsFragment extends Fragment implements BackPressHandler
         return false;
     }
 
+    public String getFragmentTitle() { return FragmentTitle; }
+
+    public void setFragmentTitle(String Title) { FragmentTitle = Title; }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)

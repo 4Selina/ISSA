@@ -17,12 +17,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class HomeActivityTest {
+public class HomeActivityTest
+{
     @Rule
     public ActivityScenarioRule<HomeActivity> activityActivityScenarioRule = new ActivityScenarioRule<>(HomeActivity.class);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         // 确保应用在每个测试开始前处于未登录状态
         simulateLogout();
     }

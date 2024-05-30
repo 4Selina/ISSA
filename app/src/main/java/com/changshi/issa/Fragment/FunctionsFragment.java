@@ -29,16 +29,17 @@ public class FunctionsFragment extends Fragment implements BackPressHandler
     RecyclerView functionRecyclerView;
 
     private ArrayList<Functions> AllFunctions;
+    private String FragmentTitle;
 
-    public FunctionsFragment(ArrayList<Functions> allFunctions)
-    {
-        AllFunctions = allFunctions;
-    }
+    public FunctionsFragment(ArrayList<Functions> allFunctions) { AllFunctions = allFunctions; }
 
     public FunctionsFragment()
     {
-
     }
+
+    public String getFragmentTitle() { return FragmentTitle; }
+
+    public void setFragmentTitle(String Title) { FragmentTitle = Title; }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -6,8 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -47,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar toolbar;
 
     private NavigationView NavView;
+    private FrameLayout FragmentContainer;
 
     SharedPreferences Pref;
 
@@ -54,6 +60,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean IsLoggedIn;
     private ArrayList<Functions> AllFunctions;
     private String ParentCategory;
+    private static final String TAG = "HomeActivity";
+
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -72,6 +80,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Functions AccommodationFunction = new Functions();
         Functions TransportsFunction = new Functions();
         Functions JobSupportFunction = new Functions();
+
+        FragmentContainer = findViewById(R.id.fragment_container);
 
         db.collection("Settings")
                 .get()
@@ -286,7 +296,65 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
         }
          */
-    }
+
+
+
+
+
+
+                OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
+                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed()
+                    {
+                        Log.d(TAG, "OnBackPressedCallback called");
+
+                        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+                        {
+                            drawerLayout.closeDrawer(GravityCompat.START);
+                        }
+                        else
+                        {
+                            // Custom back press handling
+                            int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+                            Log.d(TAG, "Back stack entry count: " + backStackEntryCount);
+
+                            if (backStackEntryCount > 1)
+                            {
+                                final Handler handler = new Handler();
+                                fragmentManager.popBackStack();
+
+                                handler.postDelayed(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        Fragment currentFragment = fragmentManager.getFragments().get(0);
+
+                                        if(currentFragment.getClass().getSimpleName().equals("FunctionsFragment"))
+                                        {
+                                            getSupportActionBar().setTitle(((FunctionsFragment)currentFragment).getFragmentTitle());
+                                        }
+                                        else if(currentFragment.getClass().getSimpleName().equals("SupportsFragment"))
+                                        {
+                                            getSupportActionBar().setTitle(((SupportsFragment)currentFragment).getFragmentTitle());
+                                        }
+                                    }
+                                }, 100);
+
+                            }
+                            else
+                            {
+                                finish();
+                            }
+                        }
+                    }
+                };
+
+                onBackPressedDispatcher.addCallback(this, callback);
+            }
+
+
     @Override
     protected void onResume()
     {
@@ -555,29 +623,92 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-    @Override
+//    @Override
+//    public void onBackPressed() {
+//        Log.d(TAG, "TITLE::"+111111111);
+//
+//        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+//            drawerLayout.closeDrawer(GravityCompat.START);
+//        } else {
+////            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//            int backStackEntryCount = fragmentManager.getBackStackEntryCount();
+//            Log.d(TAG, "TITLE::"+backStackEntryCount);
+//
+//            if (backStackEntryCount > 1) {
+//                fragmentManager.popBackStack();
+//                Fragment currentFragment = fragmentManager.getFragments().get(backStackEntryCount - 2);
+//                String title = getFragmentTitle(currentFragment);
+//                // log
+//                Log.d(TAG, "TITLE::"+title);
+//
+//                getSupportActionBar().setTitle("xxxxx");
+//            } else {
+//                super.onBackPressed();
+//                finish();
+//            }
+////            if (currentFragment instanceof BackPressHandler) {
+////                boolean handled = ((BackPressHandler) currentFragment).handleBackPress();
+////                if (!handled) {
+////                    super.onBackPressed();
+////                }
+////            } else {
+////                super.onBackPressed();
+////            }
+//        }
+//    }
+    public void openFragment(Fragment fragment, String title)
+    {
+        String ClassName = fragment.getClass().getSimpleName();
+
+        if(ClassName.equals("FunctionsFragment"))
+        {
+            ((FunctionsFragment)fragment).setFragmentTitle(title);
+        }
+        else if(ClassName.equals("SupportsFragment"))
+        {
+            ((SupportsFragment)fragment).setFragmentTitle(title);
+        }
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        Log.d(TAG, "TITLE::"+title);
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack("ccccccc"); // Use title as the back stack name
+        transaction.commit();
+        getSupportActionBar().setTitle(title); // Display fragment title on the toolbar
+    }
+
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+        Log.d(TAG, "onBackPressed called");
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            if (currentFragment instanceof BackPressHandler) {
-                boolean handled = ((BackPressHandler) currentFragment).handleBackPress();
-                if (!handled) {
-                    super.onBackPressed();
-                }
-            } else {
-                super.onBackPressed();
-            }
+            super.onBackPressed(); // 调用父类的实现以执行默认行为
         }
     }
-    public void openFragment(Fragment fragment, String title){
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null); // Add this line
-        transaction.commit();
-        getSupportActionBar().setTitle(title); //display fragment title on the toolbar
 
+
+//    public void openFragment(Fragment fragment, String title) {
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        transaction.replace(R.id.fragment_container, fragment);
+//        transaction.addToBackStack(title); // Use title as the back stack name
+//        transaction.commit();
+//        getSupportActionBar().setTitle(title); // Display fragment title on the toolbar
+//    }
+
+
+    private String getFragmentTitle(Fragment fragment) {
+        if (fragment instanceof FunctionsFragment) {
+            return "Whitireia & WelTec";
+        } else if (fragment instanceof SearchSFragment) {
+            return "Search";
+        } else if (fragment instanceof WebpageFragment) {
+            return "WelTec"; // Customize this as per the instance you create
+        } else if (fragment instanceof SupportsFragment) {
+            return "Support"; // Customize this as per your requirements
+        }
+        return "";
     }
+
 
 }
