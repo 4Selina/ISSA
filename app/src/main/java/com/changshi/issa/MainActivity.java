@@ -25,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize UI elements
         btnLogin = findViewById(R.id.btnLogin);
         bottomNavigationView = findViewById(R.id.bottomNavigationMenu);
         welcomeText = findViewById(R.id.txtWelTec);
-        //Click the screen to the home page
+
+        // Click on the welcome text to navigate to the HomeActivity
         welcomeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,15 +39,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Check if the user is already logged in
         SharedPreferences Pref = getSharedPreferences("login_pref", MODE_PRIVATE);
         boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
+        // If the user is already logged in, hide the login button
         if(IsLoggedIn)
         {
             btnLogin.setVisibility(View.GONE);
         }
 
-        //admin can login for managing the contents
+        // Click on the login button to navigate to the LoginActivity
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,25 +58,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // bottom navigation bar is clickable
+        // Set up bottom navigation bar item click listener
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.homeBTM:
-                        // Click Home icon to HomeActivity
+                        // Click on the Home icon to navigate to HomeActivity
                         Intent homeIntent = new Intent(MainActivity.this, HomeActivity.class);
                         startActivity(homeIntent);
                         return true;
                     case R.id.searchBTM:
-                        // Click add icon to SearchFragment
+                        // Click on the search icon to navigate to SearchFragment
                         Intent searchIntent = new Intent(MainActivity.this, HomeActivity.class);
                         searchIntent.putExtra("fragment", "search");
                         startActivity(searchIntent);
                         return true;
-
                     case R.id.webBTM:
-                        // Click campus icon to webpageFragment
+                        // Click on the campus icon to navigate to WebpageFragment
                         Intent webpageIntent = new Intent(MainActivity.this, HomeActivity.class);
                         webpageIntent.putExtra("fragment", "webpage");
                         startActivity(webpageIntent);
@@ -80,22 +83,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return false;
             }
-
-//            private void displayFragment(Fragment fragment) {
-//                // Hide the welcome logo and text
-//                findViewById(R.id.imgWelcomeLogo).setVisibility(View.GONE);
-//                findViewById(R.id.txtWelTec).setVisibility(View.GONE);
-//                findViewById(R.id.txtWelcome).setVisibility(View.GONE);
-//
-//                // Replace the fragment
-//                getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .replace(R.id.fragmentContainer, fragment)
-//                        .commit();
-//            }
         });
 
-        //hide the navigation items when users view the app without login
+        // Hide specific bottom navigation items when users view the app without logging in
         bottomNavigationView.getMenu().findItem(R.id.logoutBTM).setVisible(false);
         bottomNavigationView.getMenu().findItem(R.id.addBTM).setVisible(false);
     }

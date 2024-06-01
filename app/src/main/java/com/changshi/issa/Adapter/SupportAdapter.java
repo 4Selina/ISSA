@@ -36,8 +36,8 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
     private Context mContext;
     private ArrayList<Supports> mSupportList;
 
-    public SupportAdapter(Context mContext, ArrayList<Supports> mSupportList)
-    {
+    // Constructor to initialize the context and the support list
+    public SupportAdapter(Context mContext, ArrayList<Supports> mSupportList) {
         this.mContext = mContext;
         this.mSupportList = mSupportList;
     }
@@ -45,24 +45,25 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Inflate the layout for each item in the RecyclerView
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_support, parent, false);
         return new MyViewHolder(view);
     }
 
-    public void AddItem(Supports NewSupports)
-    {
+    // Method to add a new item to the support list and notify the adapter
+    public void AddItem(Supports NewSupports) {
         mSupportList.add(NewSupports);
         notifyItemInserted(mSupportList.size() - 1);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        // Get the current item from the support list
         Supports currentItem = mSupportList.get(position);
 
-        if(Strings.isNullOrEmpty(currentItem.getBannerUrl()))
-        {
-            switch (currentItem.getParentCategory())
-            {
+        // Check if the banner URL is null or empty and set the appropriate image
+        if (Strings.isNullOrEmpty(currentItem.getBannerUrl())) {
+            switch (currentItem.getParentCategory()) {
                 case "Learning Support":
                     holder.supportImage.setImageResource(learn);
                     break;
@@ -79,71 +80,67 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
                     holder.supportImage.setImageResource(jobsupport);
                     break;
             }
-        }
-        else
-        {
+        } else {
             Glide.with(holder.itemView.getContext())
                     .load(currentItem.getBannerUrl())
                     .into(holder.supportImage);
         }
 
+        // Get shared preferences to check if the user is logged in
         SharedPreferences Pref = holder.itemView.getContext().getSharedPreferences("login_pref", MODE_PRIVATE);
         boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
-        if(!IsLoggedIn)
-        {
+        // Hide the edit and delete buttons if the user is not logged in
+        if (!IsLoggedIn) {
             holder.editButton.setVisibility(View.GONE);
             holder.deleteButton.setVisibility(View.GONE);
         }
 
+        // Set the click listener for the item to open the SupportContentFragment
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                ((HomeActivity)mContext).openFragment(new SupportContentFragment(mSupportList.get(position)), mSupportList.get(position).getTitle());
+            public void onClick(View v) {
+                ((HomeActivity) mContext).openFragment(new SupportContentFragment(mSupportList.get(position)), mSupportList.get(position).getTitle());
             }
         });
 
+        // Set the support title and description
         holder.txtSupportTitle.setText(currentItem.getTitle());
         holder.txtSupportDescription.setText(currentItem.getDescription());
 
+        // Set the click listener for the edit button to start the AddActivity with edit mode
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent NewIntent = new Intent(mContext, AddActivity.class);
-
                 Supports SelectedSupport = mSupportList.get(position);
-
                 NewIntent.putExtra("IsEditMode", true);
                 NewIntent.putExtra("SelectedSupport", SelectedSupport);
-
                 mContext.startActivity(NewIntent);
             }
         });
 
+        // Set the click listener for the delete button to confirm and delete the support
         holder.deleteButton.setOnClickListener(v -> {
-            // confirm before deleting support content
+            // Show a confirmation dialog before deleting the support content
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setMessage("Are you sure you want to DELETE it？")
                     .setCancelable(false)
-                    .setPositiveButton("Yes", (dialog, id) ->
-                    {
+                    .setPositiveButton("Yes", (dialog, id) -> {
                         mSupportList.get(position).delete(mContext);
-                        // yes, delete support
-
+                        // Remove the support from the list and notify the adapter
                         mSupportList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mSupportList.size());
                     })
                     .setNegativeButton("No", (dialog, id) -> {
-                        // no, cancel
+                        // Cancel the dialog
                         dialog.cancel();
                     });
-            // dialog display
+            // Show the dialog
             AlertDialog alert = builder.create();
             alert.show();
         });
-
     }
 
     @Override
@@ -151,7 +148,7 @@ public class SupportAdapter extends RecyclerView.Adapter<SupportAdapter.MyViewHo
         return mSupportList != null ? mSupportList.size() : 0;
     }
 
-
+    // ViewHolder class to hold the views for each item
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView supportImage;
         private TextView txtSupportTitle;

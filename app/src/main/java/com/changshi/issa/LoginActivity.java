@@ -28,32 +28,29 @@ public class LoginActivity extends AppCompatActivity {
     public EditText edtUsername;
     public EditText edtPasswordEditText;
     public Button btnLogin, btnSkip;
-
     private ArrayList<DocumentSnapshot> AllUsers = new ArrayList<>();
-
-//    public TextView txtForgotPassword;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-          ////review later !!!!////
+        // Check if the user is already logged in
         SharedPreferences Pref = getSharedPreferences("login_pref", MODE_PRIVATE);
         boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
         if(IsLoggedIn)
         {
+            // If already logged in, go to HomeActivity
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish(); // Close the current activity
         }
-
+        // Initialize UI elements
         edtUsername = findViewById(R.id.edtUserName);
         edtPasswordEditText = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnSkip = findViewById(R.id.btnSkip);
-
 
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intent);
             }
         });
+        // Skip button click listener
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
@@ -87,13 +85,15 @@ public class LoginActivity extends AppCompatActivity {
                 // and start the dashboard activity if login is successful
                 GetData();
 
+
+                // Delay to simulate data retrieval (replace with actual data retrieval logic)
                 new Handler().postDelayed(new Runnable()
                 {
                     @Override
                     public void run()
                     {
                         boolean UserExists = false;
-
+                        // Check if the provided username and password match any user in the ArrayList
                         for(DocumentSnapshot SelectedDocument : AllUsers)
                         {
                             Object documentUsername = SelectedDocument.get("Username");
@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(UserExists)
                         {
+                            // Save login state and username in SharedPreferences
                             // session management
                             SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
@@ -118,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                             editor.putString("username", username);
                             editor.apply();
 
+                            // Log the login status and start HomeActivity
                             Log.d("LoginActivity", "onClick: " + sharedPref.getBoolean("is_logged_in", false));
 
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -126,16 +128,17 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else
                         {
+                            // Display error message for invalid username or password
                             Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }, 2000);
+                }, 2000); // Delay in milliseconds
             }
         });
     }
 
-    private void GetData()
-    {
+    // Method to retrieve user data from Firestore
+    private void GetData(){
         // Check if the username and password match the admin credentials
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -146,6 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task)
                     {
+                        // Add all retrieved documents to the ArrayList
                         AllUsers.addAll(task.getResult().getDocuments());
                     }
                 });

@@ -26,19 +26,14 @@ import com.changshi.issa.UpdateWebpageActivity;
 import java.util.ArrayList;
 
 public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHolder> {
-    public FragmentActivity webpageFragment;
-    public WebpageFragment wpageFragment;
-    public ArrayList<WebpageItem> webpageItems;
-    public Context context;
-//    private FirebaseFirestore mFirestore;
 
+    private FragmentActivity webpageFragment;
+    private WebpageFragment wpageFragment;
+    private ArrayList<WebpageItem> webpageItems;
+    private Context context;
 
-//    public WebpageAdapter() {
-//
-//    }
-
-    public WebpageAdapter( WebpageFragment wpageFragment, FragmentActivity webpageFragment, ArrayList<WebpageItem> webpageItems, Context context)
-    {
+    // Constructor to initialize the adapter with required data
+    public WebpageAdapter(WebpageFragment wpageFragment, FragmentActivity webpageFragment, ArrayList<WebpageItem> webpageItems, Context context) {
         this.webpageFragment = webpageFragment;
         this.webpageItems = webpageItems;
         this.context = context;
@@ -48,45 +43,33 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        //inflate layout
+        // Inflate the layout for each item in the RecyclerView
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_web_inform, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(itemView);
 
-        //handle item clicks here
-        viewHolder.setOnClickListener(new ViewHolder.ClickListener()
-        {
+        // Handle item clicks here
+        viewHolder.setOnClickListener(new ViewHolder.ClickListener() {
             @Override
-            public void onItemClick(View view, int position)
-            {
-                //show data in toast on clicking
-//              String department = webpageItems.get(position).getDepartment();
-//              String email = webpageItems.get(position).getEmail();
-//              String contact = webpageItems.get(position).getContact();
-//              String address = webpageItems.get(position).getAddress();
-
-                // Toast.makeText(webpageFragment, department + "\n" + email + "\n" + contact + "\n" + address, Toast.LENGTH_SHORT).show();
+            public void onItemClick(View view, int position) {
+                // Show data in toast on clicking (this is commented out, can be customized)
             }
 
             @Override
-            public void onItemLongClick(View view, final int position)
-            {
+            public void onItemLongClick(View view, final int position) {
+                // Get shared preferences to check if the user is logged in
                 SharedPreferences Pref = view.getContext().getSharedPreferences("login_pref", MODE_PRIVATE);
                 boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
-                if(IsLoggedIn)
-                {
+                if (IsLoggedIn) {
+                    // Show a dialog with options to update or delete the item
                     AlertDialog.Builder builder = new AlertDialog.Builder(webpageFragment);
-                    //options to display in dialog
                     String[] options = {"Update", "Delete"};
                     builder.setItems(options, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (which == 0)
-                            {
-                                //update is clicked
-                                //get data
-
+                            if (which == 0) {
+                                // Update is clicked
+                                // Get data from the selected item
                                 Long id = webpageItems.get(position).getId();
                                 String documentID = webpageItems.get(position).getDocumentID();
                                 String department = webpageItems.get(position).getDepartment();
@@ -94,22 +77,20 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
                                 String contact = webpageItems.get(position).getContact();
                                 String address = webpageItems.get(position).getAddress();
 
-                                //intent to start activity
+                                // Intent to start UpdateWebpageActivity
                                 Intent intent = new Intent(webpageFragment, UpdateWebpageActivity.class);
-                                //put data in intent
+                                // Put data in the intent
                                 intent.putExtra("pId", id);
                                 intent.putExtra("pDocID", documentID);
                                 intent.putExtra("pDepartment", department);
                                 intent.putExtra("pEmail", email);
                                 intent.putExtra("pContact", contact);
                                 intent.putExtra("pAddress", address);
-                                //start activity
+                                // Start the activity
                                 webpageFragment.startActivity(intent);
-
                             }
-                            if (which == 1)
-                            {
-                                //delete is clicked
+                            if (which == 1) {
+                                // Delete is clicked
                                 wpageFragment.deleteData(position);
                                 webpageItems.remove(position);
                                 notifyItemRemoved(position);
@@ -122,9 +103,9 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
         return viewHolder;
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        // Get the current item from the list
         WebpageItem item = webpageItems.get(i);
 
         // Set department
@@ -160,31 +141,19 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
         }
     }
 
-//    @Override
-//    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-//        //bind view /set data
-//        viewHolder.mDepartmentTextView.setText(webpageItems.get(i).getDepartment());
-//        viewHolder.mEmailTextView.setText(webpageItems.get(i).getEmail());
-//        viewHolder.mContactTextView.setText(webpageItems.get(i).getContact());
-//        viewHolder.mAddressTextView.setText(webpageItems.get(i).getAddress());
-////        viewHolder.mImageView.
-//        //use glide to update image
-////        Glide.with(context).load(webpageItems.get(i).getImageUrl()).into(viewHolder.mImageView);
-//
-//    }
-
     @Override
     public int getItemCount() {
         return (webpageItems != null) ? webpageItems.size() : 0;
     }
+
+    // Method to update the data in the adapter
     public void updateData(ArrayList<WebpageItem> newWebpageItems) {
         this.webpageItems = newWebpageItems;
         notifyDataSetChanged();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
-        //work for webpage display
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // Views for webpage display
         public TextView mDepartmentTextView;
         public TextView mEmailTextView;
         public TextView mContactTextView;
@@ -192,33 +161,28 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
         public ImageView mImageView;
         public View mView;
 
-        public ViewHolder(@NonNull View itemView)
-        {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
 
-            //item click
+            // Item click listener
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     mClickListener.onItemClick(v, getAdapterPosition());
                 }
             });
 
-            //item long click listener
-            itemView.setOnLongClickListener(new View.OnLongClickListener()
-            {
+            // Item long click listener
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-
                     mClickListener.onItemLongClick(v, getAdapterPosition());
-
                     return true;
                 }
             });
 
-            //initialize views with webpageItem layout
+            // Initialize views with webpage item layout
             mDepartmentTextView = itemView.findViewById(R.id.departmentTv);
             mEmailTextView = itemView.findViewById(R.id.emailTv);
             mContactTextView = itemView.findViewById(R.id.contactTv);
@@ -226,16 +190,15 @@ public class WebpageAdapter extends RecyclerView.Adapter<WebpageAdapter.ViewHold
             mImageView = itemView.findViewById(R.id.imgWebpage);
         }
 
-        private static ViewHolder.ClickListener mClickListener;
+        private static ClickListener mClickListener;
 
-        //interface for click listener
-        public interface ClickListener
-        {
+        // Interface for click listener
+        public interface ClickListener {
             void onItemClick(View view, int position);
             void onItemLongClick(View view, int position);
         }
 
-        public static void setOnClickListener(ViewHolder.ClickListener clickListener){
+        public static void setOnClickListener(ClickListener clickListener) {
             mClickListener = clickListener; // Set mClickListener here
         }
     }

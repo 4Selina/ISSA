@@ -39,83 +39,68 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyViewHolder>
-{
-    private final Context mContext;
-    private final ArrayList<Functions> mFunctionList;
-    private ImageView mFunctionImageToUpdate;
+public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyViewHolder> {
+    private final Context mContext; // Context of the calling activity or fragment
+    private final ArrayList<Functions> mFunctionList; // List of Functions to be displayed
+    private ImageView mFunctionImageToUpdate; // ImageView to update the function image
 
-    public FunctionAdapter(Context _Context,  ArrayList<Functions> _FunctionList)
-    {
+    // Constructor for the adapter
+    public FunctionAdapter(Context _Context, ArrayList<Functions> _FunctionList) {
         this.mContext = _Context;
         this.mFunctionList = _FunctionList;
     }
 
+    // Method to create ViewHolder
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.list_function, parent, false);
         return new MyViewHolder(view);
     }
 
+    // Method to bind data to ViewHolder
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position)
-    {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Functions currentFunction = mFunctionList.get(position);
         holder.txtFunctionTitle.setText(currentFunction.getNameOfFunction());
 
-        if(Strings.isNullOrEmpty(mFunctionList.get(position).getFunctionURL()))
-        {
+        // Load image from URL if available, else use default image
+        if (Strings.isNullOrEmpty(mFunctionList.get(position).getFunctionURL())) {
             holder.functionImage.setImageResource(mFunctionList.get(position).getFunctionImage());
-        }
-        else
-        {
+        } else {
             Picasso.get().load(currentFunction.getFunctionURL()).into(holder.functionImage);
         }
 
+        // Check if the user is logged in
         SharedPreferences Pref = holder.itemView.getContext().getSharedPreferences("login_pref", MODE_PRIVATE);
         boolean IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
-        if(!IsLoggedIn)
-        {
+        if (!IsLoggedIn) {
             holder.updateImageButton.setVisibility(View.GONE);
         }
 
-        // Click on the Update Image Button
-        holder.updateImageButton.setOnClickListener(new View.OnClickListener()
-        {
+        // Click listener for the Update Image Button
+        holder.updateImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                // Show a dialog to select an image
+            public void onClick(View v) {
                 mFunctionImageToUpdate = holder.functionImage;
                 showImagePickerDialog();
             }
 
-            //open a dialog to allow user update image
-            private void showImagePickerDialog()
-            {
+            // Show a dialog to select an image source
+            private void showImagePickerDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Select Image Source")
                         .setItems(new CharSequence[]{"URL"}, (dialog, which) -> {
-                            switch (which) {
-                                //update image by url
-                                case 0:
-                                    showUrlInputDialog();
-                                    break;
-                                    // update image by local phone
-//                                case 1:
-//                                    localImageDialog();
-//                                    break;
+                            if (which == 0) {
+                                showUrlInputDialog();
                             }
                         })
                         .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
                 builder.create().show();
             }
 
-            //function image url input
+            // Show a dialog to input image URL
             private void showUrlInputDialog() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Enter Image URL");
@@ -124,39 +109,31 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                 input.setInputType(InputType.TYPE_CLASS_TEXT);
                 builder.setView(input);
 
-                //submit the input url
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
-                {
+                // Submit the input URL
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         String imageUrl = input.getText().toString();
 
-                        //if no update image, the function image will be default one
-                        if(!Strings.isNullOrEmpty(imageUrl))
+                        if (!Strings.isNullOrEmpty(imageUrl))
                             Picasso.get().load(imageUrl).into(mFunctionImageToUpdate);
                         else
                             holder.functionImage.setImageResource(mFunctionList.get(position).getFunctionImage());
 
                         mFunctionList.get(position).setFunctionURL(imageUrl);
 
+                        // Update the URL in Firestore
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         db.collection("Settings")
                                 .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                {
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                    {
-                                        for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
-                                        {
-                                            if(SelectedDocument.contains("AccommodationUrl"))
-                                            {
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments()) {
+                                            if (SelectedDocument.contains("AccommodationUrl")) {
                                                 Map<String, Object> UrlData = new HashMap<>();
 
-                                                switch (mFunctionList.get(position).getNameOfFunction())
-                                                {
+                                                switch (mFunctionList.get(position).getNameOfFunction()) {
                                                     case "Learning Support":
                                                         UrlData.put("LearningSupportUrl", imageUrl);
                                                         break;
@@ -175,23 +152,19 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                                 }
 
                                                 String Path = SelectedDocument.getReference().getId();
-
                                                 db.collection("Settings")
                                                         .document(Path)
                                                         .update(UrlData)
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>()
-                                                        {
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<Void> task)
-                                                            {
-
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                // Handle completion if needed
                                                             }
                                                         });
                                             }
                                         }
                                     }
                                 });
-
                     }
                 });
 
@@ -204,33 +177,26 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
 
                 builder.show();
             }
-
         });
 
-        // Click on the Card and Do Code.
+        // Click listener for the main card
         holder.mainCard.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                // Create a new Intent.
+            public void onClick(View v) {
+                // Create a new Intent to fetch support contents from Firestore
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
                 db.collection("Support_Contents")
                         .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                        {
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task)
-                            {
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 ArrayList<Supports> AllSupports = new ArrayList<>();
 
-                                for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
-                                {
-                                    if(SelectedDocument.get("parentCategory").toString().equals(holder.txtFunctionTitle.getText()))
-                                    {
+                                for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments()) {
+                                    if (SelectedDocument.get("parentCategory").toString().equals(holder.txtFunctionTitle.getText())) {
                                         Supports NewSupports = new Supports();
-
-                                        NewSupports.setId((Long)SelectedDocument.get("id"));
+                                        NewSupports.setId((Long) SelectedDocument.get("id"));
                                         NewSupports.setDocumentID(SelectedDocument.getReference().getId());
                                         NewSupports.setTitle(SelectedDocument.get("title").toString());
                                         NewSupports.setDescription(SelectedDocument.get("description").toString());
@@ -239,87 +205,56 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                             NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
                                         }
 
-
                                         NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
-                                        // Get the Sections.
-                                        ArrayList<Long> SectionIDs = (ArrayList<Long>)SelectedDocument.get("sections");
+                                        // Get the Sections
+                                        ArrayList<Long> SectionIDs = (ArrayList<Long>) SelectedDocument.get("sections");
 
                                         db.collection("Sections")
                                                 .get()
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                                {
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                     @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                                    {
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                         ArrayList<SectionDetails> AllSections = new ArrayList<>();
 
-                                                        for (DocumentSnapshot SelectedSection : task.getResult().getDocuments())
-                                                        {
+                                                        for (DocumentSnapshot SelectedSection : task.getResult().getDocuments()) {
                                                             boolean IDIsCorrect = false;
 
-                                                            for (Long SelectedID : SectionIDs)
-                                                            {
-                                                                if(SelectedID == (Long) SelectedSection.get("id"))
-                                                                {
+                                                            for (Long SelectedID : SectionIDs) {
+                                                                if (SelectedID.equals(SelectedSection.get("id"))) {
                                                                     IDIsCorrect = true;
                                                                 }
                                                             }
 
-                                                            if(IDIsCorrect)
-                                                            {
+                                                            if (IDIsCorrect) {
                                                                 SectionDetails NewSection = new SectionDetails();
-                                                                NewSection.setID((Long)SelectedSection.get("id"));
+                                                                NewSection.setID((Long) SelectedSection.get("id"));
                                                                 NewSection.setDocumentID(SelectedSection.getReference().getId());
-
                                                                 NewSection.setSectionHeading(SelectedSection.get("heading").toString());
 
-                                                                ArrayList<Long> DetailsIDs = (ArrayList<Long>)SelectedSection.get("details");
+                                                                ArrayList<Long> DetailsIDs = (ArrayList<Long>) SelectedSection.get("details");
 
                                                                 db.collection("Details")
                                                                         .get()
-                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                                                        {
+                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                                             @Override
-                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                                                            {
+                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                                                 ArrayList<Details> AllDetails = new ArrayList<>();
 
-                                                                                for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
-                                                                                {
-                                                                                    //boolean IsCorrectID = false;
-
-                                                                                    for(Long SelectedDetailID : DetailsIDs)
-                                                                                    {
-                                                                                        if(SelectedDetailID.equals(SelectedDetail.getData().get("id")) )
-                                                                                        {
-                                                                                            //IsCorrectID = true;
+                                                                                for (DocumentSnapshot SelectedDetail : task.getResult().getDocuments()) {
+                                                                                    for (Long SelectedDetailID : DetailsIDs) {
+                                                                                        if (SelectedDetailID.equals(SelectedDetail.getData().get("id"))) {
                                                                                             Details NewDetail = new Details();
-                                                                                            NewDetail.setID((Long)SelectedDetail.getData().get("id"));
+                                                                                            NewDetail.setID((Long) SelectedDetail.getData().get("id"));
                                                                                             NewDetail.setDocumentID(SelectedDetail.getReference().getId());
-
                                                                                             NewDetail.setDetail(SelectedDetail.get("detail").toString());
 
-                                                                                            if(SelectedDetail.contains("link"))
+                                                                                            if (SelectedDetail.contains("link"))
                                                                                                 NewDetail.setLink(SelectedDetail.getString("link"));
 
                                                                                             AllDetails.add(NewDetail);
                                                                                         }
                                                                                     }
-
-                                                                                   /* if(IsCorrectID)
-                                                                                    {
-                                                                                        Details NewDetail = new Details();
-                                                                                        NewDetail.setID((Long)SelectedDetail.get("id"));
-                                                                                        NewDetail.setDocumentID(SelectedDetail.getReference().getId());
-
-                                                                                        NewDetail.setDetail(SelectedDetail.get("detail").toString());
-
-                                                                                        if(SelectedDetail.contains("link"))
-                                                                                            NewDetail.setLink(SelectedDetail.getString("link"));
-
-                                                                                        AllDetails.add(NewDetail);
-                                                                                    }*/
                                                                                 }
 
                                                                                 NewSection.setSectionDetails(AllDetails);
@@ -338,32 +273,31 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
                                             NewSupports.setConclusion(SelectedDocument.get("conclusion").toString());
                                         }
 
-
                                         AllSupports.add(NewSupports);
                                     }
                                 }
 
-                                ((HomeActivity)mContext).openFragment(new SupportsFragment(AllSupports), holder.txtFunctionTitle.getText().toString());
+                                // Open the SupportsFragment with the fetched support contents
+                                ((HomeActivity) mContext).openFragment(new SupportsFragment(AllSupports), holder.txtFunctionTitle.getText().toString());
                             }
                         });
             }
         });
-
     }
 
+    // Return the size of the function list
     @Override
     public int getItemCount() {
         return mFunctionList.size();
     }
 
+    // ViewHolder class to hold references to the views
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
         private final TextView txtFunctionTitle;
         private final ImageView functionImage;
         private final ImageButton updateImageButton;
-        private ConstraintLayout mainCard;
+        private final ConstraintLayout mainCard;
 
-        @SuppressLint("WrongViewCast")
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txtFunctionTitle = itemView.findViewById(R.id.txtFunctionTitle);
@@ -371,7 +305,5 @@ public class FunctionAdapter extends RecyclerView.Adapter<FunctionAdapter.MyView
             updateImageButton = itemView.findViewById(R.id.updateImageButton);
             mainCard = itemView.findViewById(R.id.functionCard);
         }
-
     }
-
 }

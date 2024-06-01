@@ -19,18 +19,21 @@ import com.google.common.base.Strings;
 import java.util.ArrayList;
 
 public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsViewHolder> {
+    // List to hold Details objects
     private ArrayList<Details> CurrentDetails;
 
-    public void setData(ArrayList<Details> supportDetails)
-    {
+    // Method to set data and notify adapter of changes
+    public void setData(ArrayList<Details> supportDetails) {
         this.CurrentDetails = supportDetails;
         notifyDataSetChanged();
     }
 
+    // Constructor for the adapter
     public DetailsAdapter(ArrayList<Details> supportDetails) {
         this.CurrentDetails = supportDetails;
     }
 
+    // Method to create ViewHolder
     @NonNull
     @Override
     public DetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,13 +41,14 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
         return new DetailsViewHolder(view);
     }
 
+    // Method to bind data to ViewHolder
     @Override
     public void onBindViewHolder(@NonNull DetailsViewHolder holder, @SuppressLint("RecyclerView") int position) {
         Details ThisDetail = CurrentDetails.get(position);
         holder.bindData(ThisDetail);
 
-        holder.DetailsText.addTextChangedListener(new TextWatcher()
-        {
+        // TextWatcher for DetailsText EditText
+        holder.DetailsText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -57,8 +61,8 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             }
         });
 
-        holder.linkET.addTextChangedListener(new TextWatcher()
-        {
+        // TextWatcher for linkET EditText
+        holder.linkET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -66,12 +70,12 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 CurrentDetails.get(position).setLink(s.toString());
             }
         });
 
+        // Set OnClickListener for AddDetails button
         holder.AddDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,42 +83,43 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             }
         });
 
+        // Set OnClickListener for RemoveDetails button
         holder.RemoveDetails.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 removeDetails(position);
             }
         });
     }
 
+    // Method to add a new Details object to the list and notify the adapter
     public void addDetails() {
         CurrentDetails.add(new Details());
         notifyItemInserted(CurrentDetails.size() - 1);
     }
 
-    public void removeDetails(int position)
-    {
-        if(CurrentDetails.size() > 1)
-        {
+    // Method to remove a Details object from the list and notify the adapter
+    public void removeDetails(int position) {
+        if (CurrentDetails.size() > 1) {
             CurrentDetails.remove(CurrentDetails.get(position));
             notifyItemRemoved(position);
         }
     }
 
+    // Method to return the size of the list
     @Override
     public int getItemCount() {
-        if(CurrentDetails != null)
+        if (CurrentDetails != null)
             return CurrentDetails.size();
         else
             return 0;
     }
 
+    // ViewHolder class to hold and manage view elements
     public static class DetailsViewHolder extends RecyclerView.ViewHolder {
 
         private EditText DetailsText;
         private EditText linkET;
-
         public Button AddDetails;
         public Button RemoveDetails;
 
@@ -122,18 +127,16 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.DetailsV
             super(itemView);
             DetailsText = itemView.findViewById(R.id.edit_detail_text);
             linkET = itemView.findViewById(R.id.linkET);
-
             AddDetails = itemView.findViewById(R.id.button_add_detail);
             RemoveDetails = itemView.findViewById(R.id.button_remove_detail);
         }
 
-        public void bindData(Details details)
-        {
+        // Method to bind data to view elements
+        public void bindData(Details details) {
             DetailsText.setText(details.getDetail());
 
-            if(!Strings.isNullOrEmpty(details.getLink()))
+            if (!Strings.isNullOrEmpty(details.getLink()))
                 linkET.setText(details.getLink());
         }
     }
-
 }

@@ -1,12 +1,9 @@
 package com.changshi.issa.DatabaseHandler;
 
-import android.graphics.drawable.Drawable;
-
 public class Functions {
     private String Name;
     private String FunctionURL = "";
     private int Image;
-
 
     public String getNameOfFunction() {
         return Name;

@@ -23,27 +23,11 @@ public class SectionDetails implements Serializable
 
     public Long getID(){return this.ID;}
     public void setID(Long id){this.ID = id;}
-
     public String getDocumentID(){return this.DocumentID;}
     public void setDocumentID(String docID){this.DocumentID = docID;}
-
-    public String getSectionHeading() {
-        return heading;
-    }
-
-    public ArrayList<Details> getSectionDetails() {
-        return details;
-    }
-
-    public void setSectionHeading(String heading) {
-        this.heading = heading;
-    }
-
-    public void setSectionDetails(ArrayList<Details> newDetails) {
-        this.details = newDetails;
-    }
-
-
-
+    public String getSectionHeading() {return heading;}
+    public ArrayList<Details> getSectionDetails() {return details;}
+    public void setSectionHeading(String heading) {this.heading = heading;}
+    public void setSectionDetails(ArrayList<Details> newDetails) {this.details = newDetails;}
 }
 

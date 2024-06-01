@@ -50,18 +50,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private BottomNavigationView bottomNavigationView;
     public FragmentManager fragmentManager;
     private Toolbar toolbar;
-
     private NavigationView NavView;
     private FrameLayout FragmentContainer;
-
     SharedPreferences Pref;
-
-
     public boolean IsLoggedIn;
     private ArrayList<Functions> AllFunctions;
     private String ParentCategory;
     private static final String TAG = "HomeActivity";
-
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -283,25 +278,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 });
 
 
-        /*
-        String fragmentClassName = getIntent().getStringExtra("fragment_class");
-        if (fragmentClassName != null) {
-            try {
-                Fragment fragment = (Fragment) Class.forName(fragmentClassName).newInstance();
-                openFragment(fragment, fragmentClassName);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
-        }
-         */
-
-
-
-
-
-
                 OnBackPressedDispatcher onBackPressedDispatcher = getOnBackPressedDispatcher();
                 OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                     @Override
@@ -363,10 +339,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Pref = getSharedPreferences("login_pref", MODE_PRIVATE);
         IsLoggedIn = Pref.getBoolean("is_logged_in", false);
 
-        // Determine which fragment to display based on login status
-        //String currentFragment = getIntent().getStringExtra("currentFragment");
-        //openFragmentByFragmentName(currentFragment);
-
         //hide the navigation items when users view the app without login
         if(!IsLoggedIn)
         {
@@ -386,6 +358,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Gets the name of the current fragment.
     private void openFragmentByFragmentName(String currentFragment)
     {
         // Check if there's an extra "fragment" in the intent
@@ -423,6 +396,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    //Gets the name of the current fragment.
     private String getCurrentFragmentName()
     {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -450,6 +424,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    // Method to handle navigation item selection
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
@@ -458,6 +433,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Reset ParentCategory to null
         ParentCategory = null;
 
+        // Determine the action based on the selected item
         if (itemId == R.id.nav_home)
             openFragment(new FunctionsFragment(AllFunctions), "Whitireia & WelTec");
         else if (itemId == R.id.nav_LearningSupport)
@@ -476,6 +452,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (itemId == R.id.nav_login)
         {
+            // Handle the login action
             SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("is_logged_in", false);
@@ -487,6 +464,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (itemId == R.id.nav_logout)
         {
+            // Handle the logout action
             SharedPreferences sharedPref = getSharedPreferences("login_pref", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("is_logged_in", false);
@@ -498,10 +476,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         drawerLayout.closeDrawer(GravityCompat.START);
 
+        // If ParentCategory is not null, fetch and display relevant supports
         if(!Strings.isNullOrEmpty(ParentCategory))
         {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+            // Fetch support contents based on the parent category
             String finalParentCategory = ParentCategory;
             db.collection("Support_Contents")
                     .get()
@@ -510,12 +490,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task)
                         {
+                            // List to store fetched supports
                             ArrayList<Supports> AllSupports = new ArrayList<>();
 
+                            // Loop through each document in the collection
                             for (DocumentSnapshot SelectedDocument : task.getResult().getDocuments())
                             {
+                                // Check if the document's parent category matches the selected category
                                 if(SelectedDocument.get("parentCategory").toString().equals(finalParentCategory))
                                 {
+                                    // Create a new Supports object and populate its fields
                                     Supports NewSupports = new Supports();
 
                                     NewSupports.setId((Long)SelectedDocument.get("id"));
@@ -523,11 +507,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                     NewSupports.setTitle(SelectedDocument.get("title").toString());
                                     NewSupports.setDescription(SelectedDocument.get("description").toString());
 
-
                                     if (SelectedDocument.contains("bannerUrl") && SelectedDocument.get("bannerUrl") != null) {
                                         NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
                                     }
-
 
                                     NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
 
@@ -541,12 +523,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 @Override
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task)
                                                 {
+                                                    // List to store fetched sections
                                                     ArrayList<SectionDetails> AllSections = new ArrayList<>();
 
+                                                    // Loop through each document in the Sections collection
                                                     for (DocumentSnapshot SelectedSection : task.getResult().getDocuments())
                                                     {
                                                         boolean IDIsCorrect = false;
 
+                                                        // Check if the section ID matches any in the document
                                                         for (Long SelectedID : SectionIDs)
                                                         {
                                                             if(SelectedID == (Long) SelectedSection.get("id"))
@@ -555,6 +540,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                             }
                                                         }
 
+                                                        // If the ID matches, create a new SectionDetails object and populate it
                                                         if(IDIsCorrect)
                                                         {
                                                             SectionDetails NewSection = new SectionDetails();
@@ -572,17 +558,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<QuerySnapshot> task)
                                                                         {
+                                                                            // List to store fetched details
                                                                             ArrayList<Details> AllDetails = new ArrayList<>();
 
+                                                                            // Loop through each document in the Details collection
                                                                             for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
                                                                             {
-                                                                                //boolean IsCorrectID = false;
-
+                                                                                // Check if the detail ID matches any in the document
                                                                                 for(Long SelectedDetailID : DetailsIDs)
                                                                                 {
                                                                                     if(SelectedDetailID.equals(SelectedDetail.getData().get("id")))
                                                                                     {
-                                                                                        //IsCorrectID = true;
+                                                                                        // Create a new Details object and populate it
                                                                                         Details NewDetail = new Details();
 
                                                                                         NewDetail.setID((Long)SelectedDetail.getData().get("id"));
@@ -623,43 +610,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return false;
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.d(TAG, "TITLE::"+111111111);
-//
-//        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-//            drawerLayout.closeDrawer(GravityCompat.START);
-//        } else {
-////            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//            int backStackEntryCount = fragmentManager.getBackStackEntryCount();
-//            Log.d(TAG, "TITLE::"+backStackEntryCount);
-//
-//            if (backStackEntryCount > 1) {
-//                fragmentManager.popBackStack();
-//                Fragment currentFragment = fragmentManager.getFragments().get(backStackEntryCount - 2);
-//                String title = getFragmentTitle(currentFragment);
-//                // log
-//                Log.d(TAG, "TITLE::"+title);
-//
-//                getSupportActionBar().setTitle("xxxxx");
-//            } else {
-//                super.onBackPressed();
-//                finish();
-//            }
-////            if (currentFragment instanceof BackPressHandler) {
-////                boolean handled = ((BackPressHandler) currentFragment).handleBackPress();
-////                if (!handled) {
-////                    super.onBackPressed();
-////                }
-////            } else {
-////                super.onBackPressed();
-////            }
-//        }
-//    }
+    // Method to open a fragment and set its title
     public void openFragment(Fragment fragment, String title)
     {
+        // Get the simple name of the fragment's class
         String ClassName = fragment.getClass().getSimpleName();
 
+        // Set the fragment title based on the fragment's class
         if(ClassName.equals("FunctionsFragment"))
         {
             ((FunctionsFragment)fragment).setFragmentTitle(title);
@@ -669,35 +626,39 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             ((SupportsFragment)fragment).setFragmentTitle(title);
         }
 
+        // Begin a transaction to replace the fragment
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
+        // Log the fragment title
         Log.d(TAG, "TITLE::"+title);
+
+        // Replace the fragment in the container
         transaction.replace(R.id.fragment_container, fragment);
+
+        // Add the transaction to the back stack with a tag
         transaction.addToBackStack("ccccccc"); // Use title as the back stack name
+
+        // Commit the transaction
         transaction.commit();
-        getSupportActionBar().setTitle(title); // Display fragment title on the toolbar
+
+        // Display the fragment title on the toolbar
+        getSupportActionBar().setTitle(title);
     }
 
+    // Method to handle back button press
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed called");
+        // Check if the drawer is open and close it if true
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed(); // 调用父类的实现以执行默认行为
+            // If the drawer is not open, call the superclass method to execute default behavior
+            super.onBackPressed();
         }
     }
 
-
-//    public void openFragment(Fragment fragment, String title) {
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        transaction.replace(R.id.fragment_container, fragment);
-//        transaction.addToBackStack(title); // Use title as the back stack name
-//        transaction.commit();
-//        getSupportActionBar().setTitle(title); // Display fragment title on the toolbar
-//    }
-
-
+    // Method to get the title for a fragment
     private String getFragmentTitle(Fragment fragment) {
+        // Check the instance of the fragment and return a title accordingly
         if (fragment instanceof FunctionsFragment) {
             return "Whitireia & WelTec";
         } else if (fragment instanceof SearchSFragment) {
@@ -709,6 +670,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return "";
     }
-
 
 }

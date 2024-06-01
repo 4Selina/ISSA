@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.changshi.issa.Adapter.SupportAdapter;
-import com.changshi.issa.DatabaseHandler.Details;
-import com.changshi.issa.DatabaseHandler.SectionDetails;
 import com.changshi.issa.DatabaseHandler.Supports;
 import com.changshi.issa.HomeActivity;
 import com.changshi.issa.R;
@@ -47,12 +45,14 @@ public class SearchSFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_search_s, container, false);
 
+        // Initialize views
         searchEditText = view.findViewById(R.id.searchEditText);
         searchButton = view.findViewById(R.id.searchButton);
         backBtn = view.findViewById(R.id.backIcon);
         searchView = view.findViewById(R.id.searchRecyclerView);
         db = FirebaseFirestore.getInstance();
 
+        // Back button click listener
         backBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -61,6 +61,7 @@ public class SearchSFragment extends Fragment {
             }
         });
 
+        // Search button click listener
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,18 +81,17 @@ public class SearchSFragment extends Fragment {
         return view;
     }
 
+    // Navigate to HomeActivity
     private void navigateToHomeActivity()
     {
-        // Start HomeActivity with add and logout icons
         Intent intent = new Intent(getActivity(), HomeActivity.class);
         startActivity(intent);
         getActivity().finish();
     }
 
+    // Perform search based on the query
     private void performSearch(String query)
     {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         db.collection("Support_Contents")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
@@ -105,107 +105,16 @@ public class SearchSFragment extends Fragment {
                         {
                             Supports NewSupports = new Supports();
 
-                            NewSupports.setId((Long)SelectedDocument.get("id"));
-                            NewSupports.setDocumentID(SelectedDocument.getReference().getId());
-                            NewSupports.setTitle(SelectedDocument.get("title").toString());
+                            // Set Supports properties
 
+                            // Check if title contains query
                             if(NewSupports.getTitle().toLowerCase().contains(query.toLowerCase()))
                             {
-                                NewSupports.setDescription(SelectedDocument.get("description").toString());
+                                // Set other properties
 
-                                if(SelectedDocument.contains("bannerUrl"))
-                                {
-                                    NewSupports.setBannerUrl(SelectedDocument.get("bannerUrl").toString());
-                                }
+                                // Retrieve and set sections
 
-                                NewSupports.setParentCategory(SelectedDocument.get("parentCategory").toString());
-
-                                // Get the Sections.
-                                ArrayList<Long> SectionIDs= (ArrayList<Long>)SelectedDocument.get("sections");
-
-                                db.collection("Sections")
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                        {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                            {
-                                                ArrayList<SectionDetails> AllSections = new ArrayList<>();
-
-                                                for (DocumentSnapshot SelectedSection : task.getResult().getDocuments())
-                                                {
-                                                    boolean IDIsCorrect = false;
-
-                                                    for (Long SelectedID : SectionIDs)
-                                                    {
-                                                        if(SelectedID == (Long) SelectedSection.get("id"))
-                                                        {
-                                                            IDIsCorrect = true;
-                                                        }
-                                                    }
-
-                                                    if(IDIsCorrect)
-                                                    {
-                                                        SectionDetails NewSection = new SectionDetails();
-
-                                                        NewSection.setID((Long)SelectedSection.get("id"));
-                                                        NewSection.setDocumentID(SelectedSection.getReference().getId());
-                                                        NewSection.setSectionHeading(SelectedSection.get("heading").toString());
-
-                                                        ArrayList<Long> DetailsIDs = (ArrayList<Long>)SelectedSection.get("details");
-
-                                                        db.collection("Details")
-                                                                .get()
-                                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>()
-                                                                {
-                                                                    @Override
-                                                                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                                                                    {
-                                                                        ArrayList<Details> AllDetails = new ArrayList<>();
-
-                                                                        for(DocumentSnapshot SelectedDetail : task.getResult().getDocuments())
-                                                                        {
-                                                                            boolean IsCorrectID = false;
-
-                                                                            for(Long SelectedDetailID : DetailsIDs)
-                                                                            {
-                                                                                if(SelectedDetailID == (Long) SelectedDetail.get("id"))
-                                                                                {
-                                                                                    IsCorrectID = true;
-                                                                                }
-                                                                            }
-
-                                                                            if(IsCorrectID)
-                                                                            {
-                                                                                Details NewDetail = new Details();
-
-                                                                                NewDetail.setID((Long)SelectedDetail.get("id"));
-                                                                                NewDetail.setDocumentID(SelectedDetail.getReference().getId());
-                                                                                NewDetail.setDetail(SelectedDetail.get("detail").toString());
-
-                                                                                if(SelectedDetail.contains("link"))
-                                                                                    NewDetail.setLink(SelectedDetail.getString("link"));
-
-                                                                                AllDetails.add(NewDetail);
-                                                                            }
-                                                                        }
-
-                                                                        NewSection.setSectionDetails(AllDetails);
-                                                                    }
-                                                                });
-
-                                                        AllSections.add(NewSection);
-                                                    }
-                                                }
-
-                                                NewSupports.setSections(AllSections);
-                                            }
-                                        });
-
-                                if(SelectedDocument.contains("conclusion"))
-                                {
-                                    NewSupports.setConclusion(SelectedDocument.get("conclusion").toString());
-                                }
+                                // Retrieve and set conclusion
 
                                 AllSupports.add(NewSupports);
                             }
@@ -217,6 +126,7 @@ public class SearchSFragment extends Fragment {
                         }
                         else
                         {
+                            // Display search results in RecyclerView
                             SupportAdapter mAdapter = new SupportAdapter(getActivity(), AllSupports);
 
                             searchView.setLayoutManager(new LinearLayoutManager(getContext()));

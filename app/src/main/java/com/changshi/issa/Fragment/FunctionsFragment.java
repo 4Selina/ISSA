@@ -24,22 +24,29 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class FunctionsFragment extends Fragment implements BackPressHandler
-{
+public class FunctionsFragment extends Fragment implements BackPressHandler {
     RecyclerView functionRecyclerView;
 
     private ArrayList<Functions> AllFunctions;
     private String FragmentTitle;
 
-    public FunctionsFragment(ArrayList<Functions> allFunctions) { AllFunctions = allFunctions; }
-
-    public FunctionsFragment()
-    {
+    // Constructor with allFunctions parameter
+    public FunctionsFragment(ArrayList<Functions> allFunctions) {
+        AllFunctions = allFunctions;
     }
 
-    public String getFragmentTitle() { return FragmentTitle; }
+    // Default constructor
+    public FunctionsFragment() { }
 
-    public void setFragmentTitle(String Title) { FragmentTitle = Title; }
+    // Getter for FragmentTitle
+    public String getFragmentTitle() {
+        return FragmentTitle;
+    }
+
+    // Setter for FragmentTitle
+    public void setFragmentTitle(String Title) {
+        FragmentTitle = Title;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,42 +60,43 @@ public class FunctionsFragment extends Fragment implements BackPressHandler
         super.onViewCreated(view, savedInstanceState);
         functionRecyclerView = getView().findViewById(R.id.functionRecyclerView);
 
+        // Create an adapter with the list of functions
         FunctionAdapter adapter = new FunctionAdapter(getActivity(), AllFunctions);
 
+        // Set layout manager and adapter for the RecyclerView
         functionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         functionRecyclerView.setAdapter(adapter);
 
+        // Access Firestore to update function URLs
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Settings")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task)
-                    {
-                        for(DocumentSnapshot SelectedSnapshot : task.getResult().getDocuments())
-                        {
-                            if(SelectedSnapshot.contains("AccommodationUrl"))
-                            {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (DocumentSnapshot SelectedSnapshot : task.getResult().getDocuments()) {
+                            if (SelectedSnapshot.contains("AccommodationUrl")) {
                                 Object learningSupportUrl = SelectedSnapshot.get("LearningSupportUrl");
-                                if(learningSupportUrl != null && !Strings.isNullOrEmpty(learningSupportUrl.toString()))
+                                if (learningSupportUrl != null && !Strings.isNullOrEmpty(learningSupportUrl.toString()))
                                     AllFunctions.get(0).setFunctionURL(learningSupportUrl.toString());
 
                                 Object socialActivitiesUrl = SelectedSnapshot.get("SocialActivitiesUrl");
-                                if(socialActivitiesUrl != null && !Strings.isNullOrEmpty(socialActivitiesUrl.toString()))
+                                if (socialActivitiesUrl != null && !Strings.isNullOrEmpty(socialActivitiesUrl.toString()))
                                     AllFunctions.get(1).setFunctionURL(socialActivitiesUrl.toString());
 
                                 Object accommodationUrl = SelectedSnapshot.get("AccommodationUrl");
-                                if(accommodationUrl != null && !Strings.isNullOrEmpty(accommodationUrl.toString()))
+                                if (accommodationUrl != null && !Strings.isNullOrEmpty(accommodationUrl.toString()))
                                     AllFunctions.get(2).setFunctionURL(accommodationUrl.toString());
 
                                 Object transportUrl = SelectedSnapshot.get("TransportUrl");
-                                if(transportUrl != null && !Strings.isNullOrEmpty(transportUrl.toString()))
+                                if (transportUrl != null && !Strings.isNullOrEmpty(transportUrl.toString()))
                                     AllFunctions.get(3).setFunctionURL(transportUrl.toString());
 
                                 Object jobSupportUrl = SelectedSnapshot.get("JobSupportUrl");
-                                if(jobSupportUrl != null && !Strings.isNullOrEmpty(jobSupportUrl.toString()))
+                                if (jobSupportUrl != null && !Strings.isNullOrEmpty(jobSupportUrl.toString()))
                                     AllFunctions.get(4).setFunctionURL(jobSupportUrl.toString());
 
+                                // Notify adapter of data change
                                 functionRecyclerView.getAdapter().notifyDataSetChanged();
                             }
                         }

@@ -55,9 +55,6 @@ public class  AddActivity extends AppCompatActivity
     private boolean IsEditMode;
     private Supports SelectedSupport;
 
-//    private static final int PICK_IMAGE_REQUEST = 1;
-//    private Uri mImageUrl;
-
     private FirebaseFirestore db;
     private static final int REQUEST_CODE_PICK_IMAGE = 1;
 

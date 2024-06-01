@@ -23,15 +23,6 @@ public class WebpageItem
         this.contact = contact;
         this.address = address;
     }
-//    public WebpageItem( String id, String department, String email, String contact, String address, String imageUrl){
-//
-//        this.id = id;
-//        this.department = department;
-//        this.email = email;
-//        this.contact = contact;
-//        this.address = address;
-//        this.imageUrl = imageUrl;
-//    }
     public Long getId() {
         return id;
     }
